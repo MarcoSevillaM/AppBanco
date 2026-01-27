@@ -64,6 +64,8 @@ function inicializarTabs() {
                 cargarEstadisticas();
             } else if (targetId === 'transacciones') {
                 cargarTransacciones();
+            } else if (targetId === 'graficas') {
+                cargarGraficas();
             }
         });
     });
@@ -580,3 +582,672 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// ==========================================
+// GRÁFICAS
+// ==========================================
+
+// Estado de las gráficas
+const GraficasState = {
+    charts: {},
+    datosGraficas: null,
+    añoSeleccionado: null
+};
+
+// Colores para categorías - todos distintos y bien diferenciados
+const COLORES_CATEGORIAS = {
+    'Inversiones': { bg: 'rgba(59, 130, 246, 0.7)', border: 'rgb(59, 130, 246)' },       // Azul
+    'Coche': { bg: 'rgba(245, 158, 11, 0.7)', border: 'rgb(245, 158, 11)' },           // Naranja/Ámbar
+    'Alimentación': { bg: 'rgba(16, 185, 129, 0.7)', border: 'rgb(16, 185, 129)' },    // Verde esmeralda
+    'Gastos recurrentes': { bg: 'rgba(168, 85, 247, 0.7)', border: 'rgb(168, 85, 247)' }, // Púrpura
+    'Ocio': { bg: 'rgba(236, 72, 153, 0.7)', border: 'rgb(236, 72, 153)' },            // Rosa/Fucsia
+    'Ingresos': { bg: 'rgba(34, 197, 94, 0.7)', border: 'rgb(34, 197, 94)' },          // Verde claro
+    'Otros': { bg: 'rgba(107, 114, 128, 0.7)', border: 'rgb(107, 114, 128)' }          // Gris
+};
+
+const NOMBRES_MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+/**
+ * Inicializar eventos de gráficas
+ */
+function inicializarEventosGraficas() {
+    document.getElementById('btn-actualizar-graficas')?.addEventListener('click', cargarGraficas);
+    document.getElementById('graficas-año')?.addEventListener('change', (e) => {
+        GraficasState.añoSeleccionado = e.target.value;
+        cargarGraficas();
+    });
+}
+
+// Llamar al inicializar
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarEventosGraficas, 100);
+});
+
+/**
+ * Cargar todos los datos y renderizar gráficas
+ */
+async function cargarGraficas() {
+    try {
+        // Obtener todas las transacciones
+        const response = await fetch(`${API_URL}/transacciones`);
+        const data = await response.json();
+        
+        if (!data.success) {
+            console.error('Error al cargar transacciones para gráficas');
+            return;
+        }
+        
+        const transacciones = data.data;
+        
+        // Procesar datos para gráficas
+        GraficasState.datosGraficas = procesarDatosGraficas(transacciones);
+        
+        // Llenar selector de años
+        llenarSelectorAños(GraficasState.datosGraficas.años);
+        
+        // Filtrar por año si hay uno seleccionado
+        const año = GraficasState.añoSeleccionado || GraficasState.datosGraficas.años[0];
+        const datosFiltrados = filtrarPorAño(transacciones, año);
+        
+        // Renderizar todas las gráficas
+        renderizarChartBalanceMensual(datosFiltrados);
+        renderizarChartCategoriasMes(datosFiltrados);
+        renderizarChartDistribucion(datosFiltrados);
+        renderizarChartAhorroAcumulado(datosFiltrados);
+        renderizarTablaResumenMensual(datosFiltrados);
+        
+        // Llenar selector de meses y configurar visor
+        llenarSelectorMeses(datosFiltrados);
+        
+    } catch (error) {
+        console.error('Error al cargar gráficas:', error);
+    }
+}
+
+/**
+ * Procesar datos de transacciones para gráficas
+ */
+function procesarDatosGraficas(transacciones) {
+    const años = [...new Set(transacciones.map(t => new Date(t.fecha).getFullYear()))].sort((a, b) => b - a);
+    
+    return {
+        años,
+        transacciones
+    };
+}
+
+/**
+ * Llenar selector de años
+ */
+function llenarSelectorAños(años) {
+    const select = document.getElementById('graficas-año');
+    if (!select) return;
+    
+    const valorActual = GraficasState.añoSeleccionado;
+    
+    select.innerHTML = años.map(año => 
+        `<option value="${año}" ${año == valorActual ? 'selected' : ''}>${año}</option>`
+    ).join('');
+    
+    if (!GraficasState.añoSeleccionado && años.length > 0) {
+        GraficasState.añoSeleccionado = años[0];
+    }
+}
+
+/**
+ * Filtrar transacciones por año
+ */
+function filtrarPorAño(transacciones, año) {
+    return transacciones.filter(t => new Date(t.fecha).getFullYear() == año);
+}
+
+/**
+ * Agrupar transacciones por mes
+ */
+function agruparPorMes(transacciones) {
+    const meses = {};
+    
+    transacciones.forEach(t => {
+        const fecha = new Date(t.fecha);
+        const mes = fecha.getMonth(); // 0-11
+        
+        if (!meses[mes]) {
+            meses[mes] = {
+                mes,
+                nombre: NOMBRES_MESES[mes],
+                ingresos: 0,
+                gastos: 0,
+                inversion: 0,
+                transacciones: []
+            };
+        }
+        
+        meses[mes].transacciones.push(t);
+        
+        // Clasificar por tipo (Inversión se separa)
+        if (t.categoria === 'Inversiones') {
+            meses[mes].inversion += t.importe;
+        } else if (t.importe > 0) {
+            meses[mes].ingresos += t.importe;
+        } else {
+            meses[mes].gastos += Math.abs(t.importe);
+        }
+    });
+    
+    // Convertir a array ordenado por mes
+    return Object.values(meses).sort((a, b) => a.mes - b.mes);
+}
+
+/**
+ * Agrupar por categoría y mes
+ */
+function agruparPorCategoriaMes(transacciones) {
+    const datos = {};
+    const categorias = new Set();
+    const mesesSet = new Set();
+    
+    transacciones.forEach(t => {
+        // Solo gastos (importe negativo) y excluyendo Ingresos
+        if (t.importe >= 0 || t.categoria === 'Ingresos') return;
+        
+        const mes = new Date(t.fecha).getMonth();
+        categorias.add(t.categoria);
+        mesesSet.add(mes);
+        
+        const key = `${t.categoria}-${mes}`;
+        if (!datos[key]) {
+            datos[key] = { categoria: t.categoria, mes, total: 0 };
+        }
+        datos[key].total += Math.abs(t.importe);
+    });
+    
+    const meses = [...mesesSet].sort((a, b) => a - b);
+    
+    return {
+        categorias: [...categorias],
+        meses,
+        datos
+    };
+}
+
+/**
+ * Destruir gráfica existente si existe
+ */
+function destruirChart(id) {
+    if (GraficasState.charts[id]) {
+        GraficasState.charts[id].destroy();
+        GraficasState.charts[id] = null;
+    }
+}
+
+/**
+ * Gráfica: Balance Mensual (Gastos/Ingresos/Ahorro)
+ */
+function renderizarChartBalanceMensual(transacciones) {
+    const ctx = document.getElementById('chart-balance-mensual');
+    if (!ctx) return;
+    
+    destruirChart('balanceMensual');
+    
+    const datosMes = agruparPorMes(transacciones);
+    const labels = datosMes.map(m => m.nombre);
+    
+    // Calcular ahorro (ingresos - gastos, sin inversión)
+    const ahorros = datosMes.map(m => m.ingresos - m.gastos);
+    
+    // Totales para resumen
+    const totalIngresos = datosMes.reduce((sum, m) => sum + m.ingresos, 0);
+    const totalGastos = datosMes.reduce((sum, m) => sum + m.gastos, 0);
+    const totalAhorro = totalIngresos - totalGastos;
+    
+    // Mostrar resumen
+    const resumenDiv = document.getElementById('resumen-balance-mensual');
+    if (resumenDiv) {
+        resumenDiv.innerHTML = `
+            <div class="total-item">
+                <span class="total-label">Total Ingresos</span>
+                <span class="total-value ingresos">${formatearMoneda(totalIngresos)}</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">Total Gastos</span>
+                <span class="total-value gastos">${formatearMoneda(totalGastos)}</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">Ahorro Total</span>
+                <span class="total-value ahorro">${formatearMoneda(totalAhorro)}</span>
+            </div>
+        `;
+    }
+    
+    GraficasState.charts.balanceMensual = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Ingresos',
+                    data: datosMes.map(m => m.ingresos),
+                    backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                    borderColor: 'rgb(34, 197, 94)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Gastos',
+                    data: datosMes.map(m => m.gastos),
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderColor: 'rgb(239, 68, 68)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Ahorro',
+                    data: ahorros,
+                    type: 'line',
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    yAxisID: 'y'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + formatearMoneda(context.raw);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => formatearMoneda(value)
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Gráfica: Gastos por Categoría y Mes (Barras apiladas)
+ */
+function renderizarChartCategoriasMes(transacciones) {
+    const ctx = document.getElementById('chart-categorias-mes');
+    if (!ctx) return;
+    
+    destruirChart('categoriasMes');
+    
+    const { categorias, meses, datos } = agruparPorCategoriaMes(transacciones);
+    const labels = meses.map(m => NOMBRES_MESES[m]);
+    
+    const datasets = categorias.map(cat => {
+        const color = COLORES_CATEGORIAS[cat] || { bg: 'rgba(107, 114, 128, 0.7)', border: 'rgb(107, 114, 128)' };
+        
+        return {
+            label: cat,
+            data: meses.map(mes => {
+                const key = `${cat}-${mes}`;
+                return datos[key]?.total || 0;
+            }),
+            backgroundColor: color.bg,
+            borderColor: color.border,
+            borderWidth: 1
+        };
+    });
+    
+    GraficasState.charts.categoriasMes = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + formatearMoneda(context.raw);
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    ticks: {
+                        callback: value => formatearMoneda(value)
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Gráfica: Distribución de Gastos (Donut)
+ */
+function renderizarChartDistribucion(transacciones) {
+    const ctx = document.getElementById('chart-distribucion');
+    if (!ctx) return;
+    
+    destruirChart('distribucion');
+    
+    // Agrupar gastos por categoría (excluyendo Ingresos)
+    const gastosPorCategoria = {};
+    
+    transacciones.forEach(t => {
+        if (t.importe >= 0 || t.categoria === 'Ingresos') return;
+        
+        if (!gastosPorCategoria[t.categoria]) {
+            gastosPorCategoria[t.categoria] = 0;
+        }
+        gastosPorCategoria[t.categoria] += Math.abs(t.importe);
+    });
+    
+    const categorias = Object.keys(gastosPorCategoria);
+    const valores = Object.values(gastosPorCategoria);
+    const colores = categorias.map(cat => 
+        COLORES_CATEGORIAS[cat]?.bg || 'rgba(107, 114, 128, 0.7)'
+    );
+    const bordes = categorias.map(cat => 
+        COLORES_CATEGORIAS[cat]?.border || 'rgb(107, 114, 128)'
+    );
+    
+    GraficasState.charts.distribucion = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: categorias,
+            datasets: [{
+                data: valores,
+                backgroundColor: colores,
+                borderColor: bordes,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        boxWidth: 15,
+                        padding: 10
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const porcentaje = ((context.raw / total) * 100).toFixed(1);
+                            return `${context.label}: ${formatearMoneda(context.raw)} (${porcentaje}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Gráfica: Evolución del Ahorro Acumulado
+ */
+function renderizarChartAhorroAcumulado(transacciones) {
+    const ctx = document.getElementById('chart-ahorro-acumulado');
+    if (!ctx) return;
+    
+    destruirChart('ahorroAcumulado');
+    
+    const datosMes = agruparPorMes(transacciones);
+    const labels = datosMes.map(m => m.nombre);
+    
+    // Calcular ahorro acumulado
+    let acumulado = 0;
+    const ahorroAcumulado = datosMes.map(m => {
+        acumulado += (m.ingresos - m.gastos);
+        return acumulado;
+    });
+    
+    GraficasState.charts.ahorroAcumulado = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Ahorro Acumulado',
+                data: ahorroAcumulado,
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: 'rgb(59, 130, 246)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Acumulado: ' + formatearMoneda(context.raw);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: value => formatearMoneda(value)
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Renderizar tabla resumen mensual
+ */
+function renderizarTablaResumenMensual(transacciones) {
+    const tbody = document.getElementById('tabla-resumen-mensual');
+    if (!tbody) return;
+    
+    const datosMes = agruparPorMes(transacciones);
+    
+    // Totales
+    let totalIngresos = 0;
+    let totalGastos = 0;
+    let totalAhorro = 0;
+    let totalInversion = 0;
+    
+    const filas = datosMes.map(m => {
+        const ahorro = m.ingresos - m.gastos;
+        totalIngresos += m.ingresos;
+        totalGastos += m.gastos;
+        totalAhorro += ahorro;
+        totalInversion += m.inversion;
+        
+        return `
+            <tr>
+                <td>${m.nombre}</td>
+                <td class="positivo">${formatearMoneda(m.ingresos)}</td>
+                <td class="negativo">${formatearMoneda(m.gastos)}</td>
+                <td class="${ahorro >= 0 ? 'positivo' : 'negativo'}">${formatearMoneda(ahorro)}</td>
+                <td class="inversion">${formatearMoneda(Math.abs(m.inversion))}</td>
+            </tr>
+        `;
+    }).join('');
+    
+    // Fila de totales
+    const filaTotales = `
+        <tr style="font-weight: bold; background: var(--bg-color);">
+            <td><strong>TOTAL</strong></td>
+            <td class="positivo">${formatearMoneda(totalIngresos)}</td>
+            <td class="negativo">${formatearMoneda(totalGastos)}</td>
+            <td class="${totalAhorro >= 0 ? 'positivo' : 'negativo'}">${formatearMoneda(totalAhorro)}</td>
+            <td class="inversion">${formatearMoneda(Math.abs(totalInversion))}</td>
+        </tr>
+    `;
+    
+    tbody.innerHTML = filas + filaTotales;
+}
+
+/**
+ * Llenar selector de meses disponibles
+ */
+function llenarSelectorMeses(transacciones) {
+    const select = document.getElementById('select-mes-detalle');
+    if (!select) return;
+    
+    // Obtener meses disponibles
+    const mesesDisponibles = new Map();
+    
+    transacciones.forEach(t => {
+        const fecha = new Date(t.fecha);
+        const mes = fecha.getMonth();
+        const key = mes;
+        
+        if (!mesesDisponibles.has(key)) {
+            mesesDisponibles.set(key, {
+                mes,
+                nombre: NOMBRES_MESES[mes],
+                transacciones: []
+            });
+        }
+        mesesDisponibles.get(key).transacciones.push(t);
+    });
+    
+    // Ordenar por mes
+    const mesesOrdenados = [...mesesDisponibles.values()].sort((a, b) => a.mes - b.mes);
+    
+    // Guardar en estado para uso posterior
+    GraficasState.mesesDisponibles = mesesOrdenados;
+    
+    // Llenar select
+    select.innerHTML = '<option value="">-- Seleccionar mes --</option>' + 
+        mesesOrdenados.map(m => 
+            `<option value="${m.mes}">${m.nombre} (${m.transacciones.length} transacciones)</option>`
+        ).join('');
+    
+    // Limpiar contenedor y contador
+    document.getElementById('transacciones-mes-container').innerHTML = 
+        '<p class="info-text">Selecciona un mes para ver sus transacciones.</p>';
+    document.getElementById('transacciones-mes-count').textContent = '';
+    
+    // Añadir evento de cambio
+    select.onchange = (e) => {
+        const mesSeleccionado = e.target.value;
+        if (mesSeleccionado !== '') {
+            mostrarTransaccionesMes(parseInt(mesSeleccionado));
+        } else {
+            document.getElementById('transacciones-mes-container').innerHTML = 
+                '<p class="info-text">Selecciona un mes para ver sus transacciones.</p>';
+            document.getElementById('transacciones-mes-count').textContent = '';
+        }
+    };
+}
+
+/**
+ * Mostrar transacciones de un mes específico
+ */
+function mostrarTransaccionesMes(mesIndex) {
+    const container = document.getElementById('transacciones-mes-container');
+    const countSpan = document.getElementById('transacciones-mes-count');
+    
+    if (!container || !GraficasState.mesesDisponibles) return;
+    
+    const datosMes = GraficasState.mesesDisponibles.find(m => m.mes === mesIndex);
+    
+    if (!datosMes || datosMes.transacciones.length === 0) {
+        container.innerHTML = '<p class="info-text">No hay transacciones para este mes.</p>';
+        countSpan.textContent = '';
+        return;
+    }
+    
+    const transacciones = datosMes.transacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    
+    // Calcular totales del mes
+    let ingresos = 0;
+    let gastos = 0;
+    let inversion = 0;
+    
+    transacciones.forEach(t => {
+        if (t.categoria === 'Inversiones') {
+            inversion += t.importe;
+        } else if (t.importe > 0) {
+            ingresos += t.importe;
+        } else {
+            gastos += Math.abs(t.importe);
+        }
+    });
+    
+    // Actualizar contador
+    countSpan.textContent = `${transacciones.length} transacciones`;
+    
+    // Crear tabla de transacciones
+    const tablaHTML = `
+        <table class="tabla-transacciones-mes">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Concepto</th>
+                    <th>Categoría</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${transacciones.map(t => `
+                    <tr>
+                        <td>${formatearFecha(t.fecha)}</td>
+                        <td>${escapeHtml(t.concepto)}</td>
+                        <td><span class="categoria-badge" data-cat="${t.categoria}">${t.categoria}</span></td>
+                        <td class="${t.importe >= 0 ? 'importe-positivo' : 'importe-negativo'}">
+                            ${formatearMoneda(t.importe)}
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        <div class="transacciones-mes-resumen">
+            <div class="resumen-item">
+                <span class="resumen-label">Ingresos</span>
+                <span class="resumen-value" style="color: var(--ingresos-color);">${formatearMoneda(ingresos)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Gastos</span>
+                <span class="resumen-value" style="color: var(--gastos-color);">${formatearMoneda(gastos)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Ahorro</span>
+                <span class="resumen-value" style="color: var(--primary-color);">${formatearMoneda(ingresos - gastos)}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Inversión</span>
+                <span class="resumen-value" style="color: #6366f1;">${formatearMoneda(Math.abs(inversion))}</span>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = tablaHTML;
+}

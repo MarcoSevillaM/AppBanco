@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AppBanco v1.5 - Gestión de Transacciones</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -20,6 +21,7 @@
         <nav class="nav-tabs">
             <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
             <button class="tab-btn" data-tab="transacciones">📋 Transacciones</button>
+            <button class="tab-btn" data-tab="graficas">📈 Gráficas</button>
             <button class="tab-btn" data-tab="importar">📥 Importar</button>
             <button class="tab-btn" data-tab="nueva">➕ Nueva</button>
         </nav>
@@ -81,7 +83,7 @@
                     <input type="text" id="filtro-busqueda" placeholder="🔍 Buscar por concepto...">
                     <select id="filtro-categoria">
                         <option value="">Todas las categorías</option>
-                        <option value="Inversión">Inversión</option>
+                        <option value="Inversiones">Inversión</option>
                         <option value="Coche">Coche</option>
                         <option value="Alimentación">Alimentación</option>
                         <option value="Gastos Recurrentes">Gastos Recurrentes</option>
@@ -115,6 +117,93 @@
                             <!-- Se llena dinámicamente -->
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- Tab: Gráficas -->
+            <section id="graficas" class="tab-content">
+                <!-- Filtros de Gráficas -->
+                <div class="filtros-bar graficas-filtros">
+                    <label for="graficas-año">Año:</label>
+                    <select id="graficas-año">
+                        <!-- Se llena dinámicamente -->
+                    </select>
+                    <button id="btn-actualizar-graficas" class="btn btn-primary">🔄 Actualizar</button>
+                </div>
+
+                <div class="graficas-grid">
+                    <!-- Gráfica: Gastos/Ingresos/Ahorro por Mes -->
+                    <div class="card card-grafica">
+                        <h3>💰 Balance Mensual (sin Inversión)</h3>
+                        <p class="info-text">Gastos, Ingresos y Ahorro por mes. Las transacciones de "Inversión" no se cuentan.</p>
+                        <div class="chart-container">
+                            <canvas id="chart-balance-mensual"></canvas>
+                        </div>
+                        <div id="resumen-balance-mensual" class="resumen-totales"></div>
+                    </div>
+
+                    <!-- Gráfica: Desglose por Categoría (Barras apiladas por mes) -->
+                    <div class="card card-grafica">
+                        <h3>📊 Gastos por Categoría y Mes</h3>
+                        <p class="info-text">Desglose de gastos (valores negativos) por categoría en cada mes.</p>
+                        <div class="chart-container">
+                            <canvas id="chart-categorias-mes"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica: Distribución de Gastos (Pie/Donut) -->
+                    <div class="card card-grafica card-half">
+                        <h3>🥧 Distribución de Gastos</h3>
+                        <p class="info-text">Proporción de cada categoría en el total de gastos.</p>
+                        <div class="chart-container chart-pie">
+                            <canvas id="chart-distribucion"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica: Evolución del Ahorro Acumulado -->
+                    <div class="card card-grafica card-half">
+                        <h3>📈 Evolución del Ahorro</h3>
+                        <p class="info-text">Ahorro acumulado mes a mes (sin contar Inversión).</p>
+                        <div class="chart-container">
+                            <canvas id="chart-ahorro-acumulado"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Tabla resumen mensual -->
+                    <div class="card card-grafica card-full">
+                        <h3>📋 Resumen Mensual Detallado</h3>
+                        <div class="table-container">
+                            <table class="tabla-resumen-mensual">
+                                <thead>
+                                    <tr>
+                                        <th>Mes</th>
+                                        <th>Ingresos</th>
+                                        <th>Gastos</th>
+                                        <th>Ahorro</th>
+                                        <th>Inversión</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-resumen-mensual">
+                                    <!-- Se llena dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Visor de Transacciones por Mes -->
+                    <div class="card card-grafica card-full">
+                        <h3>📅 Transacciones por Mes</h3>
+                        <div class="mes-selector-container">
+                            <label for="select-mes-detalle">Selecciona un mes:</label>
+                            <select id="select-mes-detalle">
+                                <option value="">-- Seleccionar mes --</option>
+                            </select>
+                            <span id="transacciones-mes-count" class="mes-count"></span>
+                        </div>
+                        <div id="transacciones-mes-container" class="transacciones-mes-lista">
+                            <p class="info-text">Selecciona un mes para ver sus transacciones.</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 

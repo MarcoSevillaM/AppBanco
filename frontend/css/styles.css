@@ -692,4 +692,257 @@ code {
     .tabla-transacciones td {
         padding: 0.75rem 0.5rem;
     }
+    
+    .graficas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-grafica.card-half,
+    .card-grafica.card-full {
+        grid-column: span 1;
+    }
+}
+
+/* ==========================================
+   SECCIÓN GRÁFICAS
+   ========================================== */
+.graficas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.card-grafica {
+    min-height: 400px;
+}
+
+.card-grafica.card-half {
+    grid-column: span 1;
+}
+
+.card-grafica.card-full {
+    grid-column: span 2;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+.chart-container.chart-pie {
+    height: 280px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.graficas-filtros {
+    align-items: center;
+}
+
+.graficas-filtros label {
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
+
+.graficas-filtros select {
+    min-width: 120px;
+}
+
+/* Tabla Resumen Mensual */
+.tabla-resumen-mensual {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-resumen-mensual th,
+.tabla-resumen-mensual td {
+    padding: 0.875rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tabla-resumen-mensual th {
+    background: var(--bg-color);
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tabla-resumen-mensual th:first-child,
+.tabla-resumen-mensual td:first-child {
+    text-align: left;
+}
+
+.tabla-resumen-mensual td.positivo {
+    color: var(--ingresos-color);
+    font-weight: 600;
+}
+
+.tabla-resumen-mensual td.negativo {
+    color: var(--gastos-color);
+    font-weight: 600;
+}
+
+.tabla-resumen-mensual td.inversion {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tabla-resumen-mensual tbody tr:hover {
+    background: rgba(37, 99, 235, 0.02);
+}
+
+.tabla-resumen-mensual tfoot {
+    font-weight: 700;
+    background: var(--bg-color);
+}
+
+.tabla-resumen-mensual tfoot td {
+    border-top: 2px solid var(--border-color);
+}
+
+/* Resumen de totales bajo gráficas */
+.resumen-totales {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.resumen-totales .total-item {
+    text-align: center;
+}
+
+.resumen-totales .total-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.resumen-totales .total-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.resumen-totales .total-value.ingresos { color: var(--ingresos-color); }
+.resumen-totales .total-value.gastos { color: var(--gastos-color); }
+.resumen-totales .total-value.ahorro { color: var(--primary-color); }
+
+/* Visor de Transacciones por Mes */
+.mes-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+}
+
+.mes-selector-container label {
+    font-weight: 500;
+}
+
+.mes-selector-container select {
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+    min-width: 180px;
+    cursor: pointer;
+}
+
+.mes-selector-container select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.mes-count {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.transacciones-mes-lista {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.transacciones-mes-lista .tabla-transacciones-mes {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transacciones-mes-lista .tabla-transacciones-mes th,
+.transacciones-mes-lista .tabla-transacciones-mes td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.transacciones-mes-lista .tabla-transacciones-mes th {
+    background: var(--bg-color);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.transacciones-mes-lista .tabla-transacciones-mes tbody tr:hover {
+    background: rgba(37, 99, 235, 0.02);
+}
+
+.transacciones-mes-lista .importe-positivo {
+    color: var(--ingresos-color);
+    font-weight: 600;
+}
+
+.transacciones-mes-lista .importe-negativo {
+    color: var(--gastos-color);
+    font-weight: 600;
+}
+
+.transacciones-mes-resumen {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-radius: var(--radius);
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.transacciones-mes-resumen .resumen-item {
+    text-align: center;
+}
+
+.transacciones-mes-resumen .resumen-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.transacciones-mes-resumen .resumen-value {
+    font-size: 1.125rem;
+    font-weight: 700;
 }
