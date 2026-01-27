@@ -22,6 +22,7 @@
             <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
             <button class="tab-btn" data-tab="transacciones">📋 Transacciones</button>
             <button class="tab-btn" data-tab="graficas">📈 Gráficas</button>
+            <button class="tab-btn" data-tab="prediccion">🔮 Predicción</button>
             <button class="tab-btn" data-tab="importar">📥 Importar</button>
             <button class="tab-btn" data-tab="nueva">➕ Nueva</button>
         </nav>
@@ -203,6 +204,88 @@
                         <div id="transacciones-mes-container" class="transacciones-mes-lista">
                             <p class="info-text">Selecciona un mes para ver sus transacciones.</p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Predicción -->
+            <section id="prediccion" class="tab-content">
+                <div class="prediccion-container">
+                    <!-- Tarjeta principal de predicción -->
+                    <div class="card card-prediccion-principal">
+                        <div class="prediccion-header">
+                            <h3>🔮 Predicción de Ahorro</h3>
+                            <p class="info-text">Estimación para el próximo mes basada en tu historial financiero</p>
+                        </div>
+                        
+                        <div class="prediccion-resultado">
+                            <div class="prediccion-mes-objetivo">
+                                <span class="mes-label" id="pred-mes-objetivo">--</span>
+                            </div>
+                            <div class="prediccion-valor-principal">
+                                <span class="pred-label">Ahorro Estimado</span>
+                                <span class="pred-valor" id="pred-ahorro">-- €</span>
+                                <span class="pred-confianza" id="pred-confianza"></span>
+                            </div>
+                        </div>
+
+                        <div class="prediccion-desglose">
+                            <div class="pred-item ingresos">
+                                <span class="pred-item-icon">📈</span>
+                                <div class="pred-item-info">
+                                    <span class="pred-item-label">Ingresos Esperados</span>
+                                    <span class="pred-item-valor" id="pred-ingresos">-- €</span>
+                                </div>
+                            </div>
+                            <div class="pred-item gastos">
+                                <span class="pred-item-icon">📉</span>
+                                <div class="pred-item-info">
+                                    <span class="pred-item-label">Gastos Esperados</span>
+                                    <span class="pred-item-valor" id="pred-gastos">-- €</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica de tendencia -->
+                    <div class="card card-prediccion">
+                        <h3>📊 Tendencia y Predicción</h3>
+                        <p class="info-text">Evolución histórica y proyección futura</p>
+                        <div class="chart-container">
+                            <canvas id="chart-prediccion"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Predicción por categorías -->
+                    <div class="card card-prediccion">
+                        <h3>📁 Predicción por Categorías</h3>
+                        <p class="info-text">Estimación de gastos por categoría para el próximo mes</p>
+                        <div id="prediccion-categorias" class="prediccion-categorias-grid">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Método y datos utilizados -->
+                    <div class="card card-prediccion card-metodo">
+                        <h3>🧮 Metodología</h3>
+                        <div class="metodo-info">
+                            <div class="metodo-item">
+                                <span class="metodo-label">Método utilizado:</span>
+                                <span class="metodo-valor" id="pred-metodo">Media Móvil Ponderada</span>
+                            </div>
+                            <div class="metodo-item">
+                                <span class="metodo-label">Meses analizados:</span>
+                                <span class="metodo-valor" id="pred-meses-analizados">--</span>
+                            </div>
+                            <div class="metodo-item">
+                                <span class="metodo-label">Tendencia detectada:</span>
+                                <span class="metodo-valor" id="pred-tendencia">--</span>
+                            </div>
+                        </div>
+                        <p class="info-text metodo-disclaimer">
+                            ⚠️ Esta predicción es una estimación basada en datos históricos. 
+                            Los resultados reales pueden variar según cambios en tus hábitos financieros.
+                        </p>
                     </div>
                 </div>
             </section>
