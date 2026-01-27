@@ -1,0 +1,729 @@
+FECHA OPERACIÓN,CONCEPTO,IMPORTE EUR,SALDO,AÑO_MES,MES,INGRESO,GASTO,CATEGORIA
+2026-01-07,Bizum De Maria Fernandez Garcia Concepto Sin Concepto,20.0,"5.980,58",2026-01,1,20.0,0.0,Coche
+2026-01-07,Bizum De Alba Camino Cossio Concepto Viaje,20.0,"5.960,58",2026-01,1,20.0,0.0,Coche
+2026-01-05,Bizum A Favor De Etna Maestro Bedoya Concepto: Cena,-9.2,"5.940,58",2026-01,1,0.0,9.2,Alimentación
+2026-01-02,"Pago Movil En Canela, Potes, Tarj. :*047140",-13.9,"5.949,78",2026-01,1,0.0,13.9,Ocio
+2026-01-02,Transferencia A Favor De Iñigo Rodríguez Navarro Concepto: Pago Piso Valdelasfuentes Mes Actual,-440.0,"5.963,68",2026-01,1,0.0,440.0,Gastos recurrentes
+2026-01-02,"Pago Movil En Dolce Vita, Aguilar De Ca, Tarj. :*047140",-5.7,"6.403,68",2026-01,1,0.0,5.7,Ocio
+2026-01-02,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-5.5,"6.409,38",2026-01,1,0.0,5.5,Ocio
+2026-01-02,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-14.5,"6.414,88",2026-01,1,0.0,14.5,Ocio
+2026-01-02,"Pago Movil En Bar Ritual Agui, Aguilar De Ca, Tarj. :*047140",-12.0,"6.429,38",2026-01,1,0.0,12.0,Ocio
+2026-01-02,"Pago Movil En Bar Ritual Agui, Aguilar De Ca, Tarj. :*047140",-6.0,"6.441,38",2026-01,1,0.0,6.0,Ocio
+2026-01-02,Bizum A Favor De David Ruiz Hernandez Concepto: Kass,-2.5,"6.447,38",2026-01,1,0.0,2.5,Ocio
+2025-12-30,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-11.67,"6.449,88",2025-12,12,0.0,11.67,Alimentación
+2025-12-29,"Pago Movil En Cascajera Gastr, Aguilar De Ca, Tarj. :*047140",-4.3,"6.461,55",2025-12,12,0.0,4.3,Ocio
+2025-12-29,"Pago Movil En Discoteca Laser, Aguilar Campo, Tarj. :*047140",-7.0,"6.465,85",2025-12,12,0.0,7.0,Ocio
+2025-12-29,"Pago Movil En Bar Ritual Agui, Aguilar De Ca, Tarj. :*047140",-22.9,"6.472,85",2025-12,12,0.0,22.9,Ocio
+2025-12-29,Bizum A Favor De Laura Vielba Gutierrez Concepto: Cali Laser,-4.5,"6.495,75",2025-12,12,0.0,4.5,Ocio
+2025-12-29,"Pago Movil En Dicoteca Laser, Aguilar Campo, Tarj. :*047140",-4.0,"6.500,25",2025-12,12,0.0,4.0,Ocio
+2025-12-29,"Pago Movil En Dicoteca Laser, Aguilar Campo, Tarj. :*047140",-2.5,"6.504,25",2025-12,12,0.0,2.5,Ocio
+2025-12-29,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.5,"6.506,75",2025-12,12,0.0,5.5,Ocio
+2025-12-26,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-6.15,"6.512,25",2025-12,12,0.0,6.15,Alimentación
+2025-12-26,Bizum De Sofia Parte Rodriguez Concepto Infusion,1.5,"6.518,40",2025-12,12,1.5,0.0,Ocio
+2025-12-26,"Pago Movil En Bar Ritual Agui, Aguilar De Ca, Tarj. :*047140",-9.0,"6.516,90",2025-12,12,0.0,9.0,Ocio
+2025-12-23,"Compra Arbitrade Centro S.a.u, Getafe, Tarjeta 5489010372047140 , Comision 0,00",-1.2,"6.525,90",2025-12,12,0.0,1.2,Otros
+2025-12-22,"Pago Movil En Dicoteca Laser, Aguilar Campo, Tarj. :*047140",-9.0,"6.527,10",2025-12,12,0.0,9.0,Ocio
+2025-12-22,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.5,"6.536,10",2025-12,12,0.0,5.5,Ocio
+2025-12-22,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-11.0,"6.541,60",2025-12,12,0.0,11.0,Ocio
+2025-12-22,"Pago Movil En Petroprix Arand, Aranda De Due, Tarj. :*047140",-56.8,"6.552,60",2025-12,12,0.0,56.8,Coche
+2025-12-22,Bizum A Favor De Adrian Herrera Garcia Concepto: Cine,-7.5,"6.609,40",2025-12,12,0.0,7.5,Ocio
+2025-12-22,"Pago Movil En Carref S S De L, S S Reyes, Tarj. :*047140",-1.84,"6.616,90",2025-12,12,0.0,1.84,Alimentación
+2025-12-19,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Telefono,-20.0,"6.618,74",2025-12,12,0.0,20.0,Gastos recurrentes
+2025-12-19,"Transferencia De Sevilla Martin Marco, .",710.0,"6.638,74",2025-12,12,710.0,0.0,Otros
+2025-12-18,"Pago Movil En Manjon Heredero, Alcobendas, Tarj. :*047140",-720.0,"5.928,74",2025-12,12,0.0,720.0,Otros
+2025-12-18,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1340.83,"6.648,74",2025-12,12,1340.83,0.0,Ingresos
+2025-12-16,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-24.01,"5.307,91",2025-12,12,0.0,24.01,Alimentación
+2025-12-16,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.74,"5.331,92",2025-12,12,0.0,5.74,Gastos recurrentes
+2025-12-15,Bizum A Favor De Daniel Timon Sabrido Concepto: Cena,-14.17,"5.337,66",2025-12,12,0.0,14.17,Alimentación
+2025-12-15,Bizum A Favor De Adrian Herrera Garcia Concepto: Tonica,-3.4,"5.351,83",2025-12,12,0.0,3.4,Ocio
+2025-12-15,"Pago Movil En Angel Nuevos Ho, Pedrezuela, Tarj. :*047140",-32.0,"5.355,23",2025-12,12,0.0,32.0,Alimentación
+2025-12-15,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-7.1,"5.387,23",2025-12,12,0.0,7.1,Alimentación
+2025-12-15,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-3.4,"5.394,33",2025-12,12,0.0,3.4,Alimentación
+2025-12-11,"Pago Movil En Aldi Alcobendas, Alcobendas, Tarj. :*047140",-6.94,"5.397,73",2025-12,12,0.0,6.94,Alimentación
+2025-12-11,"Compra Albert Heijn 1676, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-4.75,"5.404,67",2025-12,12,0.0,4.75,Ocio
+2025-12-11,"Compra Mcdonald's Muntplein, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-1.0,"5.409,42",2025-12,12,0.0,1.0,Ocio
+2025-12-11,"Compra Albert Heijn 1391, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-1.98,"5.410,42",2025-12,12,0.0,1.98,Ocio
+2025-12-11,"Recibo Axa Aurora Vida S.a. Cif A-48464606 20251210-20260110 Nif:21100160y Palencia 35 14 34800 Aguilar D Mas Informacion En Www.axa.es Y Mediador Ccio: 0,00 Pol16041685 Nº Recibo 0049 7471 755 Bcbhyyt Ref. Mandato 0000o96l72tf, De",-75.0,"5.412,40",2025-12,12,0.0,75.0,Inversiones
+2025-12-11,Bizum A Favor De Luis Alberto Frias Mariano Concepto: Wifi Noviembre Y Diciembre,-20.0,"5.487,40",2025-12,12,0.0,20.0,Gastos recurrentes
+2025-12-10,"Compra Revolut**6066*, Dublin, Tarjeta 5489010372047140 , Comision 0,00",-15.0,"5.507,40",2025-12,12,0.0,15.0,Ocio
+2025-12-10,"Compra Albert Heijn 2258, Marken, Tarjeta 5489010372047140 , Comision 0,00",-1.59,"5.522,40",2025-12,12,0.0,1.59,Ocio
+2025-12-10,"Compra Ccv*stins Flowermarket, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-6.0,"5.523,99",2025-12,12,0.0,6.0,Ocio
+2025-12-10,"Compra Bck*eetcafe Het Haveng, Volendam, Tarjeta 5489010372047140 , Comision 0,00",-103.85,"5.529,99",2025-12,12,0.0,103.85,Ocio
+2025-12-10,Bizum De Jorge Lopez Carnero Concepto Amsterdam,215.0,"5.633,84",2025-12,12,215.0,0.0,Ocio
+2025-12-10,Bizum De David Salvador Aguado Concepto Viaje Amsterdam,102.5,"5.418,84",2025-12,12,102.5,0.0,Ocio
+2025-12-09,"Compra Bk 7871 860ft7, Schiphol, Tarjeta 5489010372047140 , Comision 0,00",-39.7,"5.316,34",2025-12,12,0.0,39.7,Ocio
+2025-12-09,"Compra Gvb.nl Gvb App Order, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-64.5,"5.356,04",2025-12,12,0.0,64.5,Ocio
+2025-12-09,"Compra Revolut**6066*, Dublin, Tarjeta 5489010372047140 , Comision 0,00",-74.85,"5.420,54",2025-12,12,0.0,74.85,Ocio
+2025-12-09,"Compra De Foodhallen, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-15.8,"5.495,39",2025-12,12,0.0,15.8,Ocio
+2025-12-09,"Compra Ibis Budget Amsterdam, Amstelveen, Tarjeta 5489010372047140 , Comision 0,00",-54.6,"5.511,19",2025-12,12,0.0,54.6,Ocio
+2025-12-09,"Compra Ccv*la Vida Argentina, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-86.45,"5.565,79",2025-12,12,0.0,86.45,Ocio
+2025-12-09,Bizum De Markel Landa Axpe Concepto Tap Water,19.25,"5.652,24",2025-12,12,19.25,0.0,Ocio
+2025-12-09,Bizum De Markel Landa Axpe Concepto Envío De Dinero Con Bizum,22.5,"5.632,99",2025-12,12,22.5,0.0,Ocio
+2025-12-04,"Compra Telefonica En Mapfre España S, Majadahonda, Tarj. :*047140",-291.5,"5.610,49",2025-12,12,0.0,291.5,Coche
+2025-12-03,"Pago Movil En Aldi Alcobendas, Alcobendas, Tarj. :*047140",-4.36,"5.901,99",2025-12,12,0.0,4.36,Alimentación
+2025-12-03,Transferencia Inmediata A Favor De Iñigo Rodríguez Navarro Concepto Piso Valdelasfuentes Diciembre Y Gastos Noviembre,-462.95,"5.906,35",2025-12,12,0.0,462.95,Gastos recurrentes
+2025-12-02,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Gasolina,-61.84,"6.369,30",2025-12,12,0.0,61.84,Coche
+2025-12-01,Bizum A Favor De Joel Rodriguez Gonzalez Concepto: Cena,-4.73,"6.431,14",2025-12,12,0.0,4.73,Alimentación
+2025-12-01,Bizum De Diego Ramiro Jurado Reyna Concepto Ropero,2.0,"6.435,87",2025-12,12,2.0,0.0,Ocio
+2025-12-01,Bizum De Alex Fraile Villamil Concepto Sin Concepto,5.0,"6.433,87",2025-12,12,5.0,0.0,Ocio
+2025-12-01,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-14.58,"6.428,87",2025-12,12,0.0,14.58,Alimentación
+2025-12-01,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-7.85,"6.443,45",2025-12,12,0.0,7.85,Alimentación
+2025-11-27,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1219.04,"6.451,30",2025-11,11,1219.04,0.0,Ingresos
+2025-11-26,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-36.54,"5.232,26",2025-11,11,0.0,36.54,Alimentación
+2025-11-26,Bizum A Favor De Jose Antonio Montes Solano Concepto: Cena,-6.0,"5.268,80",2025-11,11,0.0,6.0,Alimentación
+2025-11-26,"Pago Movil En Dia 14025, Madrid, Tarj. :*047140",-3.14,"5.274,80",2025-11,11,0.0,3.14,Alimentación
+2025-11-25,"Pago Movil En Renfe Cercanias, Madrid, Tarj. :*047140",-10.0,"5.277,94",2025-11,11,0.0,10.0,Gastos recurrentes
+2025-11-25,Compra Bizum Fourvenues 25/11/2025,-22.0,"5.287,94",2025-11,11,0.0,22.0,Ocio
+2025-11-24,Bizum A Favor De Adrian Herrera Garcia Concepto: Cerveza,-3.0,"5.309,94",2025-11,11,0.0,3.0,Ocio
+2025-11-24,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-7.85,"5.312,94",2025-11,11,0.0,7.85,Alimentación
+2025-11-24,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Telefono,-3.0,"5.320,79",2025-11,11,0.0,3.0,Gastos recurrentes
+2025-11-24,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Telefono,-17.0,"5.323,79",2025-11,11,0.0,17.0,Gastos recurrentes
+2025-11-24,"Pago Movil En Mcd 428 Plaza N, San Sebastian, Tarj. :*047140",-6.51,"5.340,79",2025-11,11,0.0,6.51,Alimentación
+2025-11-24,"Pago Movil En Carref S S De L, S S Reyes, Tarj. :*047140",-1.84,"5.347,30",2025-11,11,0.0,1.84,Alimentación
+2025-11-21,Bizum A Favor De Adrian Herrera Garcia Concepto: Cine,-6.5,"5.349,14",2025-11,11,0.0,6.5,Ocio
+2025-11-20,"Compra Mocomuseum Mm-32744064, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-44.85,"5.355,64",2025-11,11,0.0,44.85,Ocio
+2025-11-20,"Pago Movil En Jsimon, Madrid, Tarj. :*047140",-14.0,"5.400,49",2025-11,11,0.0,14.0,Ocio
+2025-11-18,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.83,"5.414,49",2025-11,11,0.0,5.83,Gastos recurrentes
+2025-11-17,Bizum A Favor De Luis Fernando Mendez Lucas Concepto: Cerves,-6.0,"5.420,32",2025-11,11,0.0,6.0,Ocio
+2025-11-17,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-7.85,"5.426,32",2025-11,11,0.0,7.85,Alimentación
+2025-11-14,Bizum A Favor De Luis Alberto Frias Mariano Concepto: Wifi,-10.0,"5.434,17",2025-11,11,0.0,10.0,Gastos recurrentes
+2025-11-11,"Pago Movil En Carref S S De L, S S Reyes, Tarj. :*047140",-1.32,"5.444,17",2025-11,11,0.0,1.32,Alimentación
+2025-11-11,"Recibo Axa Aurora Vida S.a. Cif A-48464606 20251110-20251210 Nif:21100160y Palencia 35 14 34800 Aguilar D Mas Informacion En Www.axa.es Y Mediador Ccio: 0,00 Pol16041685 Nº Recibo 0049 7471 755 Bbzzmxk Ref. Mandato 0000o96l72tf, De",-75.0,"5.445,49",2025-11,11,0.0,75.0,Inversiones
+2025-11-11,Bizum A Favor De Joel Rodriguez Gonzalez Concepto: Bebida,-3.0,"5.520,49",2025-11,11,0.0,3.0,Ocio
+2025-11-10,Bizum A Favor De Luis Fernando Mendez Lucas Concepto: Comida,-10.78,"5.523,49",2025-11,11,0.0,10.78,Alimentación
+2025-11-10,"Pago Movil En Sala Copernico, Madrid, Tarj. :*047140",-20.0,"5.534,27",2025-11,11,0.0,20.0,Ocio
+2025-11-10,"Pago Movil En Sala Copernico, Madrid, Tarj. :*047140",-10.0,"5.554,27",2025-11,11,0.0,10.0,Ocio
+2025-11-10,"Pago Movil En Sala Copernico, Madrid, Tarj. :*047140",-10.0,"5.564,27",2025-11,11,0.0,10.0,Ocio
+2025-11-10,"Pago Movil En Kubo King, Madrid, Tarj. :*047140",-6.0,"5.574,27",2025-11,11,0.0,6.0,Ocio
+2025-11-10,Bizum A Favor De Alex Fraile Villamil Concepto: Copernico,-27.5,"5.580,27",2025-11,11,0.0,27.5,Ocio
+2025-11-10,"Pago Movil En Kubo King, Madrid, Tarj. :*047140",-6.0,"5.607,77",2025-11,11,0.0,6.0,Ocio
+2025-11-10,"Pago Movil En Kubo King, Madrid, Tarj. :*047140",-4.5,"5.613,77",2025-11,11,0.0,4.5,Ocio
+2025-11-10,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-7.85,"5.618,27",2025-11,11,0.0,7.85,Alimentación
+2025-11-07,Bizum De Luis Fernando Mendez Lucas Concepto Limpieza,20.0,"5.626,12",2025-11,11,20.0,0.0,Gastos recurrentes
+2025-11-06,Bizum A Favor De Maria Paz Saiz Fuente Saiz Fuente Concepto: Deuda,-5.0,"5.606,12",2025-11,11,0.0,5.0,Otros
+2025-11-06,Bizum A Favor De Ricardo Pelaz Torio Concepto: Cena,-18.4,"5.611,12",2025-11,11,0.0,18.4,Alimentación
+2025-11-04,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Gasolina,-40.6,"5.629,52",2025-11,11,0.0,40.6,Coche
+2025-11-03,Transferencia Inmediata A Favor De Iñigo Rodríguez Navarro Concepto Piso Valdelasfuente Noviembre Y Gastos,-468.81,"5.670,12",2025-11,11,0.0,468.81,Gastos recurrentes
+2025-11-03,Bizum A Favor De Joel Rodriguez Gonzalez Concepto: Cena Mascaras Y Bebida,-16.0,"6.138,93",2025-11,11,0.0,16.0,Ocio
+2025-11-03,"Pago Movil En Chaman Bolier C, Madrid, Tarj. :*047140",-5.0,"6.154,93",2025-11,11,0.0,5.0,Ocio
+2025-11-03,"Pago Movil En Chaman Bolier C, Madrid, Tarj. :*047140",-14.0,"6.159,93",2025-11,11,0.0,14.0,Ocio
+2025-11-03,"Pago Movil En Chaman Bolier C, Madrid, Tarj. :*047140",-14.0,"6.173,93",2025-11,11,0.0,14.0,Ocio
+2025-11-03,"Pago Movil En Chaman Bolier C, Madrid, Tarj. :*047140",-14.0,"6.187,93",2025-11,11,0.0,14.0,Ocio
+2025-11-03,"Pago Movil En Chaman Bolier C, Madrid, Tarj. :*047140",-14.0,"6.201,93",2025-11,11,0.0,14.0,Ocio
+2025-11-03,Bizum A Favor De Laura Lopez Chiarri Concepto: Ocio,-1.3,"6.215,93",2025-11,11,0.0,1.3,Ocio
+2025-10-31,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-7.6,"6.217,23",2025-10,10,0.0,7.6,Alimentación
+2025-10-31,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-9.3,"6.224,83",2025-10,10,0.0,9.3,Alimentación
+2025-10-31,Bizum De Ana Isabel Martin Saiz Concepto Cena,10.0,"6.234,13",2025-10,10,10.0,0.0,Alimentación
+2025-10-31,Transferencia A Favor De Marco Sevilla Martin Concepto: Fondo De Emergencia,-5500.0,"6.224,13",2025-10,10,0.0,5500.0,Inversiones
+2025-10-29,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",2112.22,"11.724,13",2025-10,10,2112.22,0.0,Ingresos
+2025-10-28,Bizum De Diego Ramiro Jurado Reyna Concepto Sin Concepto,2.5,"9.611,91",2025-10,10,2.5,0.0,Otros
+2025-10-27,Bizum A Favor De Joel Rodriguez Gonzalez Concepto: Discoteca Chaman,-22.0,"9.609,41",2025-10,10,0.0,22.0,Ocio
+2025-10-27,Bizum A Favor De Daniel Perez Cidoncha Concepto: Cervezas,-8.0,"9.631,41",2025-10,10,0.0,8.0,Otros
+2025-10-27,"Pago Movil En El Perenquen, Madrid, Tarj. :*047140",-13.0,"9.639,41",2025-10,10,0.0,13.0,Ocio
+2025-10-27,"Pago Movil En Renfe Cercanias, Madrid, Tarj. :*047140",-10.0,"9.652,41",2025-10,10,0.0,10.0,Gastos recurrentes
+2025-10-27,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-7.85,"9.662,41",2025-10,10,0.0,7.85,Alimentación
+2025-10-23,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-33.93,"9.670,26",2025-10,10,0.0,33.93,Alimentación
+2025-10-23,Compra Bizum Yelmobizum 23/10/2025,-5.9,"9.704,19",2025-10,10,0.0,5.9,Ocio
+2025-10-21,"Compra Gedemasa Vending 2, Getafe, Tarjeta 5489010372047140 , Comision 0,00",-0.85,"9.710,09",2025-10,10,0.0,0.85,Comisiones y cargos
+2025-10-21,"Devolucion Compra En Gedemasa Vending 2, Getafe, Tarjeta 5489010372047140 , Comision 0,00",0.85,"9.710,94",2025-10,10,0.85,0.0,Comisiones y cargos
+2025-10-20,"Pago Movil En Carniceria Riva, Alcobendas, Tarj. :*047140",-4.3,"9.710,09",2025-10,10,0.0,4.3,Alimentación
+2025-10-20,"Pago Movil En Alcobendas, Alcobendas, Tarj. :*047140",-4.64,"9.714,39",2025-10,10,0.0,4.64,Alimentación
+2025-10-20,Bizum A Favor De Felix Bravo Rollon Concepto: Comida,-17.0,"9.719,03",2025-10,10,0.0,17.0,Alimentación
+2025-10-20,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-3.5,"9.736,03",2025-10,10,0.0,3.5,Alimentación
+2025-10-20,"Pago Movil En Sodexo Uem Alco, Alcobendas, Tarj. :*047140",-1.6,"9.739,53",2025-10,10,0.0,1.6,Alimentación
+2025-10-16,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.75,"9.741,13",2025-10,10,0.0,5.75,Gastos recurrentes
+2025-10-15,Bizum De Jorge Lopez Carnero Concepto Marco,106.33,"9.746,88",2025-10,10,106.33,0.0,Otros
+2025-10-15,Bizum De David Salvador Aguado Concepto Hotel Amsterdam,106.33,"9.640,55",2025-10,10,106.33,0.0,Ocio
+2025-10-14,Transferencia Inmediata A Favor De Marco Sevilla Martín Concepto Viaje Amsterdam,-319.0,"9.534,22",2025-10,10,0.0,319.0,Ocio
+2025-10-14,Bizum A Favor De Rodrigo Cossio Diez Concepto: Tonica,-2.8,"9.853,22",2025-10,10,0.0,2.8,Ocio
+2025-10-13,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-37.52,"9.856,02",2025-10,10,0.0,37.52,Alimentación
+2025-10-13,"Recibo Axa Aurora Vida S.a. Cif A-48464606 20251010-20251110 Nif:21100160y Palencia 35 14 34800 Aguilar D Mas Informacion En Www.axa.es Y Mediador Ccio: 0,00 Pol16041685 Nº Recibo 0049 7471 755 Bbzrfmf Ref. Mandato 0000o96l72tf, De",-75.0,"9.893,54",2025-10,10,0.0,75.0,Inversiones
+2025-10-13,Bizum De Javier Garcia Pechero Concepto Sin Concepto,11.05,"9.968,54",2025-10,10,11.05,0.0,Otros
+2025-10-13,"Pago Movil En Metro De Madrid, Madrid, Tarj. :*047140",-1.5,"9.957,49",2025-10,10,0.0,1.5,Ocio
+2025-10-13,Bizum A Favor De Javier Clemente Jimenez Concepto: Copa,-9.5,"9.958,99",2025-10,10,0.0,9.5,Ocio
+2025-10-13,Bizum A Favor De Javier Clemente Jimenez Concepto: Madrid Comida,-25.5,"9.968,49",2025-10,10,0.0,25.5,Alimentación
+2025-10-08,Bizum De Jorge Lopez Carnero Concepto Amsterdam,179.0,"9.993,99",2025-10,10,179.0,0.0,Ocio
+2025-10-08,Bizum De David Salvador Aguado Concepto Vuelos Amsterdam,35.06,"9.814,99",2025-10,10,35.06,0.0,Ocio
+2025-10-08,"Compra Internet En Edreams, Barcelona, Tarj. :*047140",-392.7,"9.387,23",2025-10,10,0.0,392.7,Ocio
+2025-10-07,Transferencia Inmediata A Favor De Marco Sevilla Martín Concepto Enviado Por Banco Santander,-10.0,"10.172,63",2025-10,10,0.0,10.0,Ocio
+2025-10-07,Bizum A Favor De Luis Alberto Frias Mariano Concepto: Wifi Septiembre,-10.0,"10.182,63",2025-10,10,0.0,10.0,Gastos recurrentes
+2025-10-06,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-3.23,"10.192,63",2025-10,10,0.0,3.23,Alimentación
+2025-10-06,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,13.0,"10.195,86",2025-10,10,13.0,0.0,Ocio
+2025-10-06,Bizum De Sara Merino Manzano Concepto Envío De Dinero Con Bizum,2.7,"10.182,86",2025-10,10,2.7,0.0,Ocio
+2025-10-06,Bizum De Raquel Anderez Merino Concepto Sin Concepto,13.0,"10.180,16",2025-10,10,13.0,0.0,Ocio
+2025-10-06,"Pago Movil En Peña Aguilon, Aguilar De Ca, Tarj. :*047140",-54.9,"10.167,16",2025-10,10,0.0,54.9,Ocio
+2025-10-06,Bizum De Ana Isabel Martin Saiz Concepto Lupa,50.0,"10.222,06",2025-10,10,50.0,0.0,Alimentación
+2025-10-06,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-64.05,"10.172,06",2025-10,10,0.0,64.05,Alimentación
+2025-10-02,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Gasoil,-69.29,"10.236,11",2025-10,10,0.0,69.29,Coche
+2025-10-01,"Compra Buencoco Slu, Barcelona, Tarjeta 5489010372047140 , Comision 0,00",-40.5,"10.305,40",2025-10,10,0.0,40.5,Ocio
+2025-10-01,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Telefono,-21.0,"10.345,90",2025-10,10,0.0,21.0,Gastos recurrentes
+2025-10-01,Transferencia Inmediata A Favor De Iñigo Rodríguez Navarro Concepto Pago Marco Mes Octubre Valdelasfuentes 14,-440.0,"10.366,90",2025-10,10,0.0,440.0,Gastos recurrentes
+2025-10-01,Bizum A Favor De Daniel Corral Bravo Concepto: Coslada,-6.6,"10.806,90",2025-10,10,0.0,6.6,Ocio
+2025-09-29,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-16.38,"10.813,50",2025-09,9,0.0,16.38,Alimentación
+2025-09-29,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1448.78,"10.829,88",2025-09,9,1448.78,0.0,Ingresos
+2025-09-29,Bizum A Favor De Maria Martin Nistal Concepto: Spoti,-2.0,"9.381,10",2025-09,9,0.0,2.0,Gastos recurrentes
+2025-09-29,Compra Bizum Grupos Media 28/09/2025,-21.3,"9.383,10",2025-09,9,0.0,21.3,Ocio
+2025-09-29,"Pago Movil En Alimetacion Zha, Velilla De Sa, Tarj. :*047140",-4.1,"9.404,40",2025-09,9,0.0,4.1,Alimentación
+2025-09-29,"Pago Movil En Telepizza Fuent, Alcobendas, Tarj. :*047140",-9.95,"9.408,50",2025-09,9,0.0,9.95,Alimentación
+2025-09-29,Bizum A Favor De German Frances Tostado Concepto: Copas,-11.5,"9.418,45",2025-09,9,0.0,11.5,Ocio
+2025-09-26,"Pago Movil En Bar Laredo, Madrid, Tarj. :*047140",-15.0,"9.429,95",2025-09,9,0.0,15.0,Ocio
+2025-09-26,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-19.51,"9.444,95",2025-09,9,0.0,19.51,Alimentación
+2025-09-23,"Compra Ubr* Pending.uber.com, Amsterdam, Tarjeta 5489010372047140 , Comision 0,00",-28.93,"9.464,46",2025-09,9,0.0,28.93,Ocio
+2025-09-22,"Pago Movil En Aldi Alcobendas, Alcobendas, Tarj. :*047140",-15.99,"9.493,39",2025-09,9,0.0,15.99,Alimentación
+2025-09-22,Bizum De Lucia Gomez Duran Concepto Sin Concepto,7.65,"9.509,38",2025-09,9,7.65,0.0,Otros
+2025-09-22,Bizum De Lucia Calderon Garcia Concepto Sin Concepto,1.35,"9.501,73",2025-09,9,1.35,0.0,Ocio
+2025-09-22,Compra Bizum Atrapalo Com 21/09/2025,-12.0,"9.500,38",2025-09,9,0.0,12.0,Ocio
+2025-09-22,Bizum A Favor De Mateo Canibano Dominguez Concepto: Tonica,-2.5,"9.512,38",2025-09,9,0.0,2.5,Ocio
+2025-09-22,Bizum De Francisco Gonzalez De Manueles Concepto Taxi,7.25,"9.514,88",2025-09,9,7.25,0.0,Ocio
+2025-09-22,"Pago Movil En Madklyn Madrid, Madrid, Tarj. :*047140",-18.5,"9.507,63",2025-09,9,0.0,18.5,Ocio
+2025-09-22,"Pago Movil En Pub Ya Te Digo, Alcobendas, Tarj. :*047140",-3.5,"9.526,13",2025-09,9,0.0,3.5,Ocio
+2025-09-22,"Pago Movil En Leobarman S.l., Madrid, Tarj. :*047140",-18.0,"9.529,63",2025-09,9,0.0,18.0,Ocio
+2025-09-19,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-26.63,"9.547,63",2025-09,9,0.0,26.63,Alimentación
+2025-09-19,"Pago Movil En Mcdonald S Alco, Alcobendas, Tarj. :*047140",-2.9,"9.574,26",2025-09,9,0.0,2.9,Alimentación
+2025-09-18,"Pago Movil En Renfe Cercanias, Madrid, Tarj. :*047140",-10.0,"9.577,16",2025-09,9,0.0,10.0,Gastos recurrentes
+2025-09-18,"Pago Movil En Tcb 2025 Gira 2, Valencia Al M, Tarj. :*047140",-21.95,"9.587,16",2025-09,9,0.0,21.95,Alimentación
+2025-09-16,"Pago Movil En Ferreteria Cast, Alcobendas, Tarj. :*047140",-7.5,"9.609,11",2025-09,9,0.0,7.5,Otros
+2025-09-16,"Pago Movil En Mercadona Los T, S S Reyes, Tarj. :*047140",-39.39,"9.616,61",2025-09,9,0.0,39.39,Alimentación
+2025-09-16,Bizum De Ana Isabel Martin Saiz Concepto Propina,60.0,"9.656,00",2025-09,9,60.0,0.0,Otros
+2025-09-16,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Gafas,-12.0,"9.596,00",2025-09,9,0.0,12.0,Otros
+2025-09-16,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.7,"9.608,00",2025-09,9,0.0,5.7,Gastos recurrentes
+2025-09-15,"Pago Movil En Petroprix Arand, Aranda De Due, Tarj. :*047140",-57.88,"9.613,70",2025-09,9,0.0,57.88,Coche
+2025-09-15,Bizum A Favor De Sheila Fraile Rodriguez Concepto: Cocacola Nerea,-1.5,"9.671,58",2025-09,9,0.0,1.5,Ocio
+2025-09-15,Bizum De Alba Robledo Rios Concepto Sin Concepto,12.0,"9.673,08",2025-09,9,12.0,0.0,Otros
+2025-09-15,Bizum De Sheila Fraile Rodriguez Concepto Taxi,12.0,"9.661,08",2025-09,9,12.0,0.0,Ocio
+2025-09-15,Bizum De Marta Becerril Luis Concepto Taxi Sotobañado,12.0,"9.649,08",2025-09,9,12.0,0.0,Ocio
+2025-09-15,Bizum De Alejandro Julian Vazquez Concepto Taxi Sotobanado,12.0,"9.637,08",2025-09,9,12.0,0.0,Ocio
+2025-09-15,Bizum De Sergio Vega Perez Concepto Taxi Sotobanado,12.0,"9.625,08",2025-09,9,12.0,0.0,Ocio
+2025-09-15,Bizum A Favor De Juan Manuel Lopez Teran Concepto: Taxi,-84.0,"9.613,08",2025-09,9,0.0,84.0,Ocio
+2025-09-15,"Pago Movil En Mercadona C/ Do, Valladolid, Tarj. :*047140",-4.5,"9.697,08",2025-09,9,0.0,4.5,Alimentación
+2025-09-15,"Pago Movil En Mcdonald S Alco, Alcobendas, Tarj. :*047140",-18.2,"9.701,58",2025-09,9,0.0,18.2,Alimentación
+2025-09-11,"Recibo Axa Aurora Vida S.a. Cif A-48464606 20250910-20251010 Nif:21100160y Palencia 35 14 34800 Aguilar D Mas Informacion En Www.axa.es Y Mediador Ccio: 0,00 Pol16041685 Nº Recibo 0049 7471 755 Bbzjgwx Ref. Mandato 0000o96l72tf, De",-75.0,"9.719,78",2025-09,9,0.0,75.0,Inversiones
+2025-09-09,"Pago Movil En Paher, Aguilar De Ca, Tarj. :*047140",-17.64,"9.794,78",2025-09,9,0.0,17.64,Coche
+2025-09-09,Bizum A Favor De Alba Robledo Rios Concepto: Bateria,-100.0,"9.812,42",2025-09,9,0.0,100.0,Coche
+2025-09-09,Bizum De Bernardo Merchan Montero Concepto Devolucion Fianza,106.5,"9.912,42",2025-09,9,106.5,0.0,Gastos recurrentes
+2025-09-09,Bizum De Bernardo Merchan Montero Concepto Devolucion Fianza,106.5,"9.805,92",2025-09,9,106.5,0.0,Gastos recurrentes
+2025-09-05,Bizum A Favor De Alba Robledo Rios Concepto: Pilas,-5.1,"9.699,42",2025-09,9,0.0,5.1,Otros
+2025-09-05,Transferencia Inmediata A Favor De Iñigo Rodríguez Navarro Concepto Mes De Septiembre Y Parte Prop Agosto,-519.96,"9.704,52",2025-09,9,0.0,519.96,Gastos recurrentes
+2025-09-05,Bizum A Favor De Sheila Fraile Rodriguez Concepto: Cena,-22.5,"10.224,48",2025-09,9,0.0,22.5,Alimentación
+2025-09-04,Bizum A Favor De Sergio Vega Perez Concepto: Fiestas Mici,-15.4,"10.224,48",2025-09,9,0.0,15.4,Ocio
+2025-09-01,"Compra Sp Violeta Madrid, Wan Chai, Tarjeta 5489010372047140 , Comision 0,00",-54.0,"10.262,38",2025-09,9,0.0,54.0,Otros
+2025-09-01,Bizum De Alejandro Palomares Arroyo Concepto Piso,75.47,"10.316,38",2025-09,9,75.47,0.0,Gastos recurrentes
+2025-09-01,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Limpieza,-80.0,"10.240,91",2025-09,9,0.0,80.0,Gastos recurrentes
+2025-09-01,Bizum De Miguel Angel Perez Arroyo Concepto Tricount,62.57,"10.320,91",2025-09,9,62.57,0.0,Gastos recurrentes
+2025-09-01,Bizum De Brandon Cobos Alegre Concepto Sin Concepto,78.44,"10.258,34",2025-09,9,78.44,0.0,Gastos recurrentes
+2025-09-01,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Ocio,-17.0,"10.179,90",2025-09,9,0.0,17.0,Otros
+2025-08-29,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Afeitadora,-100.0,"10.196,90",2025-08,8,0.0,100.0,Otros
+2025-08-28,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1448.78,"10.296,90",2025-08,8,1448.78,0.0,Ingresos
+2025-08-27,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-7.74,"8.848,12",2025-08,8,0.0,7.74,Alimentación
+2025-08-27,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-55.73,"8.855,86",2025-08,8,0.0,55.73,Coche
+2025-08-27,Bizum De David Salvador Aguado Concepto Bizum De David,25.0,"8.911,59",2025-08,8,25.0,0.0,Otros
+2025-08-26,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-4.1,"8.886,59",2025-08,8,0.0,4.1,Alimentación
+2025-08-26,Bizum De David Salvador Aguado Concepto Mus,16.4,"8.890,69",2025-08,8,16.4,0.0,Ocio
+2025-08-26,Bizum De Javier Garcia Pechero Concepto Sin Concepto,8.0,"8.874,29",2025-08,8,8.0,0.0,Otros
+2025-08-26,Bizum De German Frances Tostado Concepto Oca,6.0,"8.866,29",2025-08,8,6.0,0.0,Otros
+2025-08-26,"Pago Movil En Cafe Alcaravan, Salamanca, Tarj. :*047140",-46.7,"8.860,29",2025-08,8,0.0,46.7,Ocio
+2025-08-25,Bizum A Favor De Alba Robledo Rios Concepto: Cali Alar,-2.64,"8.906,99",2025-08,8,0.0,2.64,Ocio
+2025-08-25,"Pago Movil En El Unicornio De, Salamanca, Tarj. :*047140",-10.4,"8.909,63",2025-08,8,0.0,10.4,Ocio
+2025-08-25,Bizum De Sergio Vega Perez Concepto Taxi Villavermudo,6.25,"8.920,03",2025-08,8,6.25,0.0,Ocio
+2025-08-25,Bizum De Sheila Fraile Rodriguez Concepto Taxi,6.25,"8.913,78",2025-08,8,6.25,0.0,Ocio
+2025-08-25,Bizum De Isabel Ortiz Rejon Concepto Taxiiiii,6.5,"8.907,53",2025-08,8,6.5,0.0,Ocio
+2025-08-25,Bizum De Alba Robledo Rios Concepto Taxi,6.25,"8.901,03",2025-08,8,6.25,0.0,Ocio
+2025-08-25,Bizum A Favor De Juan Manuel Lopez Teran Concepto: Micieces,-50.0,"8.894,78",2025-08,8,0.0,50.0,Ocio
+2025-08-25,Bizum A Favor De Sergio Vega Perez Concepto: Villavermudo,-8.0,"8.944,78",2025-08,8,0.0,8.0,Ocio
+2025-08-22,Bizum De Marta Becerril Luis Concepto Día Express,15.08,"8.952,78",2025-08,8,15.08,0.0,Ocio
+2025-08-22,Bizum De Sergio Vega Perez Concepto Jueves Divertido,15.1,"8.937,70",2025-08,8,15.1,0.0,Ocio
+2025-08-22,"Pago Movil En Aguil Campoo S, Aguilar De Ca, Tarj. :*047140",-98.07,"8.922,60",2025-08,8,0.0,98.07,Coche
+2025-08-22,"Pago Movil En Dolce Vita, Aguilar De Ca, Tarj. :*047140",-15.0,"9.020,67",2025-08,8,0.0,15.0,Ocio
+2025-08-21,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-27.3,"9.035,67",2025-08,8,0.0,27.3,Alimentación
+2025-08-21,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.75,"9.062,97",2025-08,8,0.0,5.75,Gastos recurrentes
+2025-08-19,"Pago Movil En Restaurente Los, Aguilar De Ca, Tarj. :*047140",-60.0,"9.068,72",2025-08,8,0.0,60.0,Alimentación
+2025-08-19,Transferencia Inmediata A Favor De Ana Isabel Martin Concepto Propina,-30.0,"9.128,72",2025-08,8,0.0,30.0,Otros
+2025-08-19,Transferencia Inmediata A Favor De Maria Paz Saiz Fuente Concepto Propina,-30.0,"9.158,72",2025-08,8,0.0,30.0,Otros
+2025-08-18,Bizum A Favor De Sergio Vega Perez Concepto: Sin Concepto,-10.0,"9.188,72",2025-08,8,0.0,10.0,Otros
+2025-08-18,Bizum A Favor De Alba Robledo Rios Concepto: Sin Concepto,-5.0,"9.198,72",2025-08,8,0.0,5.0,Otros
+2025-08-18,Bizum A Favor De Sergio Vega Perez Concepto: Cena,-10.0,"9.203,72",2025-08,8,0.0,10.0,Alimentación
+2025-08-18,Bizum A Favor De Sheila Fraile Rodriguez Concepto: Cali,-1.2,"9.213,72",2025-08,8,0.0,1.2,Ocio
+2025-08-18,Bizum A Favor De Sergio Vega Perez Concepto: Oteros,-8.5,"9.214,92",2025-08,8,0.0,8.5,Ocio
+2025-08-13,Transferencia Inmediata A Favor De Asociacion Del Cucuruto Concepto Pago Cuota Marco Sevilla Martin,-10.0,"9.223,42",2025-08,8,0.0,10.0,Otros
+2025-08-13,Bizum De Alba Robledo Rios Concepto Sin Concepto,50.0,"9.233,42",2025-08,8,50.0,0.0,Otros
+2025-08-12,Bizum A Favor De Alba Robledo Rios Concepto: Caso Policial,-13.0,"9.183,42",2025-08,8,0.0,13.0,Ocio
+2025-08-12,"Recibo Axa Aurora Vida S.a. Cif A-48464606 20250811-20250910 Nif:21100160y Palencia 35 14 34800 Aguilar D Mas Informacion En Www.axa.es Y Mediador Ccio: 0,00 Pol16041685 Nº Recibo 0049 7471 755 Bbyzwny Ref. Mandato 0000o96l72tf, De",-75.0,"9.196,42",2025-08,8,0.0,75.0,Inversiones
+2025-08-07,Bizum De Aitor Ramirez Gutierrez Concepto Desayuno Cangrejo,10.0,"9.271,42",2025-08,8,10.0,0.0,Alimentación
+2025-08-05,Bizum De German Frances Tostado Concepto Sin Concepto,14.5,"9.261,42",2025-08,8,14.5,0.0,Otros
+2025-08-05,"Pago Movil En Kalas Lounge Sa, Salamanca, Tarj. :*047140",-29.0,"9.246,92",2025-08,8,0.0,29.0,Ocio
+2025-08-04,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-11.56,"9.275,92",2025-08,8,0.0,11.56,Alimentación
+2025-08-04,"Pago Movil En Ronda Oeste,s.l, Salamanca, Tarj. :*047140",-60.01,"9.287,48",2025-08,8,0.0,60.01,Coche
+2025-08-04,"Pago Movil En Bistro Bar La P, Herrera De Pi, Tarj. :*047140",-22.5,"9.347,49",2025-08,8,0.0,22.5,Ocio
+2025-08-04,Bizum De Alba Robledo Rios Concepto Sin Concepto,20.0,"9.369,99",2025-08,8,20.0,0.0,Otros
+2025-08-01,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-11.97,"9.349,99",2025-08,8,0.0,11.97,Alimentación
+2025-08-01,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-38.67,"9.361,96",2025-08,8,0.0,38.67,Alimentación
+2025-07-31,Bizum A Favor De Raquel Garcia Vicente Concepto: Papas,-8.4,"9.400,63",2025-07,7,0.0,8.4,Alimentación
+2025-07-31,Bizum De David Salvador Aguado Concepto Bizum De David,2.8,"9.409,03",2025-07,7,2.8,0.0,Otros
+2025-07-31,Bizum De German Frances Tostado Concepto Sin Concepto,7.6,"9.406,23",2025-07,7,7.6,0.0,Otros
+2025-07-30,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1448.78,"9.398,63",2025-07,7,1448.78,0.0,Ingresos
+2025-07-29,Bizum De David Salvador Aguado Concepto Mus,11.8,"7.949,85",2025-07,7,11.8,0.0,Ocio
+2025-07-29,Bizum De Javier Garcia Pechero Concepto Comida,5.1,"7.938,05",2025-07,7,5.1,0.0,Alimentación
+2025-07-29,"Pago Movil En Cafe Alcaravan, Salamanca, Tarj. :*047140",-40.8,"7.932,95",2025-07,7,0.0,40.8,Ocio
+2025-07-28,"Pago Movil En Bico De Xeado S, Salamanca, Tarj. :*047140",-4.8,"7.973,75",2025-07,7,0.0,4.8,Ocio
+2025-07-28,Bizum A Favor De Angel Picado Cuadrado Concepto: Cena,-13.4,"7.978,55",2025-07,7,0.0,13.4,Alimentación
+2025-07-25,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-53.61,"7.991,95",2025-07,7,0.0,53.61,Coche
+2025-07-25,Transferencia A Favor De Iñigo Rodriguez Navarro Concepto: Fianza Marco Sevilla Paseo Valdelasfuentes 14,-440.0,"8.045,56",2025-07,7,0.0,440.0,Gastos recurrentes
+2025-07-24,Bizum A Favor De David Salvador Aguado Concepto: Sin Concepto,-4.5,"8.485,56",2025-07,7,0.0,4.5,Otros
+2025-07-24,Bizum De Angel Picado Cuadrado Concepto Cata Y Cenas,6.5,"8.490,06",2025-07,7,6.5,0.0,Alimentación
+2025-07-24,Bizum De David Salvador Aguado Concepto Bizum De David,6.5,"8.483,56",2025-07,7,6.5,0.0,Otros
+2025-07-23,"Pago Movil En Dia 7980, Salamanca, Tarj. :*047140",-19.49,"8.477,06",2025-07,7,0.0,19.49,Alimentación
+2025-07-23,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-22.7,"8.496,55",2025-07,7,0.0,22.7,Alimentación
+2025-07-22,Bizum De David Salvador Aguado Concepto Bizum De David,5.8,"8.519,25",2025-07,7,5.8,0.0,Otros
+2025-07-22,"Pago Movil En St Patricks, Salamanca, Tarj. :*047140",-11.6,"8.513,45",2025-07,7,0.0,11.6,Ocio
+2025-07-22,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-18.82,"8.525,05",2025-07,7,0.0,18.82,Alimentación
+2025-07-21,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.77,"8.543,87",2025-07,7,0.0,5.77,Gastos recurrentes
+2025-07-16,Bizum A Favor De David Salvador Aguado Concepto: Pu,-3.73,"8.549,64",2025-07,7,0.0,3.73,Otros
+2025-07-14,Bizum A Favor De David Salvador Aguado Concepto: Tonica,-2.9,"8.553,37",2025-07,7,0.0,2.9,Ocio
+2025-07-10,Bizum De David Salvador Aguado Concepto Bizum De David,9.35,"8.556,27",2025-07,7,9.35,0.0,Otros
+2025-07-10,Bizum De German Frances Tostado Concepto Sin Concepto,10.0,"8.546,92",2025-07,7,10.0,0.0,Otros
+2025-07-08,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-21.92,"8.536,92",2025-07,7,0.0,21.92,Alimentación
+2025-07-07,Bizum De David Salvador Aguado Concepto Bizum De David,7.0,"8.558,84",2025-07,7,7.0,0.0,Otros
+2025-07-04,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-9.3,"8.551,84",2025-07,7,0.0,9.3,Alimentación
+2025-07-03,Transferencia Inmediata A Favor De Bernardo Merchan Montero Concepto Pago Piso Mes De Julio Vitgudino 39 Marco,-230.0,"8.561,14",2025-07,7,0.0,230.0,Gastos recurrentes
+2025-07-03,Bizum De German Frances Tostado Concepto Sin Concepto,2.5,"8.791,14",2025-07,7,2.5,0.0,Otros
+2025-07-03,Bizum De German Frances Tostado Concepto Nyx,19.0,"8.788,64",2025-07,7,19.0,0.0,Ocio
+2025-07-02,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-62.0,"8.769,64",2025-07,7,0.0,62.0,Coche
+2025-07-01,Bizum A Favor De David Salvador Aguado Concepto: Cena,-15.05,"8.831,64",2025-07,7,0.0,15.05,Alimentación
+2025-06-30,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-17.2,"8.846,69",2025-06,6,0.0,17.2,Alimentación
+2025-06-30,"Pago Movil En Bk24115 La Bane, Salamanca, Tarj. :*047140",-12.95,"8.863,89",2025-06,6,0.0,12.95,Ocio
+2025-06-30,Bizum A Favor De Maria Martin Nistal Concepto: Spoty,-21.0,"8.876,84",2025-06,6,0.0,21.0,Gastos recurrentes
+2025-06-30,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-64.56,"8.897,84",2025-06,6,0.0,64.56,Alimentación
+2025-06-27,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1448.78,"8.962,40",2025-06,6,1448.78,0.0,Ingresos
+2025-06-27,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-5.5,"7.513,62",2025-06,6,0.0,5.5,Ocio
+2025-06-24,"Pago Movil En Cascajera Gastr, Aguilar De Ca, Tarj. :*047140",-8.5,"7.519,12",2025-06,6,0.0,8.5,Ocio
+2025-06-24,"Pago Movil En Cascajera Gastr, Aguilar De Ca, Tarj. :*047140",-7.5,"7.527,62",2025-06,6,0.0,7.5,Ocio
+2025-06-24,"Pago Movil En Bar Omega, Aguilar De Ca, Tarj. :*047140",-12.5,"7.535,12",2025-06,6,0.0,12.5,Ocio
+2025-06-23,Bizum A Favor De Maria Carmen Carral Saiz Concepto: Mechas,-35.0,"7.547,62",2025-06,6,0.0,35.0,Ocio
+2025-06-19,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-60.01,"7.582,62",2025-06,6,0.0,60.01,Coche
+2025-06-18,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-4.5,"7.642,63",2025-06,6,0.0,4.5,Alimentación
+2025-06-17,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-2.95,"7.647,13",2025-06,6,0.0,2.95,Alimentación
+2025-06-16,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.8,"7.650,08",2025-06,6,0.0,5.8,Gastos recurrentes
+2025-06-16,Bizum A Favor De Brandon Cobos Alegre Concepto: Copa Extopa,-5.5,"7.655,88",2025-06,6,0.0,5.5,Ocio
+2025-06-16,Bizum A Favor De Jorge Lopez Carnero Concepto: Comida,-44.1,"7.661,38",2025-06,6,0.0,44.1,Alimentación
+2025-06-16,Bizum A Favor De Miguel Angel Perez Arroyo Concepto: A,-5.5,"7.705,48",2025-06,6,0.0,5.5,Ocio
+2025-06-16,Bizum De Miguel Angel Perez Arroyo Concepto Copa Yerai,6.5,"7.710,98",2025-06,6,6.5,0.0,Ocio
+2025-06-12,Bizum De Javier Garcia Pechero Concepto Copita,5.5,"7.704,48",2025-06,6,5.5,0.0,Ocio
+2025-06-12,"Pago Movil En Bender, Salamanca, Tarj. :*047140",-5.5,"7.698,98",2025-06,6,0.0,5.5,Ocio
+2025-06-12,"Pago Movil En Bender, Salamanca, Tarj. :*047140",-5.5,"7.704,48",2025-06,6,0.0,5.5,Ocio
+2025-06-12,"Pago Movil En Bender, Salamanca, Tarj. :*047140",-13.8,"7.709,98",2025-06,6,0.0,13.8,Ocio
+2025-06-12,Bizum A Favor De Pablo Santos Blazquez Concepto: Cena Y Copas,-14.2,"7.723,78",2025-06,6,0.0,14.2,Alimentación
+2025-06-11,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-5.15,"7.737,98",2025-06,6,0.0,5.15,Alimentación
+2025-06-11,Bizum A Favor De Pablo Santos Blazquez Concepto: Patriks,-15.0,"7.743,13",2025-06,6,0.0,15.0,Ocio
+2025-06-10,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-30.79,"7.758,13",2025-06,6,0.0,30.79,Alimentación
+2025-06-10,Bizum De Pablo Santos Blazquez Concepto Sanpa,6.0,"7.788,92",2025-06,6,6.0,0.0,Ocio
+2025-06-10,"Pago Movil En St Patricks, Salamanca, Tarj. :*047140",-13.0,"7.782,92",2025-06,6,0.0,13.0,Ocio
+2025-06-09,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-6.09,"7.795,92",2025-06,6,0.0,6.09,Alimentación
+2025-06-09,"Pago Movil En Bar Puccini, Salamanca, Tarj. :*047140",-5.6,"7.802,01",2025-06,6,0.0,5.6,Ocio
+2025-06-09,"Pago Movil En Expportiv, Salamanca, Tarj. :*047140",-3.97,"7.807,61",2025-06,6,0.0,3.97,Ocio
+2025-06-06,"Compra Megarama Salam, Salamanca, Tarjeta 5489010372047140 , Comision 0,00",-7.0,"7.811,58",2025-06,6,0.0,7.0,Ocio
+2025-06-06,Bizum De German Frances Tostado Concepto Stpa,12.0,"7.818,58",2025-06,6,12.0,0.0,Ocio
+2025-06-06,Bizum De Javier Garcia Pechero Concepto Feliz Cum,22.0,"7.806,58",2025-06,6,22.0,0.0,Alimentación
+2025-06-06,Bizum De Angel Picado Cuadrado Concepto Cena Cumple,23.4,"7.784,58",2025-06,6,23.4,0.0,Alimentación
+2025-06-06,Bizum De David Salvador Aguado Concepto Bizum De David,23.0,"7.761,18",2025-06,6,23.0,0.0,Alimentación
+2025-06-06,"Pago Movil En St Patricks, Salamanca, Tarj. :*047140",-131.7,"7.738,18",2025-06,6,0.0,131.7,Ocio
+2025-06-06,Bizum De Pablo Santos Blazquez Concepto Ggg,26.7,"7.869,88",2025-06,6,26.7,0.0,Alimentación
+2025-06-05,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-35.77,"7.843,18",2025-06,6,0.0,35.77,Alimentación
+2025-06-05,Transferencia Inmediata A Favor De Bernardo Merchan Montero Concepto Pago Piso Mes De Junio Vitgudino 39 Marco,-230.0,"7.878,95",2025-06,6,0.0,230.0,Gastos recurrentes
+2025-06-05,Bizum De Ana Isabel Martin Saiz Concepto Cumple,100.0,"8.108,95",2025-06,6,100.0,0.0,Otros
+2025-06-05,"Transferencia Inmediata De Maria Paz Saiz Fuente, Concepto Regalo De Cumplanos",100.0,"8.008,95",2025-06,6,100.0,0.0,Otros
+2025-06-05,"Pago Movil En Abierto 24 H, Salamanca, Tarj. :*047140",-1.95,"7.908,95",2025-06,6,0.0,1.95,Alimentación
+2025-06-03,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-1.9,"7.910,90",2025-06,6,0.0,1.9,Alimentación
+2025-06-03,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Gasoil,-53.3,"7.912,80",2025-06,6,0.0,53.3,Coche
+2025-06-02,"Compra Internet En Sfx Ticketing, Malaga, Tarj. :*047140",-114.0,"7.966,10",2025-06,6,0.0,114.0,Otros
+2025-06-02,Bizum A Favor De Alba Camino Cossio Concepto: Copa Ron Cola,-5.5,"8.080,10",2025-06,6,0.0,5.5,Ocio
+2025-06-02,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-1.8,"8.085,60",2025-06,6,0.0,1.8,Alimentación
+2025-06-02,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-55.26,"8.087,40",2025-06,6,0.0,55.26,Alimentación
+2025-05-30,Bizum A Favor De Maria Martin Nistal Concepto: Spoti,-3.0,"8.142,66",2025-05,5,0.0,3.0,Gastos recurrentes
+2025-05-29,"Pago Movil En Es Bp Santillan, Palencia, Tarj. :*047140",-20.0,"8.145,66",2025-05,5,0.0,20.0,Coche
+2025-05-29,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1448.78,"8.165,66",2025-05,5,1448.78,0.0,Ingresos
+2025-05-29,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",140.2,"6.716,88",2025-05,5,140.2,0.0,Ingresos
+2025-05-28,Bizum De David Salvador Aguado Concepto Bizum De David,4.0,"6.576,68",2025-05,5,4.0,0.0,Ocio
+2025-05-27,Bizum A Favor De David Salvador Aguado Concepto: Tonica,-2.5,"6.572,68",2025-05,5,0.0,2.5,Ocio
+2025-05-26,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-23.18,"6.575,18",2025-05,5,0.0,23.18,Alimentación
+2025-05-26,Bizum De German Frances Tostado Concepto Cena Y Luisa,17.0,"6.598,36",2025-05,5,17.0,0.0,Alimentación
+2025-05-26,Bizum De Javier Garcia Pechero Concepto Billar,12.0,"6.581,36",2025-05,5,12.0,0.0,Ocio
+2025-05-26,"Pago Movil En Balabuskha J.j., Salamanca, Tarj. :*047140",-45.0,"6.569,36",2025-05,5,0.0,45.0,Ocio
+2025-05-26,Bizum De German Frances Tostado Concepto Sin Concepto,23.0,"6.614,36",2025-05,5,23.0,0.0,Ocio
+2025-05-23,Bizum De David Salvador Aguado Concepto Bizum De David,9.5,"6.591,36",2025-05,5,9.5,0.0,Ocio
+2025-05-23,"Pago Movil En Bar Nyx, Salamanca, Tarj. :*047140",-60.0,"6.581,86",2025-05,5,0.0,60.0,Ocio
+2025-05-19,Bizum A Favor De Etna Maestro Bedoya Concepto: Copa,-5.5,"6.641,86",2025-05,5,0.0,5.5,Ocio
+2025-05-19,Bizum A Favor De Francisco Gomez Gomez Concepto: Calimochoss,-6.99,"6.647,36",2025-05,5,0.0,6.99,Ocio
+2025-05-19,Bizum De Raquel Anderez Merino Concepto Sin Concepto,1.5,"6.654,35",2025-05,5,1.5,0.0,Ocio
+2025-05-19,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-51.35,"6.652,85",2025-05,5,0.0,51.35,Coche
+2025-05-16,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-6.0,"6.704,20",2025-05,5,0.0,6.0,Gastos recurrentes
+2025-05-14,Bizum De German Frances Tostado Concepto Sin Concepto,15.05,"6.710,20",2025-05,5,15.05,0.0,Ocio
+2025-05-14,Bizum A Favor De David Salvador Aguado Concepto: Cine,-4.0,"6.695,15",2025-05,5,0.0,4.0,Ocio
+2025-05-14,Bizum De Javier Garcia Pechero Concepto Papas,11.75,"6.699,15",2025-05,5,11.75,0.0,Alimentación
+2025-05-14,Bizum De David Salvador Aguado Concepto Bizum De David,9.35,"6.687,40",2025-05,5,9.35,0.0,Ocio
+2025-05-14,"Pago Movil En Bar Papas, Salamanca, Tarj. :*047140",-44.7,"6.678,05",2025-05,5,0.0,44.7,Ocio
+2025-05-12,Bizum De David Salvador Aguado Concepto Bizum De David,1.5,"6.722,75",2025-05,5,1.5,0.0,Ocio
+2025-05-12,Bizum De Javier Garcia Pechero Concepto Guapo,4.0,"6.721,25",2025-05,5,4.0,0.0,Ocio
+2025-05-12,"Pago Movil En Expportiv, Salamanca, Tarj. :*047140",-21.83,"6.717,25",2025-05,5,0.0,21.83,Ocio
+2025-05-12,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-13.34,"6.739,08",2025-05,5,0.0,13.34,Alimentación
+2025-05-12,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-28.7,"6.752,42",2025-05,5,0.0,28.7,Alimentación
+2025-05-09,Bizum De Miguel Angel Perez Arroyo Concepto Irish,11.5,"6.781,12",2025-05,5,11.5,0.0,Ocio
+2025-05-09,"Pago Movil En Irish Corner Pu, Salamanca, Tarj. :*047140",-22.5,"6.769,62",2025-05,5,0.0,22.5,Ocio
+2025-05-08,"Pago Movil En Megarama, Salamanca, Tarj. :*047140",-3.0,"6.792,12",2025-05,5,0.0,3.0,Ocio
+2025-05-06,"Transferencia De Santander Seguros Y Reaseguros Compania Asegurador, Concepto Liquidacion Siniestro Num. 25000206 Seguro Num.: 174000000224.",632.73,"6.795,12",2025-05,5,632.73,0.0,Seguros
+2025-05-05,Transferencia A Favor De Bernardo Merchan Montero Concepto: Pago Piso Mes De Mayo Vitgudino 39 Marco,-230.0,"6.162,39",2025-05,5,0.0,230.0,Gastos recurrentes
+2025-05-05,Bizum De Francisco Gomez Gomez Concepto Sin Concepto,11.99,"6.392,39",2025-05,5,11.99,0.0,Alimentación
+2025-05-05,"Pago Movil En Cafeteria Valen, Aguilar De Ca, Tarj. :*047140",-107.3,"6.380,40",2025-05,5,0.0,107.3,Alimentación
+2025-05-05,Bizum De Cristina Pelaz Roldan Concepto Cena,10.0,"6.487,70",2025-05,5,10.0,0.0,Alimentación
+2025-05-05,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,12.0,"6.477,70",2025-05,5,12.0,0.0,Alimentación
+2025-05-05,Bizum De Raquel Anderez Merino Concepto Sin Concepto,16.75,"6.465,70",2025-05,5,16.75,0.0,Alimentación
+2025-05-05,Ingreso  Contra Cuenta En Atm 004957850000 El 03/05/2025 A Las 18:08. Concepto: Aguina. . Pan: 5489010372047140.,300.0,"6.448,95",2025-05,5,300.0,0.0,Ingresos
+2025-05-02,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-4.15,"6.148,95",2025-05,5,0.0,4.15,Alimentación
+2025-05-02,"Pago Movil En Cafemica Roaste, Salamanca, Tarj. :*047140",-9.6,"6.153,10",2025-05,5,0.0,9.6,Alimentación
+2025-04-30,"Pago Movil En Restaurante Los, Villares De L, Tarj. :*047140",-39.0,"6.162,70",2025-04,4,0.0,39.0,Alimentación
+2025-04-30,Bizum De Javier Garcia Pechero Concepto Comida,19.95,"6.201,70",2025-04,4,19.95,0.0,Alimentación
+2025-04-30,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-27.95,"6.181,75",2025-04,4,0.0,27.95,Alimentación
+2025-04-30,Bizum A Favor De Maria Martin Nistal Concepto: Spoti,-3.0,"6.209,70",2025-04,4,0.0,3.0,Gastos recurrentes
+2025-04-29,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1308.58,"6.212,70",2025-04,4,1308.58,0.0,Ingresos
+2025-04-28,Bizum De David Salvador Aguado Concepto Bizum De David,9.16,"4.904,12",2025-04,4,9.16,0.0,Otros
+2025-04-28,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-16.96,"4.894,96",2025-04,4,0.0,16.96,Alimentación
+2025-04-28,Bizum A Favor De German Frances Tostado Concepto: Copa,-5.5,"4.911,92",2025-04,4,0.0,5.5,Ocio
+2025-04-28,Bizum A Favor De Javier Garcia Pechero Concepto: Copa,-5.5,"4.917,42",2025-04,4,0.0,5.5,Ocio
+2025-04-28,"Pago Movil En Long Li, Salamanca, Tarj. :*047140",-3.5,"4.922,92",2025-04,4,0.0,3.5,Alimentación
+2025-04-28,Bizum A Favor De Javier Garcia Pechero Concepto: Patriks,-12.0,"4.926,42",2025-04,4,0.0,12.0,Ocio
+2025-04-28,Bizum A Favor De David Salvador Aguado Concepto: Tonica,-5.0,"4.938,42",2025-04,4,0.0,5.0,Ocio
+2025-04-28,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-20.44,"4.943,42",2025-04,4,0.0,20.44,Alimentación
+2025-04-23,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-61.0,"4.963,86",2025-04,4,0.0,61.0,Coche
+2025-04-23,Bizum A Favor De Alba Robledo Rios Concepto: Pilas,-5.25,"5.024,86",2025-04,4,0.0,5.25,Otros
+2025-04-21,Bizum De Angel Jose Polanco Del Blanco Concepto 3 Entradas Pincho,29.5,"5.030,11",2025-04,4,29.5,0.0,Ocio
+2025-04-21,Bizum De Alba Robledo Rios Concepto Sin Concepto,11.5,"5.000,61",2025-04,4,11.5,0.0,Ocio
+2025-04-21,Devolución Bizum Recibido De Sheila Fraile Rodriguez Concepto Entrada Laser,-9.0,"4.989,11",2025-04,4,0.0,9.0,Ocio
+2025-04-21,Bizum De Sheila Fraile Rodriguez Concepto Entrada Laser,9.0,"4.998,11",2025-04,4,9.0,0.0,Ocio
+2025-04-21,"Pago Movil En Bar Dolce Vita, Aguilar De Ca, Tarj. :*047140",-7.5,"4.989,11",2025-04,4,0.0,7.5,Ocio
+2025-04-21,"Pago Movil En Dicoteca Laser, Aguilar Campo, Tarj. :*047140",-36.0,"4.996,61",2025-04,4,0.0,36.0,Ocio
+2025-04-21,"Pago Movil En Dicoteca Laser, Aguilar Campo, Tarj. :*047140",-9.0,"5.032,61",2025-04,4,0.0,9.0,Ocio
+2025-04-21,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-3.0,"5.041,61",2025-04,4,0.0,3.0,Ocio
+2025-04-21,"Pago Movil En Celtic Tavern A, Aguilar De Ca, Tarj. :*047140",-6.0,"5.044,61",2025-04,4,0.0,6.0,Ocio
+2025-04-21,"Pago Movil En Celtic Tavern A, Aguilar De Ca, Tarj. :*047140",-9.5,"5.050,61",2025-04,4,0.0,9.5,Ocio
+2025-04-21,Bizum A Favor De Felix Bravo Rollon Concepto: Kali,-2.1,"5.060,11",2025-04,4,0.0,2.1,Ocio
+2025-04-21,Bizum De Alba Robledo Rios Concepto Sin Concepto,12.0,"5.062,21",2025-04,4,12.0,0.0,Ocio
+2025-04-16,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-5.93,"5.050,21",2025-04,4,0.0,5.93,Gastos recurrentes
+2025-04-14,Bizum A Favor De David Salvador Aguado Concepto: Copa Liver,-7.0,"5.056,14",2025-04,4,0.0,7.0,Ocio
+2025-04-14,Bizum A Favor De Alejandro Macias Hernandez Concepto: Copa,-7.0,"5.063,14",2025-04,4,0.0,7.0,Ocio
+2025-04-14,Bizum A Favor De Jorge Lopez Carnero Concepto: Comida,-20.55,"5.070,14",2025-04,4,0.0,20.55,Alimentación
+2025-04-14,Bizum A Favor De Jorge Lopez Carnero Concepto: Vermu,-5.0,"5.090,69",2025-04,4,0.0,5.0,Ocio
+2025-04-11,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-60.0,"5.095,69",2025-04,4,0.0,60.0,Coche
+2025-04-10,"Pago Movil En Salamanca I, Salamanca, Tarj. :*047140",-60.0,"5.155,69",2025-04,4,0.0,60.0,Ocio
+2025-04-10,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-5.99,"5.215,69",2025-04,4,0.0,5.99,Alimentación
+2025-04-07,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-19.68,"5.221,68",2025-04,4,0.0,19.68,Alimentación
+2025-04-07,"Pago Movil En Long Li, Salamanca, Tarj. :*047140",-3.5,"5.241,36",2025-04,4,0.0,3.5,Alimentación
+2025-04-07,"Pago Movil En Bar Bolero, Salamanca, Tarj. :*047140",-8.0,"5.244,86",2025-04,4,0.0,8.0,Ocio
+2025-04-07,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-33.8,"5.252,86",2025-04,4,0.0,33.8,Alimentación
+2025-04-07,Transferencia A Favor De Bernardo Merchan Montero Concepto: Pago Piso Mes De Abril Vitgudino 39 Marco,-230.0,"5.286,66",2025-04,4,0.0,230.0,Gastos recurrentes
+2025-04-01,Bizum De Carlos Garcia Alonso Concepto Sin Concepto,2.1,"5.516,66",2025-04,4,2.1,0.0,Otros
+2025-04-01,Bizum A Favor De Carlos Garcia Alonso Concepto: Cerve,-4.2,"5.514,56",2025-04,4,0.0,4.2,Ocio
+2025-04-01,Bizum A Favor De David Perez Velasco Concepto: Cerves,-8.4,"5.518,76",2025-04,4,0.0,8.4,Ocio
+2025-03-31,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-19.72,"5.527,16",2025-03,3,0.0,19.72,Alimentación
+2025-03-31,Bizum De Alejandro Palomares Arroyo Concepto Deuda,30.0,"5.546,88",2025-03,3,30.0,0.0,Otros
+2025-03-31,Bizum A Favor De Maria Martin Nistal Concepto: Spoty,-3.0,"5.516,88",2025-03,3,0.0,3.0,Gastos recurrentes
+2025-03-31,Bizum A Favor De German Frances Tostado Concepto: Mojit,-10.0,"5.519,88",2025-03,3,0.0,10.0,Ocio
+2025-03-28,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1308.58,"5.529,88",2025-03,3,1308.58,0.0,Ingresos
+2025-03-27,Bizum De Jose Antonio Cordon Munoz Concepto Galacum,4.66,"4.221,30",2025-03,3,4.66,0.0,Ocio
+2025-03-27,Bizum De Efrain Fernandez Sangrador Concepto Sin Concepto,2.3,"4.216,64",2025-03,3,2.3,0.0,Ocio
+2025-03-25,Ingreso  Contra Cuenta En Atm 004952910021 El 25/03/2025 A Las 17:33. Concepto: Efectivo. . Pan: 5489010372047140.,250.0,"4.214,34",2025-03,3,250.0,0.0,Ingresos
+2025-03-25,"Compra Insomnia, Dublin, Tarjeta 5489010372047140 , Comision 0,00",-5.25,"3.964,34",2025-03,3,0.0,5.25,Alimentación
+2025-03-25,"Compra The Temple Bar Trading, Dublin, Tarjeta 5489010372047140 , Comision 0,00",-46.99,"3.969,59",2025-03,3,0.0,46.99,Ocio
+2025-03-25,"Compra Moby Move, Bessboro Road, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"4.016,58",2025-03,3,0.0,10.0,Ocio
+2025-03-25,"Compra Moby Move, Bessboro Road, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"4.026,58",2025-03,3,0.0,10.0,Ocio
+2025-03-25,"Compra Moby Move, Bessboro Road, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"4.036,58",2025-03,3,0.0,10.0,Ocio
+2025-03-25,"Compra The Camden, Dublin 2, Tarjeta 5489010372047140 , Comision 0,00",-13.0,"4.046,58",2025-03,3,0.0,13.0,Ocio
+2025-03-25,"Compra Darkey Kellys, Dublin 2, Tarjeta 5489010372047140 , Comision 0,00",-53.85,"4.059,58",2025-03,3,0.0,53.85,Ocio
+2025-03-25,Bizum De Ricardo Pelaz Torio Concepto Deudas Irlanda,31.28,"4.113,43",2025-03,3,31.28,0.0,Ocio
+2025-03-24,"Compra Tst-dash Burger, Dublin 8, Tarjeta 5489010372047140 , Comision 0,00",-57.9,"4.082,15",2025-03,3,0.0,57.9,Alimentación
+2025-03-24,"Compra Sv Aston Quay, Aston Quay, Tarjeta 5489010372047140 , Comision 0,00",-32.55,"4.140,05",2025-03,3,0.0,32.55,Ocio
+2025-03-24,"Compra Lidl Ireland Gmbh, Dublin, Tarjeta 5489010372047140 , Comision 0,00",-41.32,"4.172,60",2025-03,3,0.0,41.32,Alimentación
+2025-03-20,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-6.22,"4.213,92",2025-03,3,0.0,6.22,Gastos recurrentes
+2025-03-17,"Pago Movil En El Corte Ingles, Salamanca, Tarj. :*047140",-19.0,"4.220,14",2025-03,3,0.0,19.0,Alimentación
+2025-03-17,"Pago Movil En Bershka, Salamanca, Tarj. :*047140",-38.08,"4.239,14",2025-03,3,0.0,38.08,Ocio
+2025-03-17,Bizum De Santiago Benjamin Villalon Martin Concepto Copas,10.0,"4.277,22",2025-03,3,10.0,0.0,Ocio
+2025-03-17,Bizum De Alonso Garcia Llata Concepto Nose,5.0,"4.267,22",2025-03,3,5.0,0.0,Ocio
+2025-03-17,"Pago Movil En Peter's Salaman, Salamanca, Tarj. :*047140",-15.0,"4.262,22",2025-03,3,0.0,15.0,Ocio
+2025-03-17,"Pago Movil En Peter's Salaman, Salamanca, Tarj. :*047140",-5.0,"4.277,22",2025-03,3,0.0,5.0,Ocio
+2025-03-17,"Pago Movil En Bar Bolero, Salamanca, Tarj. :*047140",-10.0,"4.282,22",2025-03,3,0.0,10.0,Ocio
+2025-03-17,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-5.82,"4.292,22",2025-03,3,0.0,5.82,Alimentación
+2025-03-13,Bizum De David Salvador Aguado Concepto Bizum De David,5.5,"4.298,04",2025-03,3,5.5,0.0,Ocio
+2025-03-11,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-15.33,"4.292,54",2025-03,3,0.0,15.33,Alimentación
+2025-03-06,Bizum A Favor De Sergio Mulas Diaz Concepto: Cafe Tulipooo,-2.5,"4.307,87",2025-03,3,0.0,2.5,Alimentación
+2025-03-05,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-60.9,"4.310,37",2025-03,3,0.0,60.9,Coche
+2025-03-04,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-5.64,"4.371,27",2025-03,3,0.0,5.64,Alimentación
+2025-03-04,Transferencia A Favor De Bernardo Merchan Montero Concepto: Pago Piso Mes De Febrero Y Marzo Vitgudino 39 Marco,-460.0,"4.376,91",2025-03,3,0.0,460.0,Gastos recurrentes
+2025-03-03,Bizum De Judit Rodriguez Hoyos Concepto .,15.0,"4.836,91",2025-03,3,15.0,0.0,Otros
+2025-03-03,Bizum De Laura Vielba Gutierrez Concepto Chinos,2.95,"4.821,91",2025-03,3,2.95,0.0,Otros
+2025-03-03,"Pago Movil En Dolce Vita, Aguilar Campo, Tarj. :*047140",-11.0,"4.818,96",2025-03,3,0.0,11.0,Ocio
+2025-03-03,"Pago Movil En Dicoteca Laser, Aguilar Campo, Tarj. :*047140",-7.0,"4.829,96",2025-03,3,0.0,7.0,Ocio
+2025-02-28,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-5.43,"4.836,96",2025-02,2,0.0,5.43,Alimentación
+2025-02-28,Bizum A Favor De Maria Martin Nistal Concepto: Spoty,-3.0,"4.842,39",2025-02,2,0.0,3.0,Gastos recurrentes
+2025-02-27,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1308.58,"4.845,39",2025-02,2,1308.58,0.0,Ingresos
+2025-02-26,"Pago Movil En Dia 7987, Salamanca, Tarj. :*047140",-2.37,"3.536,81",2025-02,2,0.0,2.37,Alimentación
+2025-02-24,Bizum A Favor De David Salvador Aguado Concepto: Nyx,-6.0,"3.539,18",2025-02,2,0.0,6.0,Ocio
+2025-02-24,Bizum A Favor De Jorge Lopez Carnero Concepto: Tonica,-2.8,"3.545,18",2025-02,2,0.0,2.8,Ocio
+2025-02-21,"Pago Movil En Alberto Almeida, Salamanca, Tarj. :*047140",-5.28,"3.547,98",2025-02,2,0.0,5.28,Alimentación
+2025-02-21,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-17.27,"3.553,26",2025-02,2,0.0,17.27,Alimentación
+2025-02-18,Bizum A Favor De Jose Javier Galindo Nevado Concepto: Cerve Mus,-2.0,"3.570,53",2025-02,2,0.0,2.0,Ocio
+2025-02-17,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-14.24,"3.572,53",2025-02,2,0.0,14.24,Alimentación
+2025-02-17,Bizum De Jose Antonio Cordon Munoz Concepto Mollys Y Subma,9.0,"3.586,77",2025-02,2,9.0,0.0,Ocio
+2025-02-17,"Pago Movil En Molly Malone, Salamanca, Tarj. :*047140",-11.0,"3.577,77",2025-02,2,0.0,11.0,Ocio
+2025-02-17,"Pago Movil En Molly Malone, Salamanca, Tarj. :*047140",-24.7,"3.588,77",2025-02,2,0.0,24.7,Ocio
+2025-02-17,"Pago Movil En Five Napoli Piz, Salamanca, Tarj. :*047140",-16.34,"3.613,47",2025-02,2,0.0,16.34,Alimentación
+2025-02-14,Bizum A Favor De Ricardo Pelaz Torio Concepto: Dublinnnn,-114.0,"3.629,81",2025-02,2,0.0,114.0,Ocio
+2025-02-12,"Pago Movil En Dia 7987, Salamanca, Tarj. :*047140",-2.37,"3.743,81",2025-02,2,0.0,2.37,Alimentación
+2025-02-12,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-19.0,"3.746,18",2025-02,2,0.0,19.0,Alimentación
+2025-02-12,Bizum De Alonso Garcia Llata Concepto Palancas Fc,4.8,"3.765,18",2025-02,2,4.8,0.0,Ocio
+2025-02-12,Bizum De David Salvador Aguado Concepto Bizum De David,4.8,"3.760,38",2025-02,2,4.8,0.0,Ocio
+2025-02-12,"Pago Movil En Bar Nuevo Ii, Salamanca, Tarj. :*047140",-16.4,"3.755,58",2025-02,2,0.0,16.4,Ocio
+2025-02-10,Bizum A Favor De Ricardo Pelaz Torio Concepto: Vueloss,-84.0,"3.771,98",2025-02,2,0.0,84.0,Ocio
+2025-02-10,Bizum De David Salvador Aguado Concepto Bizum De David,3.0,"3.855,98",2025-02,2,3.0,0.0,Ocio
+2025-02-10,"Pago Movil En Long Li, Salamanca, Tarj. :*047140",-3.5,"3.852,98",2025-02,2,0.0,3.5,Alimentación
+2025-02-10,"Pago Movil En Paniagua, Salamanca, Tarj. :*047140",-8.5,"3.856,48",2025-02,2,0.0,8.5,Ocio
+2025-02-10,Bizum De David Salvador Aguado Concepto Bizum De David,2.5,"3.864,98",2025-02,2,2.5,0.0,Otros
+2025-02-10,"Pago Movil En Bar Astaroth, Salamanca, Tarj. :*047140",-7.5,"3.862,48",2025-02,2,0.0,7.5,Ocio
+2025-02-10,Bizum De Santiago Benjamin Villalon Martin Concepto Bocadillo,4.2,"3.869,98",2025-02,2,4.2,0.0,Ocio
+2025-02-10,Bizum De Alonso Garcia Llata Concepto Cena,9.7,"3.865,78",2025-02,2,9.7,0.0,Ocio
+2025-02-10,Bizum De David Salvador Aguado Concepto Bizum De David,8.5,"3.856,08",2025-02,2,8.5,0.0,Otros
+2025-02-10,"Pago Movil En Restaurante Mon, Salamanca, Tarj. :*047140",-30.5,"3.847,58",2025-02,2,0.0,30.5,Alimentación
+2025-02-10,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-33.73,"3.878,08",2025-02,2,0.0,33.73,Alimentación
+2025-02-10,"Pago Movil En Itv 3701 Carbaj, Carbajosa De, Tarj. :*047140",-58.87,"3.911,81",2025-02,2,0.0,58.87,Coche
+2025-02-07,"Pago Movil En Mcdonalds - Cor, Salamanca, Tarj. :*047140",-3.7,"3.970,68",2025-02,2,0.0,3.7,Alimentación
+2025-02-06,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-0.75,"3.974,38",2025-02,2,0.0,0.75,Alimentación
+2025-02-03,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-66.02,"3.975,13",2025-02,2,0.0,66.02,Coche
+2025-02-03,"Pago Movil En Cafeteria Valen, Aguilar De Ca, Tarj. :*047140",-55.7,"4.041,15",2025-02,2,0.0,55.7,Alimentación
+2025-02-03,Bizum De Francisco Gomez Gomez Concepto Sin Concepto,12.9,"4.096,85",2025-02,2,12.9,0.0,Otros
+2025-02-03,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,10.13,"4.083,95",2025-02,2,10.13,0.0,Otros
+2025-02-03,Bizum De Raquel Anderez Merino Concepto Sin Concepto,10.33,"4.073,82",2025-02,2,10.33,0.0,Otros
+2025-01-30,Bizum De Brandon Cobos Alegre Concepto Deudas Piso,41.01,"4.063,49",2025-01,1,41.01,0.0,Otros
+2025-01-30,Bizum A Favor De Maria Martin Nistal Concepto: Spoty,-3.0,"4.022,48",2025-01,1,0.0,3.0,Gastos recurrentes
+2025-01-29,Bizum De Alejandro Palomares Arroyo Concepto Deuda,30.0,"4.025,48",2025-01,1,30.0,0.0,Otros
+2025-01-29,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1308.58,"3.995,48",2025-01,1,1308.58,0.0,Ingresos
+2025-01-27,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-24.97,"2.686,90",2025-01,1,0.0,24.97,Alimentación
+2025-01-27,"Pago Movil En Bar Bolero, Salamanca, Tarj. :*047140",-4.0,"2.711,87",2025-01,1,0.0,4.0,Ocio
+2025-01-23,"Pago Movil En Alberto Almeida, Salamanca, Tarj. :*047140",-20.98,"2.715,87",2025-01,1,0.0,20.98,Alimentación
+2025-01-23,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-8.45,"2.736,85",2025-01,1,0.0,8.45,Alimentación
+2025-01-22,"Compra Internet En Univ Europea Ma, Villaviciosa, Tarj. :*047140",-550.0,"2.745,30",2025-01,1,0.0,550.0,Otros
+2025-01-20,Bizum De German Frances Tostado Concepto Sin Concepto,3.0,"3.295,30",2025-01,1,3.0,0.0,Otros
+2025-01-20,"Pago Movil En Daniel S Chupit, Salamanca, Tarj. :*047140",-5.0,"3.292,30",2025-01,1,0.0,5.0,Ocio
+2025-01-20,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-6.51,"3.297,30",2025-01,1,0.0,6.51,Gastos recurrentes
+2025-01-20,Bizum A Favor De Javier Garcia Pechero Concepto: Holy,-15.7,"3.303,81",2025-01,1,0.0,15.7,Ocio
+2025-01-20,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-20.22,"3.319,51",2025-01,1,0.0,20.22,Alimentación
+2025-01-15,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-9.02,"3.339,73",2025-01,1,0.0,9.02,Alimentación
+2025-01-15,Bizum De Javier Garcia Pechero Concepto Cerves,4.0,"3.348,75",2025-01,1,4.0,0.0,Ocio
+2025-01-15,Bizum De Marcos Arias Gonzalez Concepto Trampas,4.0,"3.344,75",2025-01,1,4.0,0.0,Ocio
+2025-01-15,"Pago Movil En Bar Nuevo Ii, Salamanca, Tarj. :*047140",-15.0,"3.340,75",2025-01,1,0.0,15.0,Ocio
+2025-01-14,Bizum A Favor De German Frances Tostado Concepto: Nyx,-18.0,"3.355,75",2025-01,1,0.0,18.0,Ocio
+2025-01-14,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-4.5,"3.373,75",2025-01,1,0.0,4.5,Alimentación
+2025-01-14,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-27.62,"3.378,25",2025-01,1,0.0,27.62,Alimentación
+2025-01-13,Bizum De Brandon Cobos Alegre Concepto Sin Concepto,1.5,"3.405,87",2025-01,1,1.5,0.0,Ocio
+2025-01-13,"Pago Movil En St Patricks, Salamanca, Tarj. :*047140",-9.0,"3.404,37",2025-01,1,0.0,9.0,Ocio
+2025-01-10,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-3.56,"3.413,37",2025-01,1,0.0,3.56,Alimentación
+2025-01-07,Transferencia A Favor De Bernardo Merchan Montero Concepto: Pago Piso Mes De Enero Vitgudino 39 Marco,-230.0,"3.416,93",2025-01,1,0.0,230.0,Gastos recurrentes
+2025-01-07,Bizum De Andres Maestro Bedoya Concepto Taxista Marco,16.0,"3.646,93",2025-01,1,16.0,0.0,Coche
+2025-01-07,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-67.0,"3.630,93",2025-01,1,0.0,67.0,Coche
+2025-01-07,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.0,"3.697,93",2025-01,1,0.0,5.0,Ocio
+2025-01-07,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.5,"3.702,93",2025-01,1,0.0,5.5,Ocio
+2025-01-07,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.5,"3.708,43",2025-01,1,0.0,5.5,Ocio
+2025-01-07,Bizum De Hector Carneros Martin Concepto Sin Concepto,3.0,"3.713,93",2025-01,1,3.0,0.0,Ocio
+2025-01-07,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-8.5,"3.710,93",2025-01,1,0.0,8.5,Ocio
+2025-01-07,"Pago Movil En Discoteca Laser, Aguilar Campo, Tarj. :*047140",-4.0,"3.719,43",2025-01,1,0.0,4.0,Ocio
+2025-01-03,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-21.89,"3.723,43",2025-01,1,0.0,21.89,Alimentación
+2025-01-03,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-13.73,"3.745,32",2025-01,1,0.0,13.73,Alimentación
+2025-01-02,"Pago Movil En Omega Plaza, Aguilar De Ca, Tarj. :*047140",-9.0,"3.759,05",2025-01,1,0.0,9.0,Ocio
+2025-01-02,"Pago Movil En Omega Plaza, Aguilar De Ca, Tarj. :*047140",-9.0,"3.768,05",2025-01,1,0.0,9.0,Ocio
+2025-01-02,"Pago Movil En Dicoteca Laser, Aguilar Campo, Tarj. :*047140",-7.0,"3.777,05",2025-01,1,0.0,7.0,Ocio
+2025-01-02,"Pago Movil En Dolce Vita, Aguilar De Ca, Tarj. :*047140",-5.0,"3.784,05",2025-01,1,0.0,5.0,Ocio
+2025-01-02,"Pago Movil En Discoteca Laser, Aguilar Campo, Tarj. :*047140",-7.0,"3.789,05",2025-01,1,0.0,7.0,Ocio
+2025-01-02,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-2.0,"3.796,05",2025-01,1,0.0,2.0,Ocio
+2025-01-02,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-5.5,"3.798,05",2025-01,1,0.0,5.5,Ocio
+2025-01-02,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-3.0,"3.803,55",2025-01,1,0.0,3.0,Ocio
+2025-01-02,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.5,"3.806,55",2025-01,1,0.0,5.5,Ocio
+2025-01-02,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.5,"3.812,05",2025-01,1,0.0,5.5,Ocio
+2025-01-02,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-5.5,"3.817,55",2025-01,1,0.0,5.5,Ocio
+2025-01-02,Bizum De Cristina Pelaz Roldan Concepto Yllera,5.85,"3.823,05",2025-01,1,5.85,0.0,Ocio
+2025-01-02,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,5.85,"3.817,20",2025-01,1,5.85,0.0,Ocio
+2025-01-02,Bizum De Raquel Anderez Merino Concepto Sin Concepto,5.85,"3.811,35",2025-01,1,5.85,0.0,Ocio
+2024-12-31,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-36.44,"3.805,50",2024-12,12,0.0,36.44,Alimentación
+2024-12-30,"Pago Movil En Bar Restaurante, Santillana De, Tarj. :*047140",-100.0,"3.841,94",2024-12,12,0.0,100.0,Alimentación
+2024-12-30,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,20.0,"3.941,94",2024-12,12,20.0,0.0,Alimentación
+2024-12-30,Bizum De Raquel Anderez Merino Concepto Sin Concepto,20.0,"3.921,94",2024-12,12,20.0,0.0,Alimentación
+2024-12-30,Ingreso En Efectivo De Sevilla Martin Marco  En Suc. 0049 5785,550.0,"3.901,94",2024-12,12,550.0,0.0,Ingresos
+2024-12-30,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-18.03,"3.351,94",2024-12,12,0.0,18.03,Alimentación
+2024-12-30,Bizum A Favor De Maria Martin Nistal Concepto: Spoty,-3.0,"3.369,97",2024-12,12,0.0,3.0,Gastos recurrentes
+2024-12-30,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,3.0,"3.372,97",2024-12,12,3.0,0.0,Ocio
+2024-12-30,"Pago Movil En Ritual Aguilar, Aguilar De Ca, Tarj. :*047140",-8.0,"3.369,97",2024-12,12,0.0,8.0,Ocio
+2024-12-30,"Pago Movil En Bar El Porton, Aguilar Campo, Tarj. :*047140",-6.0,"3.377,97",2024-12,12,0.0,6.0,Ocio
+2024-12-30,"Pago Movil En Ritual Aguilar, Aguilar De Ca, Tarj. :*047140",-3.4,"3.383,97",2024-12,12,0.0,3.4,Ocio
+2024-12-30,"Pago Movil En Ritual Aguilar, Aguilar De Ca, Tarj. :*047140",-6.0,"3.387,37",2024-12,12,0.0,6.0,Ocio
+2024-12-27,Bizum De German Frances Tostado Concepto Sin Concepto,3.0,"3.393,37",2024-12,12,3.0,0.0,Ocio
+2024-12-27,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-7.95,"3.390,37",2024-12,12,0.0,7.95,Alimentación
+2024-12-26,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-0.92,"3.398,32",2024-12,12,0.0,0.92,Alimentación
+2024-12-26,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-61.5,"3.399,24",2024-12,12,0.0,61.5,Coche
+2024-12-23,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-0.51,"3.460,74",2024-12,12,0.0,0.51,Alimentación
+2024-12-19,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-6.38,"3.461,25",2024-12,12,0.0,6.38,Gastos recurrentes
+2024-12-19,Bizum A Favor De David Salvador Aguado Concepto: Patriks,-11.0,"3.467,63",2024-12,12,0.0,11.0,Ocio
+2024-12-19,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-22.77,"3.478,63",2024-12,12,0.0,22.77,Alimentación
+2024-12-19,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1308.72,"3.501,40",2024-12,12,1308.72,0.0,Ingresos
+2024-12-19,Bizum A Favor De David Salvador Aguado Concepto: Queso,-9.6,"2.192,68",2024-12,12,0.0,9.6,Alimentación
+2024-12-18,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-25.94,"2.202,28",2024-12,12,0.0,25.94,Alimentación
+2024-12-18,"Pago Movil En Us282 Palencia, Palencia, Tarj. :*047140",-59.0,"2.228,22",2024-12,12,0.0,59.0,Coche
+2024-12-13,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-0.64,"2.287,22",2024-12,12,0.0,0.64,Alimentación
+2024-12-12,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Seguro Coche,-345.46,"2.287,86",2024-12,12,0.0,345.46,Coche
+2024-12-11,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-1.29,"2.633,32",2024-12,12,0.0,1.29,Alimentación
+2024-12-10,"Compra Mcd 01651, Würzburg, Tarjeta 5489010372047140 , Comision 0,00",-13.14,"2.634,61",2024-12,12,0.0,13.14,Alimentación
+2024-12-09,"Compra La Bamba, Wuerzburg, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"2.647,75",2024-12,12,0.0,10.0,Ocio
+2024-12-09,"Compra Burger King 14569 Sot, Wuerzburg, Tarjeta 5489010372047140 , Comision 0,00",-10.49,"2.657,75",2024-12,12,0.0,10.49,Alimentación
+2024-12-09,"Compra Aldi Sued, Wuerzburg, Tarjeta 5489010372047140 , Comision 0,00",-5.27,"2.668,24",2024-12,12,0.0,5.27,Alimentación
+2024-12-09,"Compra La Bamba, Wuerzburg, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"2.673,51",2024-12,12,0.0,10.0,Ocio
+2024-12-09,"Compra La Bamba, Wuerzburg, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"2.683,51",2024-12,12,0.0,10.0,Ocio
+2024-12-09,"Compra La Bamba, Wuerzburg, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"2.693,51",2024-12,12,0.0,10.0,Ocio
+2024-12-09,"Compra La Bamba, Wuerzburg, Tarjeta 5489010372047140 , Comision 0,00",-10.0,"2.703,51",2024-12,12,0.0,10.0,Ocio
+2024-12-09,Bizum A Favor De Diego Diaz Mateos Concepto: Alemania,-20.68,"2.713,51",2024-12,12,0.0,20.68,Ocio
+2024-12-09,"Pago Movil En Facultad Medici, Madrid, Tarj. :*047140",-1.25,"2.734,19",2024-12,12,0.0,1.25,Ocio
+2024-12-05,"Compra Hotel Till Eulenspiege, Würzburg, Tarjeta 5489010372047140 , Comision 0,00",-20.0,"2.735,44",2024-12,12,0.0,20.0,Ocio
+2024-12-02,Transferencia A Favor De Bernardo Merchan Montero Concepto: Pago Piso Mes De Diciembre Vitgudino 39 Marco,-230.0,"2.755,44",2024-12,12,0.0,230.0,Gastos recurrentes
+2024-12-02,"Pago Movil En L Ovella Negra, Barcelona, Tarj. :*047140",-17.0,"2.985,44",2024-12,12,0.0,17.0,Ocio
+2024-12-02,"Pago Movil En L Ovella Negra, Barcelona, Tarj. :*047140",-21.0,"3.002,44",2024-12,12,0.0,21.0,Ocio
+2024-12-02,"Pago Movil En El Cafe Del Tre, Madrid, Tarj. :*047140",-7.0,"3.023,44",2024-12,12,0.0,7.0,Alimentación
+2024-12-02,Bizum A Favor De Maria Martin Nistal Concepto: Spoty,-3.0,"3.030,44",2024-12,12,0.0,3.0,Gastos recurrentes
+2024-12-02,"Pago Movil En El Cafe Del Tre, Madrid, Tarj. :*047140",-14.0,"3.033,44",2024-12,12,0.0,14.0,Alimentación
+2024-12-02,"Pago Movil En Restaurante La, Madrid-recole, Tarj. :*047140",-15.0,"3.047,44",2024-12,12,0.0,15.0,Alimentación
+2024-11-28,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-54.0,"3.062,44",2024-11,11,0.0,54.0,Coche
+2024-11-28,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1308.72,"3.116,44",2024-11,11,1308.72,0.0,Ingresos
+2024-11-27,"Compra Blablacar, Paris, Tarjeta 5489010372047140 , Comision 0,00",-30.78,"1.807,72",2024-11,11,0.0,30.78,Coche
+2024-11-27,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-9.14,"1.838,50",2024-11,11,0.0,9.14,Alimentación
+2024-11-26,"Compra Internet En Monfobus, S.l., Poligono Da L, Tarj. :*047140",-15.46,"1.847,64",2024-11,11,0.0,15.46,Ocio
+2024-11-21,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-17.89,"1.863,10",2024-11,11,0.0,17.89,Alimentación
+2024-11-20,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-10.55,"1.880,99",2024-11,11,0.0,10.55,Alimentación
+2024-11-20,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-6.0,"1.891,54",2024-11,11,0.0,6.0,Gastos recurrentes
+2024-11-19,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Pesada,-120.0,"1.897,54",2024-11,11,0.0,120.0,Coche
+2024-11-15,"Pago Movil En Lupa Palencia A, Aguilar De Ca, Tarj. :*047140",-28.22,"2.017,54",2024-11,11,0.0,28.22,Alimentación
+2024-11-15,Ingreso  Contra Cuenta En Atm 004957850001 El 15/11/2024 A Las 11:07. Concepto: Ingreso Luz Y Agua. . Pan: 5489010372047140.,400.0,"2.045,76",2024-11,11,400.0,0.0,Otros
+2024-11-15,Bizum A Favor De Victorino Sevilla Millan Concepto: Luz Y Agua 2023 2024 Lomilla,-379.62,"1.645,76",2024-11,11,0.0,379.62,Otros
+2024-11-14,Bizum A Favor De David Salvador Aguado Concepto: Venom,-4.5,"2.025,38",2024-11,11,0.0,4.5,Ocio
+2024-11-14,"Pago Movil En Cines Van Dyck, Salamanca, Tarj. :*047140",-5.0,"2.029,88",2024-11,11,0.0,5.0,Ocio
+2024-11-12,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-20.87,"2.034,88",2024-11,11,0.0,20.87,Alimentación
+2024-11-12,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-3.4,"2.055,75",2024-11,11,0.0,3.4,Alimentación
+2024-11-11,Bizum A Favor De Lydia Merino Suberviola Concepto: Comida Avila,-9.43,"2.059,15",2024-11,11,0.0,9.43,Alimentación
+2024-11-11,Bizum De Pablo Morales Villalba Concepto Sin Concepto,3.4,"2.068,58",2024-11,11,3.4,0.0,Coche
+2024-11-11,"Pago Movil En Dia Retail Espa, S S Reyes, Tarj. :*047140",-2.59,"2.065,18",2024-11,11,0.0,2.59,Alimentación
+2024-11-11,Bizum De David Salvador Aguado Concepto Gasolina,3.4,"2.067,77",2024-11,11,3.4,0.0,Coche
+2024-11-11,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-17.0,"2.064,37",2024-11,11,0.0,17.0,Coche
+2024-11-11,"Pago Movil En Ronda Oeste S.l, Salamanca, Tarj. :*047140",-47.0,"2.081,37",2024-11,11,0.0,47.0,Coche
+2024-11-11,Bizum A Favor De Angel Picado Cuadrado Concepto: Bombones,-3.0,"2.128,37",2024-11,11,0.0,3.0,Otros
+2024-11-11,"Pago Movil En Paki Palla, Salamanca, Tarj. :*047140",-10.0,"2.131,37",2024-11,11,0.0,10.0,Ocio
+2024-11-07,"Pago Movil En Altafit Salaman, Salamanca, Tarj. :*047140",-75.8,"2.141,37",2024-11,11,0.0,75.8,Ocio
+2024-11-06,Bizum De Diego Diaz Mateos Concepto Vuelo,29.0,"2.217,17",2024-11,11,29.0,0.0,Ocio
+2024-11-06,Compra Bizum Iberia Lineas Aereas De Espa A Sa 05/11/2024,-142.98,"2.188,17",2024-11,11,0.0,142.98,Ocio
+2024-11-06,"Compra Internet En Vueling Airline, Prat De Llobr, Tarj. :*047140",-149.98,"2.331,15",2024-11,11,0.0,149.98,Ocio
+2024-11-05,Transferencia A Favor De Bernardo Merchan Montero Concepto: Pago Piso Mes De Noviembre Vitgudino 39 Marco,-230.0,"2.481,13",2024-11,11,0.0,230.0,Gastos recurrentes
+2024-11-05,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-4.48,"2.711,13",2024-11,11,0.0,4.48,Alimentación
+2024-11-04,"Compra Petroprix Carbajosa, Martos, Tarjeta 5489010372047140 , Comision 0,00",-29.91,"2.715,61",2024-11,11,0.0,29.91,Coche
+2024-11-04,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,6.0,"2.745,52",2024-11,11,6.0,0.0,Otros
+2024-11-04,Bizum A Favor De Amanda Bravo Anton Concepto: Litros Y Calefactor Mas Alba,-10.0,"2.739,52",2024-11,11,0.0,10.0,Otros
+2024-11-04,Bizum De Alba Robledo Rios Concepto Sin Concepto,4.75,"2.749,52",2024-11,11,4.75,0.0,Otros
+2024-11-04,Bizum De Angel Picado Cuadrado Concepto Provenzal,2.0,"2.744,77",2024-11,11,2.0,0.0,Ocio
+2024-10-31,Bizum A Favor De David Zarzuelo Gonzalez Concepto: Copa A Mi Salud Por Rueda Coche,-6.0,"2.742,77",2024-10,10,0.0,6.0,Otros
+2024-10-30,"Pago Movil En Neumaticos Park, Salamanca, Tarj. :*047140",-116.0,"2.748,77",2024-10,10,0.0,116.0,Coche
+2024-10-30,"Pago Movil En Vasco De Gama, Salamanca, Tarj. :*047140",-3.2,"2.864,77",2024-10,10,0.0,3.2,Ocio
+2024-10-30,"Pago Movil En Decathlon Salam, Carbajosa De, Tarj. :*047140",-20.98,"2.867,97",2024-10,10,0.0,20.98,Ocio
+2024-10-30,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",1308.72,"2.888,95",2024-10,10,1308.72,0.0,Ingresos
+2024-10-30,Bizum De Javier Garcia Pechero Concepto Mus,7.5,"1.580,23",2024-10,10,7.5,0.0,Ocio
+2024-10-30,"Pago Movil En Bar Nuevo Ii, Salamanca, Tarj. :*047140",-15.0,"1.572,73",2024-10,10,0.0,15.0,Ocio
+2024-10-29,"Pago Movil En Bershka, Salamanca, Tarj. :*047140",-60.07,"1.587,73",2024-10,10,0.0,60.07,Ocio
+2024-10-29,Bizum A Favor De Maria Martin Nistal Concepto: Spo,-3.0,"1.647,80",2024-10,10,0.0,3.0,Gastos recurrentes
+2024-10-29,"Pago Movil En Mercado Provenz, Salamanca, Tarj. :*047140",-6.0,"1.650,80",2024-10,10,0.0,6.0,Ocio
+2024-10-28,Bizum A Favor De David Salvador Aguado Concepto: Madrid Barça,-16.5,"1.656,80",2024-10,10,0.0,16.5,Ocio
+2024-10-28,Bizum A Favor De Roberto Merchan Gonzalez Concepto: Bacardi,-5.5,"1.673,30",2024-10,10,0.0,5.5,Ocio
+2024-10-25,"Pago Movil En Alberto Almeida, Salamanca, Tarj. :*047140",-9.25,"1.678,80",2024-10,10,0.0,9.25,Alimentación
+2024-10-25,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-22.1,"1.688,05",2024-10,10,0.0,22.1,Alimentación
+2024-10-24,"Pago Movil En Dia 7987, Salamanca, Tarj. :*047140",-2.92,"1.710,15",2024-10,10,0.0,2.92,Alimentación
+2024-10-23,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-14.44,"1.713,07",2024-10,10,0.0,14.44,Alimentación
+2024-10-22,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-0.95,"1.727,51",2024-10,10,0.0,0.95,Alimentación
+2024-10-21,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-12.11,"1.728,46",2024-10,10,0.0,12.11,Alimentación
+2024-10-21,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-1.35,"1.740,57",2024-10,10,0.0,1.35,Alimentación
+2024-10-21,"Pago Movil En Abierto 24 H, Salamanca, Tarj. :*047140",-16.75,"1.741,92",2024-10,10,0.0,16.75,Alimentación
+2024-10-21,"Pago Movil En Bar Bolero, Salamanca, Tarj. :*047140",-6.0,"1.758,67",2024-10,10,0.0,6.0,Ocio
+2024-10-21,Bizum De David Salvador Aguado Concepto Bizum,6.25,"1.764,67",2024-10,10,6.25,0.0,Otros
+2024-10-21,"Pago Movil En St Patricks, Salamanca, Tarj. :*047140",-15.3,"1.758,42",2024-10,10,0.0,15.3,Ocio
+2024-10-18,Bizum De Miguel Angel Perez Arroyo Concepto Deuda,10.4,"1.773,72",2024-10,10,10.4,0.0,Otros
+2024-10-18,Bizum De German Frances Tostado Concepto Sin Concepto,8.6,"1.763,32",2024-10,10,8.6,0.0,Otros
+2024-10-18,"Pago Movil En Bar Nuevo Ii, Salamanca, Tarj. :*047140",-23.6,"1.754,72",2024-10,10,0.0,23.6,Ocio
+2024-10-17,Bizum De Brandon Cobos Alegre Concepto Sin Concepto,2.65,"1.778,32",2024-10,10,2.65,0.0,Ocio
+2024-10-17,Bizum De Ana Isabel Martin Saiz Concepto Curso De Informática,47.0,"1.775,67",2024-10,10,47.0,0.0,Otros
+2024-10-17,Bizum A Favor De Ana Isabel Martin Saiz Concepto: Gasolina,-46.28,"1.728,67",2024-10,10,0.0,46.28,Coche
+2024-10-17,Devolución Bizum Recibido De Ana Isabel Martin Saiz Concepto Bizum,-5.0,"1.774,95",2024-10,10,0.0,5.0,Otros
+2024-10-17,Bizum De Ana Isabel Martin Saiz Concepto Bizum,5.0,"1.779,95",2024-10,10,5.0,0.0,Otros
+2024-10-17,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-10.51,"1.774,95",2024-10,10,0.0,10.51,Alimentación
+2024-10-17,Bizum A Favor De David Valle Galvez Concepto: Ordago A La Grande,-8.0,"1.785,46",2024-10,10,0.0,8.0,Ocio
+2024-10-16,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-16.94,"1.793,46",2024-10,10,0.0,16.94,Alimentación
+2024-10-16,Bizum De Javier Garcia Pechero Concepto No Hay Suerte Para La Gente Honrada,7.5,"1.810,40",2024-10,10,7.5,0.0,Ocio
+2024-10-15,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-6.0,"1.802,90",2024-10,10,0.0,6.0,Gastos recurrentes
+2024-10-14,Bizum De Etna Maestro Bedoya Concepto Sin Concepto,12.0,"1.808,90",2024-10,10,12.0,0.0,Otros
+2024-10-14,"Compra Amazon* Tq0zx0hp4, Luxembourg, Tarjeta 5489010372047140 , Comision 0,00",-31.93,"1.796,90",2024-10,10,0.0,31.93,Otros
+2024-10-14,"Pago Movil En Kb Bar, Aguilar De Ca, Tarj. :*047140",-7.5,"1.828,83",2024-10,10,0.0,7.5,Ocio
+2024-10-14,Bizum De Raquel Anderez Merino Concepto Sin Concepto,6.0,"1.836,33",2024-10,10,6.0,0.0,Otros
+2024-10-09,"Compra Amazon* To6ho1h44, Luxembourg, Tarjeta 5489010372047140 , Comision 0,00",-11.99,"1.830,33",2024-10,10,0.0,11.99,Ocio
+2024-10-09,Bizum De German Frances Tostado Concepto Sin Concepto,2.2,"1.842,32",2024-10,10,2.2,0.0,Otros
+2024-10-09,"Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140",-2.5,"1.840,12",2024-10,10,0.0,2.5,Alimentación
+2024-10-09,Bizum De Javier Garcia Pechero Concepto Mus Corto Y Envido,4.2,"1.842,62",2024-10,10,4.2,0.0,Ocio
+2024-10-09,Bizum De Marcos Arias Gonzalez Concepto Sin Concepto,7.6,"1.838,42",2024-10,10,7.6,0.0,Ocio
+2024-10-08,"Compra Amzn Mktp Es*to4r400n4, 800-279-6620, Tarjeta 5489010372047140 , Comision 0,00",-11.99,"1.830,82",2024-10,10,0.0,11.99,Ocio
+2024-10-08,Bizum De Pablo Santos Blazquez Concepto Flores Y Birras Con Mil Gracias,35.0,"1.842,81",2024-10,10,35.0,0.0,Otros
+2024-10-07,"Pago Movil En El Corte Ingles, Salamanca, Tarj. :*047140",-30.0,"1.807,81",2024-10,10,0.0,30.0,Alimentación
+2024-10-07,"Pago Movil En Dia 7987, Salamanca, Tarj. :*047140",-1.04,"1.837,81",2024-10,10,0.0,1.04,Alimentación
+2024-10-07,Bizum A Favor De David Salvador Aguado Concepto: Patriks,-11.05,"1.838,85",2024-10,10,0.0,11.05,Ocio
+2024-10-04,"Pago Movil En Dia 7987, Salamanca, Tarj. :*047140",-0.52,"1.849,90",2024-10,10,0.0,0.52,Alimentación
+2024-10-03,Transferencia A Favor De Bernardo Merchan Montero Concepto: Piso Vitigudino 39 Marco Sevilla Mes Octubre,-230.0,"1.850,42",2024-10,10,0.0,230.0,Gastos recurrentes
+2024-10-02,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-1.2,"2.080,42",2024-10,10,0.0,1.2,Alimentación
+2024-10-01,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-6.05,"2.081,62",2024-10,10,0.0,6.05,Alimentación
+2024-09-30,Bizum A Favor De Maria Martin Nistal Concepto: Spo,-3.0,"2.087,67",2024-09,9,0.0,3.0,Gastos recurrentes
+2024-09-30,Bizum De Alicia Esteban Molina Concepto Bolero,2.0,"2.090,67",2024-09,9,2.0,0.0,Ocio
+2024-09-30,Bizum De David Salvador Aguado Concepto Bizum,1.5,"2.088,67",2024-09,9,1.5,0.0,Otros
+2024-09-30,"Pago Movil En Bar Bolero, Salamanca, Tarj. :*047140",-20.0,"2.087,17",2024-09,9,0.0,20.0,Ocio
+2024-09-30,Bizum De Alicia Esteban Molina Concepto Statere,5.0,"2.107,17",2024-09,9,5.0,0.0,Ocio
+2024-09-30,"Pago Movil En Bershka, Salamanca, Tarj. :*047140",-58.08,"2.102,17",2024-09,9,0.0,58.08,Ocio
+2024-09-30,"Pago Movil En Decathlon Salam, Carbajosa De, Tarj. :*047140",-11.17,"2.160,25",2024-09,9,0.0,11.17,Ocio
+2024-09-30,Bizum De David Salvador Aguado Concepto Bizum,6.0,"2.171,42",2024-09,9,6.0,0.0,Otros
+2024-09-30,Bizum De Trinidad Burs Concepto Sin Concepto,12.0,"2.165,42",2024-09,9,12.0,0.0,Otros
+2024-09-30,"Pago Movil En St Patricks, Salamanca, Tarj. :*047140",-29.0,"2.153,42",2024-09,9,0.0,29.0,Ocio
+2024-09-27,"Transferencia De Universidad De Salamanca, Concepto Abono De Nominas.",636.47,"2.182,42",2024-09,9,636.47,0.0,Ingresos
+2024-09-24,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-1.5,"1.545,95",2024-09,9,0.0,1.5,Alimentación
+2024-09-23,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-18.64,"1.547,45",2024-09,9,0.0,18.64,Alimentación
+2024-09-23,Bizum De Marcos Rodrigo Vergara Morales Concepto Pakipa Agua Valencia,3.5,"1.566,09",2024-09,9,3.5,0.0,Ocio
+2024-09-23,"Pago Movil En Paki Palla, Salamanca, Tarj. :*047140",-11.5,"1.562,59",2024-09,9,0.0,11.5,Ocio
+2024-09-23,"Pago Movil En Bender, Salamanca, Tarj. :*047140",-5.5,"1.574,09",2024-09,9,0.0,5.5,Ocio
+2024-09-23,Bizum A Favor De Javier Ripplinger Serrano Concepto: Tonica,-2.2,"1.579,59",2024-09,9,0.0,2.2,Ocio
+2024-09-20,Bizum De Alejandro Palomares Arroyo Concepto Limpieza,20.0,"1.581,79",2024-09,9,20.0,0.0,Otros
+2024-09-20,Bizum De Miguel Angel Perez Arroyo Concepto Limpio,20.0,"1.561,79",2024-09,9,20.0,0.0,Otros
+2024-09-20,Bizum De Brandon Cobos Alegre Concepto Limpieza,20.0,"1.541,79",2024-09,9,20.0,0.0,Otros
+2024-09-20,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-8.24,"1.521,79",2024-09,9,0.0,8.24,Alimentación
+2024-09-19,Bizum De Hugo Garcia Sanchez Concepto Tricount,10.49,"1.530,03",2024-09,9,10.49,0.0,Otros
+2024-09-18,Bizum A Favor De Javier Garcia Pechero Concepto: Chati,-6.0,"1.519,54",2024-09,9,0.0,6.0,Gastos recurrentes
+2024-09-16,Bizum De Miguel Angel Perez Arroyo Concepto Starbucks,6.0,"1.525,54",2024-09,9,6.0,0.0,Ocio
+2024-09-16,"Pago Movil En Parabarap, Salamanca, Tarj. :*047140",-12.0,"1.519,54",2024-09,9,0.0,12.0,Ocio
+2024-09-16,Bizum A Favor De Pablo Santos Blazquez Concepto: Patriks,-13.5,"1.531,54",2024-09,9,0.0,13.5,Ocio
+2024-09-16,Bizum A Favor De Javier Garcia Pechero Concepto: Mus,-5.0,"1.545,04",2024-09,9,0.0,5.0,Ocio
+2024-09-16,Bizum A Favor De Rocio Romero Navarro Concepto: Caseta,-3.5,"1.550,04",2024-09,9,0.0,3.5,Ocio
+2024-09-13,Bizum A Favor De Angel Picado Cuadrado Concepto: Casetas,-2.95,"1.553,54",2024-09,9,0.0,2.95,Ocio
+2024-09-13,Bizum A Favor De David Salvador Aguado Concepto: Casetas,-4.75,"1.556,49",2024-09,9,0.0,4.75,Ocio
+2024-09-13,Bizum De Miguel Angel Perez Arroyo Concepto Casetas,16.9,"1.561,24",2024-09,9,16.9,0.0,Ocio
+2024-09-13,"Pago Movil En St Patricks, Salamanca, Tarj. :*047140",-22.6,"1.544,34",2024-09,9,0.0,22.6,Ocio
+2024-09-11,"Compra Petroprix Carbajosa, Martos, Tarjeta 5489010372047140 , Comision 0,00",-39.28,"1.566,94",2024-09,9,0.0,39.28,Coche
+2024-09-10,Bizum A Favor De Miguel Angel Perez Arroyo Concepto: Ca,-2.5,"1.606,22",2024-09,9,0.0,2.5,Otros
+2024-09-10,Devolución Bizum A Favor De Pablo Santos Blazquez Concepto Cocacola Maria Miki,2.5,"1.608,72",2024-09,9,2.5,0.0,Ocio
+2024-09-10,Bizum A Favor De Pablo Santos Blazquez Concepto: Cocacola Maria Miki,-2.5,"1.606,22",2024-09,9,0.0,2.5,Ocio
+2024-09-10,Bizum De Miguel Angel Perez Arroyo Concepto 6 Tuyos Y 2 50 De Santos,8.5,"1.608,72",2024-09,9,8.5,0.0,Ocio
+2024-09-10,Bizum A Favor De Pablo Santos Blazquez Concepto: Patriks,-11.0,"1.600,22",2024-09,9,0.0,11.0,Ocio
+2024-09-10,Bizum De Brandon Cobos Alegre Concepto Sin Concepto,5.5,"1.611,22",2024-09,9,5.5,0.0,Otros
+2024-09-05,"Compra Petroprix Carbajosa, Martos, Tarjeta 5489010372047140 , Comision 0,00",-48.93,"1.605,72",2024-09,9,0.0,48.93,Coche
+2024-09-04,Bizum A Favor De David Salvador Aguado Concepto: Pinta,-2.0,"1.654,65",2024-09,9,0.0,2.0,Ocio
+2024-09-04,Transferencia A Favor De Bernardo Merchan Montero Concepto: Piso Vitigudino 39 Marco Sevilla Mes Septiembre,-230.0,"1.656,65",2024-09,9,0.0,230.0,Gastos recurrentes
+2024-09-03,Bizum De Pablo Santos Blazquez Concepto Polo,14.5,"1.886,65",2024-09,9,14.5,0.0,Ocio
+2024-09-03,"Pago Movil En Mercadona Sntia, Salamanca, Tarj. :*047140",-8.17,"1.872,15",2024-09,9,0.0,8.17,Alimentación
+2024-09-02,Bizum A Favor De Martin Cataldi Ibanez Concepto: Litros,-3.0,"1.880,32",2024-09,9,0.0,3.0,Ocio

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppBanco v1.5 - Gestión de Transacciones</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🏦 AppBanco <span class="version">v1.5</span></h1>
+                <p class="subtitle">Sistema de Gestión de Transacciones Bancarias</p>
+            </div>
+        </header>
+
+        <!-- Navegación -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+            <button class="tab-btn" data-tab="transacciones">📋 Transacciones</button>
+            <button class="tab-btn" data-tab="importar">📥 Importar</button>
+            <button class="tab-btn" data-tab="nueva">➕ Nueva</button>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            
+            <!-- Tab: Dashboard -->
+            <section id="dashboard" class="tab-content active">
+                <div class="dashboard-grid">
+                    <!-- Balance -->
+                    <div class="card card-balance">
+                        <h3>💰 Balance General</h3>
+                        <div class="balance-info">
+                            <div class="balance-item ingresos">
+                                <span class="label">Ingresos</span>
+                                <span class="value" id="total-ingresos">0,00 €</span>
+                            </div>
+                            <div class="balance-item gastos">
+                                <span class="label">Gastos</span>
+                                <span class="value" id="total-gastos">0,00 €</span>
+                            </div>
+                            <div class="balance-item balance">
+                                <span class="label">Balance</span>
+                                <span class="value" id="balance-total">0,00 €</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen por Categorías -->
+                    <div class="card card-categorias">
+                        <h3>📁 Resumen por Categorías</h3>
+                        <div id="categorias-resumen" class="categorias-list">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas -->
+                    <div class="card card-stats">
+                        <h3>📈 Estadísticas</h3>
+                        <div class="stats-info">
+                            <div class="stat-item">
+                                <span class="stat-value" id="total-transacciones">0</span>
+                                <span class="stat-label">Transacciones</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="categorias-count">7</span>
+                                <span class="stat-label">Categorías</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Transacciones -->
+            <section id="transacciones" class="tab-content">
+                <!-- Filtros -->
+                <div class="filtros-bar">
+                    <input type="text" id="filtro-busqueda" placeholder="🔍 Buscar por concepto...">
+                    <select id="filtro-categoria">
+                        <option value="">Todas las categorías</option>
+                        <option value="Inversión">Inversión</option>
+                        <option value="Coche">Coche</option>
+                        <option value="Alimentación">Alimentación</option>
+                        <option value="Gastos Recurrentes">Gastos Recurrentes</option>
+                        <option value="Ocio">Ocio</option>
+                        <option value="Ingresos">Ingresos</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                    <select id="filtro-orden">
+                        <option value="DESC">📅 Más recientes primero</option>
+                        <option value="ASC">📅 Más antiguas primero</option>
+                    </select>
+                    <input type="date" id="filtro-fecha-inicio" placeholder="Desde">
+                    <input type="date" id="filtro-fecha-fin" placeholder="Hasta">
+                    <button id="btn-filtrar" class="btn btn-primary">Filtrar</button>
+                    <button id="btn-limpiar" class="btn btn-secondary">Limpiar</button>
+                </div>
+
+                <!-- Tabla de Transacciones -->
+                <div class="table-container">
+                    <table class="tabla-transacciones">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="fecha">Fecha <span id="sort-indicator">▼</span></th>
+                                <th>Concepto</th>
+                                <th>Categoría</th>
+                                <th>Importe</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-body">
+                            <!-- Se llena dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab: Importar -->
+            <section id="importar" class="tab-content">
+                <div class="card card-importar">
+                    <h3>📥 Importar Transacciones</h3>
+                    <p class="info-text">Sube un archivo CSV o JSON con tus transacciones bancarias.</p>
+                    
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">📁</div>
+                        <p>Arrastra tu archivo aquí o haz clic para seleccionar</p>
+                        <input type="file" id="file-input" accept=".csv,.json" hidden>
+                        <button class="btn btn-primary" id="btn-seleccionar">Seleccionar archivo</button>
+                    </div>
+
+                    <div id="file-info" class="file-info hidden">
+                        <span id="file-name"></span>
+                        <button class="btn btn-danger btn-small" id="btn-cancelar-archivo">✕</button>
+                    </div>
+
+                    <button class="btn btn-success btn-large" id="btn-importar" disabled>
+                        🚀 Importar Transacciones
+                    </button>
+
+                    <div id="resultado-importacion" class="resultado hidden"></div>
+                </div>
+
+                <div class="card card-formato">
+                    <h3>📋 Formato esperado</h3>
+                    <p>El archivo CSV debe tener las siguientes columnas:</p>
+                    <code>Fecha;Concepto;Importe</code>
+                    <p class="info-text">El sistema detectará automáticamente el formato de varios bancos españoles.</p>
+                </div>
+            </section>
+
+            <!-- Tab: Nueva Transacción -->
+            <section id="nueva" class="tab-content">
+                <div class="card card-form">
+                    <h3>➕ Nueva Transacción</h3>
+                    <form id="form-transaccion">
+                        <div class="form-group">
+                            <label for="input-fecha">Fecha</label>
+                            <input type="date" id="input-fecha" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-concepto">Concepto</label>
+                            <input type="text" id="input-concepto" placeholder="Ej: Compra Mercadona" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-importe">Importe (€)</label>
+                            <input type="number" id="input-importe" step="0.01" placeholder="-50.00" required>
+                            <small>Usa valores negativos para gastos, positivos para ingresos</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-categoria">Categoría</label>
+                            <select id="input-categoria">
+                                <option value="">Clasificación automática</option>
+                                <option value="Inversión">Inversión</option>
+                                <option value="Coche">Coche</option>
+                                <option value="Alimentación">Alimentación</option>
+                                <option value="Gastos Recurrentes">Gastos Recurrentes</option>
+                                <option value="Ocio">Ocio</option>
+                                <option value="Ingresos">Ingresos</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input-notas">Notas (opcional)</label>
+                            <textarea id="input-notas" placeholder="Notas adicionales..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-large">
+                            💾 Guardar Transacción
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal de Edición -->
+        <div id="modal-editar" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>✏️ Editar Transacción</h3>
+                    <button class="btn-close" id="btn-cerrar-modal">&times;</button>
+                </div>
+                <form id="form-editar">
+                    <input type="hidden" id="edit-id">
+                    <div class="form-group">
+                        <label for="edit-fecha">Fecha</label>
+                        <input type="date" id="edit-fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-concepto">Concepto</label>
+                        <input type="text" id="edit-concepto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-importe">Importe (€)</label>
+                        <input type="number" id="edit-importe" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-categoria">Categoría</label>
+                        <select id="edit-categoria">
+                            <option value="Inversión">Inversión</option>
+                            <option value="Coche">Coche</option>
+                            <option value="Alimentación">Alimentación</option>
+                            <option value="Gastos Recurrentes">Gastos Recurrentes</option>
+                            <option value="Ocio">Ocio</option>
+                            <option value="Ingresos">Ingresos</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-cancelar-edicion">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>AppBanco v1.5 - Sistema de Gestión de Transacciones Bancarias</p>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
