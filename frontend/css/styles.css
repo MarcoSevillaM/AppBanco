@@ -352,7 +352,7 @@ body {
     color: var(--text-muted);
 }
 
-.categoria-badge[data-cat="Inversión"] { background: #dbeafe; color: #1e40af; }
+.categoria-badge[data-cat="Inversiones"] { background: #dbeafe; color: #1e40af; }
 .categoria-badge[data-cat="Coche"] { background: #fef3c7; color: #92400e; }
 .categoria-badge[data-cat="Alimentación"] { background: #d1fae5; color: #065f46; }
 .categoria-badge[data-cat="Gastos Recurrentes"] { background: #fce7f3; color: #9d174d; }

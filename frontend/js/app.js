@@ -1500,6 +1500,57 @@ function renderizarPrediccion(prediccion) {
 }
 
 /**
+ * Calcular predicciones históricas retroactivas
+ * Para cada mes, calcula qué hubiéramos predicho basándonos en los meses anteriores
+ */
+function calcularPrediccionesHistoricas(datosMensuales) {
+    const prediccionesHistoricas = [];
+    
+    // Necesitamos al menos 3 meses de datos para empezar a predecir
+    for (let i = 3; i < datosMensuales.length; i++) {
+        // Usar los meses anteriores para predecir el mes i
+        const datosAnteriores = datosMensuales.slice(0, i);
+        const mesesParaAnalisis = Math.min(datosAnteriores.length, 6);
+        const datosRecientes = datosAnteriores.slice(-mesesParaAnalisis);
+        
+        // Calcular media ponderada
+        let pesoTotal = 0;
+        let ingresoPonderado = 0;
+        let gastoPonderado = 0;
+        
+        datosRecientes.forEach((mes, index) => {
+            const peso = index + 1;
+            pesoTotal += peso;
+            ingresoPonderado += mes.ingresos * peso;
+            gastoPonderado += mes.gastos * peso;
+        });
+        
+        let ingresoPredicho = ingresoPonderado / pesoTotal;
+        let gastoPredicho = gastoPonderado / pesoTotal;
+        
+        // Análisis de tendencia
+        const tendenciaIngresos = calcularTendencia(datosRecientes.map(m => m.ingresos));
+        const tendenciaGastos = calcularTendencia(datosRecientes.map(m => m.gastos));
+        
+        ingresoPredicho += tendenciaIngresos.pendiente;
+        gastoPredicho += tendenciaGastos.pendiente;
+        
+        ingresoPredicho = Math.max(0, ingresoPredicho);
+        gastoPredicho = Math.max(0, gastoPredicho);
+        
+        const ahorroPredicho = ingresoPredicho - gastoPredicho;
+        
+        prediccionesHistoricas.push({
+            mesIndex: i,
+            prediccion: ahorroPredicho,
+            real: datosMensuales[i].ingresos - datosMensuales[i].gastos
+        });
+    }
+    
+    return prediccionesHistoricas;
+}
+
+/**
  * Renderizar gráfica de tendencia y predicción
  */
 function renderizarChartPrediccion(datosMensuales, prediccion) {
@@ -1512,58 +1563,53 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
     
     // Preparar datos históricos (últimos 12 meses máximo)
     const datosGrafica = datosMensuales.slice(-12);
+    const offsetInicio = Math.max(0, datosMensuales.length - 12);
     const labels = datosGrafica.map(m => NOMBRES_MESES[m.mes]);
-    const ahorros = datosGrafica.map(m => m.ingresos - m.gastos);
+    const ahorrosReales = datosGrafica.map(m => m.ingresos - m.gastos);
     
-    // Añadir predicción
+    // Calcular predicciones históricas
+    const prediccionesHistoricas = calcularPrediccionesHistoricas(datosMensuales);
+    
+    // Mapear predicciones históricas a los índices de la gráfica
+    const ahorrosPredichos = datosGrafica.map((m, idx) => {
+        const idxGlobal = offsetInicio + idx;
+        const predHistorica = prediccionesHistoricas.find(p => p.mesIndex === idxGlobal);
+        return predHistorica ? predHistorica.prediccion : null;
+    });
+    
+    // Añadir mes de predicción futura
     if (prediccion) {
         labels.push(`${NOMBRES_MESES[prediccion.mesObjetivo]} (Pred.)`);
-        ahorros.push(null); // Valor nulo para separar
+        ahorrosReales.push(null);
+        ahorrosPredichos.push(prediccion.ahorro);
     }
     
-    // Dataset de ahorro histórico
+    // Dataset de ahorro real
     const datasets = [
         {
-            label: 'Ahorro Histórico',
-            data: [...ahorros.slice(0, -1), null],
-            borderColor: 'rgb(59, 130, 246)',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            label: 'Ahorro Real',
+            data: ahorrosReales,
+            borderColor: 'rgb(34, 197, 94)',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
             fill: true,
             tension: 0.3,
-            pointBackgroundColor: 'rgb(59, 130, 246)',
-            pointRadius: 5
+            pointBackgroundColor: 'rgb(34, 197, 94)',
+            pointRadius: 6,
+            pointHoverRadius: 8
+        },
+        {
+            label: 'Predicción',
+            data: ahorrosPredichos,
+            borderColor: 'rgb(168, 85, 247)',
+            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+            fill: false,
+            tension: 0.3,
+            pointBackgroundColor: 'rgb(168, 85, 247)',
+            pointRadius: 5,
+            pointStyle: 'triangle',
+            borderDash: [5, 5]
         }
     ];
-    
-    // Añadir punto de predicción
-    if (prediccion) {
-        const prediccionData = new Array(labels.length - 1).fill(null);
-        prediccionData.push(prediccion.ahorro);
-        
-        // Conectar último punto real con predicción
-        const ultimoAhorro = ahorros[ahorros.length - 2];
-        const conexionData = new Array(labels.length).fill(null);
-        conexionData[labels.length - 2] = ultimoAhorro;
-        conexionData[labels.length - 1] = prediccion.ahorro;
-        
-        datasets.push({
-            label: 'Predicción',
-            data: prediccionData,
-            borderColor: 'rgb(168, 85, 247)',
-            backgroundColor: 'rgba(168, 85, 247, 0.8)',
-            pointRadius: 8,
-            pointStyle: 'star'
-        });
-        
-        datasets.push({
-            label: 'Tendencia',
-            data: conexionData,
-            borderColor: 'rgba(168, 85, 247, 0.5)',
-            borderDash: [5, 5],
-            pointRadius: 0,
-            fill: false
-        });
-    }
     
     PrediccionState.chart = new Chart(ctx, {
         type: 'line',
@@ -1571,6 +1617,10 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             plugins: {
                 legend: {
                     position: 'top'
@@ -1580,6 +1630,18 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
                         label: function(context) {
                             if (context.raw === null) return null;
                             return context.dataset.label + ': ' + formatearMoneda(context.raw);
+                        },
+                        afterBody: function(tooltipItems) {
+                            const realItem = tooltipItems.find(i => i.dataset.label === 'Ahorro Real');
+                            const predItem = tooltipItems.find(i => i.dataset.label === 'Predicción');
+                            
+                            if (realItem && predItem && realItem.raw !== null && predItem.raw !== null) {
+                                const diferencia = realItem.raw - predItem.raw;
+                                const porcentaje = predItem.raw !== 0 ? ((diferencia / Math.abs(predItem.raw)) * 100).toFixed(1) : 0;
+                                const signo = diferencia >= 0 ? '+' : '';
+                                return [`─────────────`, `Diferencia: ${signo}${formatearMoneda(diferencia)} (${signo}${porcentaje}%)`];
+                            }
+                            return [];
                         }
                     }
                 }
@@ -1593,6 +1655,39 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
             }
         }
     });
+    
+    // Calcular y mostrar precisión del modelo
+    mostrarPrecisionModelo(prediccionesHistoricas);
+}
+
+/**
+ * Mostrar precisión del modelo de predicción
+ */
+function mostrarPrecisionModelo(prediccionesHistoricas) {
+    if (prediccionesHistoricas.length === 0) return;
+    
+    // Calcular error medio absoluto (MAE) y porcentaje de acierto
+    let sumaErrores = 0;
+    let sumaErroresPorcentuales = 0;
+    
+    prediccionesHistoricas.forEach(p => {
+        const error = Math.abs(p.real - p.prediccion);
+        sumaErrores += error;
+        
+        if (p.real !== 0) {
+            sumaErroresPorcentuales += (error / Math.abs(p.real)) * 100;
+        }
+    });
+    
+    const errorMedioAbsoluto = sumaErrores / prediccionesHistoricas.length;
+    const errorMedioPorcentual = sumaErroresPorcentuales / prediccionesHistoricas.length;
+    const precision = Math.max(0, 100 - errorMedioPorcentual).toFixed(1);
+    
+    // Actualizar el elemento de método con la precisión
+    const metodoEl = document.getElementById('pred-metodo');
+    if (metodoEl) {
+        metodoEl.innerHTML = `Media Móvil Ponderada + Tendencia <br><small style="color: ${precision > 70 ? 'var(--success-color)' : precision > 50 ? 'var(--warning-color)' : 'var(--danger-color)'}">📊 Precisión histórica: ${precision}%</small>`;
+    }
 }
 
 /**
