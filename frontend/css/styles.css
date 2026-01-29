@@ -159,7 +159,7 @@ body {
 /* Balance Card */
 .balance-info {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
 }
 
@@ -168,6 +168,12 @@ body {
     padding: 1rem;
     border-radius: var(--radius);
     background: var(--bg-color);
+}
+
+.balance-item.balance {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(37, 99, 235, 0.05));
+    border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 .balance-item .label {
@@ -181,6 +187,10 @@ body {
     display: block;
     font-size: 1.25rem;
     font-weight: 700;
+}
+
+.balance-item.balance .value {
+    font-size: 1.5rem;
 }
 
 .balance-item.ingresos .value { color: var(--ingresos-color); }
@@ -250,11 +260,94 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     padding: 1rem;
     background: var(--card-bg);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
+}
+
+/* Resumen del filtro aplicado */
+.resumen-filtro {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.resumen-filtro.hidden {
+    display: none;
+}
+
+.resumen-filtro-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0.875rem 1.25rem;
+    border-right: 1px solid var(--border-color);
+}
+
+.resumen-filtro-item:last-child {
+    border-right: none;
+}
+
+.resumen-filtro-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.resumen-filtro-valor {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.resumen-filtro-valor.ingresos {
+    color: var(--ingresos-color);
+}
+
+.resumen-filtro-valor.gastos {
+    color: var(--gastos-color);
+}
+
+.resumen-filtro-valor.ahorro {
+    color: var(--primary-color);
+}
+
+.resumen-filtro-valor.inversion {
+    color: #8b5cf6;
+}
+
+/* Responsive resumen filtro */
+@media (max-width: 600px) {
+    .resumen-filtro {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .resumen-filtro-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .resumen-filtro-item:nth-child(odd) {
+        border-right: 1px solid var(--border-color);
+    }
+    
+    .resumen-filtro-item:nth-child(3),
+    .resumen-filtro-item:nth-child(4) {
+        border-bottom: none;
+    }
+    
+    .resumen-filtro-valor {
+        font-size: 1rem;
+    }
 }
 
 .filtros-bar input,
@@ -651,48 +744,9 @@ code {
 }
 
 /* ==========================================
-   RESPONSIVE
+   RESPONSIVE - TABLET (max-width: 1024px)
    ========================================== */
-@media (max-width: 768px) {
-    .header {
-        padding: 1rem;
-    }
-    
-    .nav-tabs {
-        overflow-x: auto;
-    }
-    
-    .tab-btn {
-        padding: 0.75rem 1rem;
-        font-size: 0.875rem;
-        white-space: nowrap;
-    }
-    
-    .main-content {
-        padding: 1rem;
-    }
-    
-    .filtros-bar {
-        flex-direction: column;
-    }
-    
-    #filtro-busqueda {
-        min-width: 100%;
-    }
-    
-    .balance-info {
-        grid-template-columns: 1fr;
-    }
-    
-    .tabla-transacciones {
-        font-size: 0.875rem;
-    }
-    
-    .tabla-transacciones th,
-    .tabla-transacciones td {
-        padding: 0.75rem 0.5rem;
-    }
-    
+@media (max-width: 1024px) {
     .graficas-grid {
         grid-template-columns: 1fr;
     }
@@ -700,6 +754,563 @@ code {
     .card-grafica.card-half,
     .card-grafica.card-full {
         grid-column: span 1;
+    }
+    
+    .prediccion-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-prediccion-principal,
+    .card-metodo {
+        grid-column: span 1;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - MÓVIL (max-width: 768px)
+   ========================================== */
+@media (max-width: 768px) {
+    /* Header */
+    .header {
+        padding: 1rem;
+    }
+    
+    .header-content h1 {
+        font-size: 1.25rem;
+    }
+    
+    .header-content .subtitle {
+        font-size: 0.75rem;
+    }
+    
+    /* Navegación - Scroll horizontal */
+    .nav-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0 0.5rem;
+    }
+    
+    .nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .tab-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.8125rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    /* Contenido Principal */
+    .main-content {
+        padding: 0.75rem;
+    }
+    
+    /* Cards */
+    .card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: var(--radius);
+    }
+    
+    .card h3 {
+        font-size: 1rem;
+    }
+    
+    /* Dashboard Grid */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    /* Balance */
+    .balance-info {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .balance-item {
+        padding: 0.75rem;
+    }
+    
+    .balance-item .value {
+        font-size: 1.125rem;
+    }
+    
+    /* Stats */
+    .stats-info {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    /* Filtros */
+    .filtros-bar {
+        flex-direction: column;
+        padding: 0.75rem;
+        gap: 0.5rem;
+    }
+    
+    .filtros-bar input,
+    .filtros-bar select {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+    
+    #filtro-busqueda {
+        min-width: 100%;
+    }
+    
+    .filtros-bar .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Tabla - Scroll horizontal */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius);
+    }
+    
+    .tabla-transacciones {
+        min-width: 600px;
+        font-size: 0.8125rem;
+    }
+    
+    .tabla-transacciones th,
+    .tabla-transacciones td {
+        padding: 0.625rem 0.5rem;
+    }
+    
+    .categoria-badge {
+        font-size: 0.6875rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .btn-icon {
+        padding: 0.375rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Formulario Nueva Transacción */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px; /* Evita zoom en iOS */
+        padding: 0.875rem;
+    }
+    
+    /* Upload */
+    .upload-area {
+        padding: 2rem 1rem;
+    }
+    
+    .upload-icon {
+        font-size: 2rem;
+    }
+    
+    .file-info {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    /* Modal */
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 1rem;
+        max-height: 85vh;
+    }
+    
+    .modal-header {
+        padding: 1rem;
+    }
+    
+    .modal-content form {
+        padding: 1rem;
+    }
+    
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .modal-actions .btn {
+        width: 100%;
+    }
+    
+    /* Gráficas */
+    .graficas-filtros {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .graficas-filtros select {
+        width: 100%;
+    }
+    
+    .card-grafica {
+        min-height: 300px;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .chart-container.chart-pie {
+        height: 220px;
+    }
+    
+    /* Tabla Resumen */
+    .tabla-resumen-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .tabla-resumen-mensual {
+        min-width: 500px;
+        font-size: 0.8125rem;
+    }
+    
+    .tabla-resumen-mensual th,
+    .tabla-resumen-mensual td {
+        padding: 0.625rem 0.5rem;
+    }
+    
+    /* Resumen Totales */
+    .resumen-totales {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .resumen-totales .total-item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    
+    .resumen-totales .total-value {
+        font-size: 1.125rem;
+    }
+    
+    /* Selector de Mes */
+    .mes-selector-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .mes-selector-container select {
+        width: 100%;
+        font-size: 16px;
+    }
+    
+    .transacciones-mes-lista {
+        max-height: 400px;
+    }
+    
+    .transacciones-mes-resumen {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .transacciones-mes-resumen .resumen-item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        text-align: left;
+    }
+    
+    /* Predicción */
+    .prediccion-resultado {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .prediccion-desglose {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .pred-item {
+        min-width: 100%;
+    }
+    
+    .prediccion-valor-principal .pred-valor {
+        font-size: 2rem;
+    }
+    
+    .prediccion-categorias-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .metodo-info {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    /* Footer */
+    .footer {
+        padding: 1rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - iPhone 13 y móviles pequeños (max-width: 414px)
+   ========================================== */
+@media (max-width: 414px) {
+    /* Header más compacto */
+    .header {
+        padding: 0.75rem;
+    }
+    
+    .header-content h1 {
+        font-size: 1.125rem;
+    }
+    
+    .header-content .version {
+        font-size: 0.75rem;
+    }
+    
+    /* Tabs más pequeños */
+    .tab-btn {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Contenido */
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    .card {
+        padding: 0.875rem;
+        border-radius: 8px;
+    }
+    
+    .card h3 {
+        font-size: 0.9375rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    /* Balance más compacto */
+    .balance-item {
+        padding: 0.625rem;
+    }
+    
+    .balance-item .label {
+        font-size: 0.75rem;
+    }
+    
+    .balance-item .value {
+        font-size: 1rem;
+    }
+    
+    /* Categorías */
+    .categoria-item {
+        padding: 0.625rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Botones */
+    .btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .btn-large {
+        padding: 0.875rem 1.5rem;
+    }
+    
+    /* Tabla aún más compacta */
+    .tabla-transacciones {
+        min-width: 550px;
+        font-size: 0.75rem;
+    }
+    
+    .tabla-transacciones th,
+    .tabla-transacciones td {
+        padding: 0.5rem 0.375rem;
+    }
+    
+    /* Gráficas */
+    .card-grafica {
+        min-height: 280px;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+    
+    .chart-container.chart-pie {
+        height: 180px;
+    }
+    
+    /* Predicción */
+    .prediccion-valor-principal .pred-valor {
+        font-size: 1.75rem;
+    }
+    
+    .pred-item {
+        padding: 0.75rem 1rem;
+    }
+    
+    .pred-item-valor {
+        font-size: 1.125rem;
+    }
+    
+    .prediccion-mes-objetivo .mes-label {
+        font-size: 1rem;
+        padding: 0.375rem 1rem;
+    }
+    
+    .pred-categoria-item {
+        padding: 0.75rem;
+    }
+    
+    .pred-categoria-valor {
+        font-size: 1.125rem;
+    }
+    
+    /* Tabla Resumen */
+    .tabla-resumen-mensual {
+        font-size: 0.75rem;
+    }
+    
+    .tabla-resumen-mensual th,
+    .tabla-resumen-mensual td {
+        padding: 0.5rem 0.375rem;
+    }
+    
+    /* Metodología */
+    .metodo-valor {
+        font-size: 0.875rem;
+    }
+    
+    .metodo-disclaimer {
+        font-size: 0.75rem;
+        padding: 0.75rem;
+    }
+}
+
+/* ==========================================
+   UTILIDADES RESPONSIVE
+   ========================================== */
+
+/* Safe area para iPhone con notch */
+@supports (padding: max(0px)) {
+    .header {
+        padding-top: max(1rem, env(safe-area-inset-top));
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+    
+    .footer {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    .main-content {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+    }
+}
+
+/* Mejoras de accesibilidad táctil */
+@media (hover: none) and (pointer: coarse) {
+    .btn,
+    .tab-btn,
+    .btn-icon {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .filtros-bar input,
+    .filtros-bar select,
+    .form-group input,
+    .form-group select {
+        min-height: 44px;
+    }
+    
+    .tabla-transacciones tbody tr {
+        min-height: 48px;
+    }
+    
+    /* Eliminar efectos hover en touch */
+    .tabla-transacciones tbody tr:hover {
+        background: transparent;
+    }
+    
+    .categoria-item:hover,
+    .btn:hover {
+        transform: none;
+    }
+}
+
+/* Prevenir zoom en inputs iOS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select,
+    textarea,
+    input {
+        font-size: 16px !important;
+    }
+}
+
+/* Ocultar scrollbars pero mantener funcionalidad */
+.nav-tabs,
+.table-container,
+.transacciones-mes-lista,
+.tabla-resumen-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.nav-tabs::-webkit-scrollbar,
+.table-container::-webkit-scrollbar,
+.transacciones-mes-lista::-webkit-scrollbar,
+.tabla-resumen-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Landscape en móvil */
+@media (max-width: 896px) and (orientation: landscape) {
+    .header {
+        padding: 0.5rem 1rem;
+    }
+    
+    .header-content h1 {
+        font-size: 1rem;
+    }
+    
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    .card-grafica {
+        min-height: 250px;
+    }
+    
+    .chart-container {
+        height: 180px;
+    }
+    
+    .modal-content {
+        max-height: 95vh;
+    }
+    
+    .prediccion-resultado {
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 }
 
@@ -1153,38 +1764,4 @@ code {
 
 .pred-categoria-tendencia.estable {
     color: var(--text-muted);
-}
-
-/* Responsive predicción */
-@media (max-width: 768px) {
-    .prediccion-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .card-prediccion-principal,
-    .card-metodo {
-        grid-column: span 1;
-    }
-    
-    .prediccion-resultado {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .prediccion-desglose {
-        flex-direction: column;
-    }
-    
-    .pred-item {
-        min-width: 100%;
-    }
-    
-    .prediccion-valor-principal .pred-valor {
-        font-size: 2rem;
-    }
-    
-    .metodo-info {
-        flex-direction: column;
-        gap: 1rem;
-    }
 }

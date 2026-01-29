@@ -167,10 +167,46 @@ async function cargarTransacciones(filtros = {}) {
             AppState.transacciones = data.data;
             renderizarTransacciones(data.data);
             actualizarIndicadorOrden();
+            actualizarResumenFiltro(data.data);
         }
     } catch (error) {
         console.error('Error al cargar transacciones:', error);
     }
+}
+
+/**
+ * Actualizar resumen del filtro aplicado
+ */
+function actualizarResumenFiltro(transacciones) {
+    const resumenDiv = document.getElementById('resumen-filtro');
+    if (!resumenDiv) return;
+    
+    // Calcular totales
+    let ingresos = 0;
+    let gastos = 0;
+    let inversion = 0;
+    
+    transacciones.forEach(t => {
+        if (t.categoria === 'Inversiones') {
+            //inversion += Math.abs(t.importe);
+            inversion += t.importe;
+        } else if (t.importe > 0) {
+            ingresos += t.importe;
+        } else {
+            gastos += Math.abs(t.importe);
+        }
+    });
+    
+    const ahorro = ingresos - gastos;
+    
+    // Actualizar valores
+    document.getElementById('filtro-total-ingresos').textContent = formatearMoneda(ingresos);
+    document.getElementById('filtro-total-gastos').textContent = formatearMoneda(gastos);
+    document.getElementById('filtro-total-ahorro').textContent = formatearMoneda(ahorro);
+    document.getElementById('filtro-total-inversion').textContent = formatearMoneda(inversion);
+    
+    // Mostrar el resumen
+    resumenDiv.classList.remove('hidden');
 }
 
 async function crearTransaccion(e) {
@@ -610,6 +646,31 @@ const COLORES_CATEGORIAS = {
 const NOMBRES_MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
 /**
+ * Obtener configuración responsive para Chart.js
+ */
+function getChartResponsiveConfig() {
+    const isMobile = window.innerWidth < 500;
+    const isTablet = window.innerWidth < 768;
+    
+    return {
+        legend: {
+            boxWidth: isMobile ? 10 : isTablet ? 15 : 20,
+            padding: isMobile ? 6 : 10,
+            fontSize: isMobile ? 10 : 12
+        },
+        axis: {
+            fontSize: isMobile ? 9 : isTablet ? 10 : 11,
+            maxRotation: isMobile ? 65 : 45,
+            minRotation: isMobile ? 45 : 0
+        },
+        point: {
+            radius: isMobile ? 3 : 5,
+            hoverRadius: isMobile ? 5 : 7
+        }
+    };
+}
+
+/**
  * Inicializar eventos de gráficas
  */
 function inicializarEventosGraficas() {
@@ -857,7 +918,12 @@ function renderizarChartBalanceMensual(transacciones) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top'
+                    position: 'top',
+                    labels: {
+                        boxWidth: getChartResponsiveConfig().legend.boxWidth,
+                        padding: getChartResponsiveConfig().legend.padding,
+                        font: { size: getChartResponsiveConfig().legend.fontSize }
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -868,10 +934,17 @@ function renderizarChartBalanceMensual(transacciones) {
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        maxRotation: getChartResponsiveConfig().axis.maxRotation,
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => formatearMoneda(value)
+                        callback: value => formatearMoneda(value),
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
                     }
                 }
             }
@@ -914,7 +987,12 @@ function renderizarChartCategoriasMes(transacciones) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top'
+                    position: 'top',
+                    labels: {
+                        boxWidth: getChartResponsiveConfig().legend.boxWidth,
+                        padding: getChartResponsiveConfig().legend.padding,
+                        font: { size: getChartResponsiveConfig().legend.fontSize }
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -926,13 +1004,18 @@ function renderizarChartCategoriasMes(transacciones) {
             },
             scales: {
                 x: {
-                    stacked: true
+                    stacked: true,
+                    ticks: {
+                        maxRotation: getChartResponsiveConfig().axis.maxRotation,
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
+                    }
                 },
                 y: {
                     stacked: true,
                     beginAtZero: true,
                     ticks: {
-                        callback: value => formatearMoneda(value)
+                        callback: value => formatearMoneda(value),
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
                     }
                 }
             }
@@ -986,10 +1069,11 @@ function renderizarChartDistribucion(transacciones) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'right',
+                    position: window.innerWidth < 500 ? 'bottom' : 'right',
                     labels: {
-                        boxWidth: 15,
-                        padding: 10
+                        boxWidth: getChartResponsiveConfig().legend.boxWidth,
+                        padding: getChartResponsiveConfig().legend.padding,
+                        font: { size: getChartResponsiveConfig().legend.fontSize }
                     }
                 },
                 tooltip: {
@@ -1039,7 +1123,7 @@ function renderizarChartAhorroAcumulado(transacciones) {
                 pointBackgroundColor: 'rgb(59, 130, 246)',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
-                pointRadius: 5
+                pointRadius: getChartResponsiveConfig().point.radius
             }]
         },
         options: {
@@ -1058,9 +1142,16 @@ function renderizarChartAhorroAcumulado(transacciones) {
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        maxRotation: getChartResponsiveConfig().axis.maxRotation,
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
+                    }
+                },
                 y: {
                     ticks: {
-                        callback: value => formatearMoneda(value)
+                        callback: value => formatearMoneda(value),
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
                     }
                 }
             }
@@ -1337,7 +1428,72 @@ function agruparTransaccionesPorAñoMes(transacciones) {
 }
 
 /**
- * Calcular predicción usando Media Móvil Ponderada + Análisis de Tendencia
+ * Calcular índices de estacionalidad para cada mes del año
+ * Detecta patrones que se repiten en los mismos meses (ej: diciembre siempre más gastos)
+ */
+function calcularEstacionalidad(datosMensuales) {
+    // Agrupar datos por mes del año (0-11)
+    const datosPorMes = {};
+    
+    for (let i = 0; i < 12; i++) {
+        datosPorMes[i] = { ingresos: [], gastos: [], ahorros: [] };
+    }
+    
+    datosMensuales.forEach(m => {
+        datosPorMes[m.mes].ingresos.push(m.ingresos);
+        datosPorMes[m.mes].gastos.push(m.gastos);
+        datosPorMes[m.mes].ahorros.push(m.ingresos - m.gastos);
+    });
+    
+    // Calcular medias globales
+    const totalIngresos = datosMensuales.reduce((sum, m) => sum + m.ingresos, 0);
+    const totalGastos = datosMensuales.reduce((sum, m) => sum + m.gastos, 0);
+    const mediaGlobalIngresos = totalIngresos / datosMensuales.length;
+    const mediaGlobalGastos = totalGastos / datosMensuales.length;
+    
+    // Calcular índices estacionales para cada mes
+    // Índice > 1 = mes con valores superiores a la media
+    // Índice < 1 = mes con valores inferiores a la media
+    const indicesEstacionales = {};
+    
+    for (let mes = 0; mes < 12; mes++) {
+        const datosDelMes = datosPorMes[mes];
+        
+        if (datosDelMes.ingresos.length === 0) {
+            // Sin datos para este mes, usar índice neutro
+            indicesEstacionales[mes] = { 
+                ingresos: 1.0, 
+                gastos: 1.0,
+                confianza: 0,
+                muestras: 0
+            };
+            continue;
+        }
+        
+        // Media del mes específico
+        const mediaIngresosMes = datosDelMes.ingresos.reduce((a, b) => a + b, 0) / datosDelMes.ingresos.length;
+        const mediaGastosMes = datosDelMes.gastos.reduce((a, b) => a + b, 0) / datosDelMes.gastos.length;
+        
+        // Índice estacional = media del mes / media global
+        const indiceIngresos = mediaGlobalIngresos > 0 ? mediaIngresosMes / mediaGlobalIngresos : 1.0;
+        const indiceGastos = mediaGlobalGastos > 0 ? mediaGastosMes / mediaGlobalGastos : 1.0;
+        
+        // Confianza basada en número de muestras (más años = más confianza)
+        const confianza = Math.min(datosDelMes.ingresos.length / 3, 1); // 3+ años = confianza máxima
+        
+        indicesEstacionales[mes] = {
+            ingresos: indiceIngresos,
+            gastos: indiceGastos,
+            confianza,
+            muestras: datosDelMes.ingresos.length
+        };
+    }
+    
+    return indicesEstacionales;
+}
+
+/**
+ * Calcular predicción usando Media Móvil Ponderada + Tendencia + Estacionalidad
  */
 function calcularPrediccion(datosMensuales) {
     const n = datosMensuales.length;
@@ -1356,32 +1512,44 @@ function calcularPrediccion(datosMensuales) {
         añoObjetivo++;
     }
     
-    // Usar los últimos N meses (máximo 6) para la predicción
-    const mesesParaAnalisis = Math.min(n, 6);
+    // Usar los últimos N meses (máximo 12) para la predicción
+    const mesesParaAnalisis = Math.min(n, 12);
     const datosRecientes = datosMensuales.slice(-mesesParaAnalisis);
     
+    // Calcular índices de estacionalidad con todos los datos históricos
+    const estacionalidad = calcularEstacionalidad(datosMensuales);
+    const indiceEstacionalObjetivo = estacionalidad[mesObjetivo];
+    
     // Calcular media ponderada (más peso a meses recientes)
+    // Pesos exponenciales para dar más importancia a datos recientes
     let pesoTotal = 0;
     let ingresoPonderado = 0;
     let gastoPonderado = 0;
     
     datosRecientes.forEach((mes, index) => {
-        const peso = index + 1; // Pesos: 1, 2, 3, 4, 5, 6
+        // Peso exponencial: los últimos meses pesan mucho más
+        const peso = Math.pow(1.5, index); // 1, 1.5, 2.25, 3.37, 5.06...
         pesoTotal += peso;
         ingresoPonderado += mes.ingresos * peso;
         gastoPonderado += mes.gastos * peso;
     });
     
-    let ingresoPredicho = ingresoPonderado / pesoTotal;
-    let gastoPredicho = gastoPonderado / pesoTotal;
+    let ingresoBase = ingresoPonderado / pesoTotal;
+    let gastoBase = gastoPonderado / pesoTotal;
     
     // Análisis de tendencia (regresión lineal simple)
     const tendenciaIngresos = calcularTendencia(datosRecientes.map(m => m.ingresos));
     const tendenciaGastos = calcularTendencia(datosRecientes.map(m => m.gastos));
     
-    // Ajustar predicción con tendencia
-    ingresoPredicho += tendenciaIngresos.pendiente;
-    gastoPredicho += tendenciaGastos.pendiente;
+    // Ajustar con tendencia
+    let ingresoPredicho = ingresoBase + tendenciaIngresos.pendiente;
+    let gastoPredicho = gastoBase + tendenciaGastos.pendiente;
+    
+    // Aplicar ajuste estacional (ponderado por confianza del índice)
+    const pesoEstacional = indiceEstacionalObjetivo.confianza * 0.3; // Máximo 30% de ajuste estacional
+    
+    ingresoPredicho = ingresoPredicho * (1 - pesoEstacional + pesoEstacional * indiceEstacionalObjetivo.ingresos);
+    gastoPredicho = gastoPredicho * (1 - pesoEstacional + pesoEstacional * indiceEstacionalObjetivo.gastos);
     
     // Asegurar valores no negativos
     ingresoPredicho = Math.max(0, ingresoPredicho);
@@ -1403,6 +1571,15 @@ function calcularPrediccion(datosMensuales) {
         tendenciaGeneral = 'bajando';
     }
     
+    // Determinar efecto estacional
+    let efectoEstacional = 'neutro';
+    const indiceCombinadoEstacional = (indiceEstacionalObjetivo.ingresos + (2 - indiceEstacionalObjetivo.gastos)) / 2;
+    if (indiceCombinadoEstacional > 1.1) {
+        efectoEstacional = 'favorable';
+    } else if (indiceCombinadoEstacional < 0.9) {
+        efectoEstacional = 'desfavorable';
+    }
+    
     return {
         mesObjetivo,
         añoObjetivo,
@@ -1413,7 +1590,13 @@ function calcularPrediccion(datosMensuales) {
         confianza,
         tendencia: tendenciaGeneral,
         mesesAnalizados: mesesParaAnalisis,
-        metodo: 'Media Móvil Ponderada + Tendencia'
+        metodo: 'Media Móvil Ponderada + Tendencia + Estacionalidad',
+        estacionalidad: {
+            indiceIngresos: indiceEstacionalObjetivo.ingresos,
+            indiceGastos: indiceEstacionalObjetivo.gastos,
+            muestrasHistoricas: indiceEstacionalObjetivo.muestras,
+            efecto: efectoEstacional
+        }
     };
 }
 
@@ -1497,43 +1680,67 @@ function renderizarPrediccion(prediccion) {
         'estable': '➡️ Ahorro estable'
     };
     document.getElementById('pred-tendencia').textContent = tendenciaTexto[prediccion.tendencia];
+    
+    // Mostrar información de estacionalidad si existe
+    if (prediccion.estacionalidad) {
+        const estacionalidadEl = document.getElementById('pred-estacionalidad');
+        if (estacionalidadEl) {
+            const efectoIcono = {
+                'favorable': '🌟 Mes históricamente favorable',
+                'desfavorable': '⚠️ Mes históricamente difícil',
+                'neutro': '➖ Mes sin patrón estacional marcado'
+            };
+            estacionalidadEl.textContent = efectoIcono[prediccion.estacionalidad.efecto];
+        }
+    }
 }
 
 /**
  * Calcular predicciones históricas retroactivas
  * Para cada mes, calcula qué hubiéramos predicho basándonos en los meses anteriores
+ * Usa el mismo algoritmo mejorado: Media Móvil Ponderada + Tendencia + Estacionalidad
  */
 function calcularPrediccionesHistoricas(datosMensuales) {
     const prediccionesHistoricas = [];
     
-    // Necesitamos al menos 3 meses de datos para empezar a predecir
-    for (let i = 3; i < datosMensuales.length; i++) {
+    // Necesitamos al menos 2 meses de datos para empezar a predecir
+    for (let i = 2; i < datosMensuales.length; i++) {
         // Usar los meses anteriores para predecir el mes i
         const datosAnteriores = datosMensuales.slice(0, i);
-        const mesesParaAnalisis = Math.min(datosAnteriores.length, 6);
+        const mesesParaAnalisis = Math.min(datosAnteriores.length, 12); // Ampliado a 12 meses
         const datosRecientes = datosAnteriores.slice(-mesesParaAnalisis);
         
-        // Calcular media ponderada
+        // Calcular estacionalidad con los datos disponibles hasta ese punto
+        const estacionalidad = calcularEstacionalidad(datosAnteriores);
+        const mesObjetivo = datosMensuales[i].mes;
+        const indiceEstacional = estacionalidad[mesObjetivo];
+        
+        // Calcular media ponderada con pesos exponenciales
         let pesoTotal = 0;
         let ingresoPonderado = 0;
         let gastoPonderado = 0;
         
         datosRecientes.forEach((mes, index) => {
-            const peso = index + 1;
+            const peso = Math.pow(1.5, index); // Pesos exponenciales
             pesoTotal += peso;
             ingresoPonderado += mes.ingresos * peso;
             gastoPonderado += mes.gastos * peso;
         });
         
-        let ingresoPredicho = ingresoPonderado / pesoTotal;
-        let gastoPredicho = gastoPonderado / pesoTotal;
+        let ingresoBase = ingresoPonderado / pesoTotal;
+        let gastoBase = gastoPonderado / pesoTotal;
         
         // Análisis de tendencia
         const tendenciaIngresos = calcularTendencia(datosRecientes.map(m => m.ingresos));
         const tendenciaGastos = calcularTendencia(datosRecientes.map(m => m.gastos));
         
-        ingresoPredicho += tendenciaIngresos.pendiente;
-        gastoPredicho += tendenciaGastos.pendiente;
+        let ingresoPredicho = ingresoBase + tendenciaIngresos.pendiente;
+        let gastoPredicho = gastoBase + tendenciaGastos.pendiente;
+        
+        // Aplicar ajuste estacional
+        const pesoEstacional = indiceEstacional.confianza * 0.3;
+        ingresoPredicho = ingresoPredicho * (1 - pesoEstacional + pesoEstacional * indiceEstacional.ingresos);
+        gastoPredicho = gastoPredicho * (1 - pesoEstacional + pesoEstacional * indiceEstacional.gastos);
         
         ingresoPredicho = Math.max(0, ingresoPredicho);
         gastoPredicho = Math.max(0, gastoPredicho);
@@ -1561,10 +1768,12 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
         PrediccionState.chart.destroy();
     }
     
-    // Preparar datos históricos (últimos 12 meses máximo)
-    const datosGrafica = datosMensuales.slice(-12);
-    const offsetInicio = Math.max(0, datosMensuales.length - 12);
-    const labels = datosGrafica.map(m => NOMBRES_MESES[m.mes]);
+    // Usar TODOS los datos históricos (no limitar)
+    const datosGrafica = datosMensuales;
+    const offsetInicio = 0;
+    
+    // Crear labels con mes y año para evitar confusión
+    const labels = datosGrafica.map(m => `${NOMBRES_MESES[m.mes]} ${m.año.toString().slice(-2)}`);
     const ahorrosReales = datosGrafica.map(m => m.ingresos - m.gastos);
     
     // Calcular predicciones históricas
@@ -1579,7 +1788,7 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
     
     // Añadir mes de predicción futura
     if (prediccion) {
-        labels.push(`${NOMBRES_MESES[prediccion.mesObjetivo]} (Pred.)`);
+        labels.push(`${NOMBRES_MESES[prediccion.mesObjetivo]} ${prediccion.añoObjetivo.toString().slice(-2)} (Pred.)`);
         ahorrosReales.push(null);
         ahorrosPredichos.push(prediccion.ahorro);
     }
@@ -1623,7 +1832,12 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
             },
             plugins: {
                 legend: {
-                    position: 'top'
+                    position: 'top',
+                    labels: {
+                        boxWidth: getChartResponsiveConfig().legend.boxWidth,
+                        padding: getChartResponsiveConfig().legend.padding,
+                        font: { size: getChartResponsiveConfig().legend.fontSize }
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -1647,9 +1861,17 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        maxRotation: getChartResponsiveConfig().axis.maxRotation,
+                        minRotation: getChartResponsiveConfig().axis.minRotation,
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
+                    }
+                },
                 y: {
                     ticks: {
-                        callback: value => formatearMoneda(value)
+                        callback: value => formatearMoneda(value),
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
                     }
                 }
             }
@@ -1664,30 +1886,40 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
  * Mostrar precisión del modelo de predicción
  */
 function mostrarPrecisionModelo(prediccionesHistoricas) {
-    if (prediccionesHistoricas.length === 0) return;
+    const metodoEl = document.getElementById('pred-metodo');
+    if (!metodoEl) return;
     
-    // Calcular error medio absoluto (MAE) y porcentaje de acierto
-    let sumaErrores = 0;
-    let sumaErroresPorcentuales = 0;
+    if (prediccionesHistoricas.length === 0) {
+        metodoEl.innerHTML = `Media Móvil Ponderada + Tendencia + Estacionalidad <br><small style="color: var(--warning-color)">📊 Sin datos suficientes para calcular precisión</small>`;
+        return;
+    }
+    
+    // Calcular precisión usando SMAPE (Symmetric Mean Absolute Percentage Error)
+    // Es más robusto cuando hay valores cercanos a 0 o negativos
+    let sumaErroresSMAPE = 0;
+    let conteoValido = 0;
     
     prediccionesHistoricas.forEach(p => {
-        const error = Math.abs(p.real - p.prediccion);
-        sumaErrores += error;
-        
-        if (p.real !== 0) {
-            sumaErroresPorcentuales += (error / Math.abs(p.real)) * 100;
+        const denominador = (Math.abs(p.real) + Math.abs(p.prediccion)) / 2;
+        if (denominador > 0) {
+            const error = Math.abs(p.real - p.prediccion);
+            const smape = (error / denominador) * 100;
+            sumaErroresSMAPE += Math.min(smape, 200); // Limitar a 200% máximo
+            conteoValido++;
         }
     });
     
-    const errorMedioAbsoluto = sumaErrores / prediccionesHistoricas.length;
-    const errorMedioPorcentual = sumaErroresPorcentuales / prediccionesHistoricas.length;
-    const precision = Math.max(0, 100 - errorMedioPorcentual).toFixed(1);
+    if (conteoValido === 0) {
+        metodoEl.innerHTML = `Media Móvil Ponderada + Tendencia + Estacionalidad <br><small style="color: var(--warning-color)">📊 Sin datos válidos para calcular precisión</small>`;
+        return;
+    }
+    
+    const errorMedioSMAPE = sumaErroresSMAPE / conteoValido;
+    const precision = Math.max(0, Math.min(100, 100 - errorMedioSMAPE / 2)).toFixed(1);
     
     // Actualizar el elemento de método con la precisión
-    const metodoEl = document.getElementById('pred-metodo');
-    if (metodoEl) {
-        metodoEl.innerHTML = `Media Móvil Ponderada + Tendencia <br><small style="color: ${precision > 70 ? 'var(--success-color)' : precision > 50 ? 'var(--warning-color)' : 'var(--danger-color)'}">📊 Precisión histórica: ${precision}%</small>`;
-    }
+    const colorPrecision = precision > 70 ? 'var(--success-color)' : precision > 50 ? 'var(--warning-color)' : 'var(--danger-color)';
+    metodoEl.innerHTML = `Media Móvil Ponderada + Tendencia + Estacionalidad <br><small style="color: ${colorPrecision}">📊 Precisión histórica: ${precision}% (${conteoValido} meses comparados)</small>`;
 }
 
 /**

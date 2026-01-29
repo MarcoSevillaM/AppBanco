@@ -2,9 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
     <title>AppBanco v1.5 - Gestión de Transacciones</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -38,11 +44,11 @@
                         <h3>💰 Balance General</h3>
                         <div class="balance-info">
                             <div class="balance-item ingresos">
-                                <span class="label">Ingresos</span>
+                                <span class="label">Categoría ingresos</span>
                                 <span class="value" id="total-ingresos">0,00 €</span>
                             </div>
                             <div class="balance-item gastos">
-                                <span class="label">Gastos</span>
+                                <span class="label">Balance de gastos</span>
                                 <span class="value" id="total-gastos">0,00 €</span>
                             </div>
                             <div class="balance-item balance">
@@ -87,7 +93,7 @@
                         <option value="Inversiones">Inversión</option>
                         <option value="Coche">Coche</option>
                         <option value="Alimentación">Alimentación</option>
-                        <option value="Gastos Recurrentes">Gastos Recurrentes</option>
+                        <option value="Gastos recurrentes">Gastos Recurrentes</option>
                         <option value="Ocio">Ocio</option>
                         <option value="Ingresos">Ingresos</option>
                         <option value="Otros">Otros</option>
@@ -100,6 +106,26 @@
                     <input type="date" id="filtro-fecha-fin" placeholder="Hasta">
                     <button id="btn-filtrar" class="btn btn-primary">Filtrar</button>
                     <button id="btn-limpiar" class="btn btn-secondary">Limpiar</button>
+                </div>
+
+                <!-- Resumen del filtro aplicado -->
+                <div id="resumen-filtro" class="resumen-filtro hidden">
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label">INGRESOS</span>
+                        <span class="resumen-filtro-valor ingresos" id="filtro-total-ingresos">0,00 €</span>
+                    </div>
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label">GASTOS</span>
+                        <span class="resumen-filtro-valor gastos" id="filtro-total-gastos">0,00 €</span>
+                    </div>
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label">AHORRO</span>
+                        <span class="resumen-filtro-valor ahorro" id="filtro-total-ahorro">0,00 €</span>
+                    </div>
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label">INVERSIÓN</span>
+                        <span class="resumen-filtro-valor inversion" id="filtro-total-inversion">0,00 €</span>
+                    </div>
                 </div>
 
                 <!-- Tabla de Transacciones -->
@@ -280,6 +306,10 @@
                             <div class="metodo-item">
                                 <span class="metodo-label">Tendencia detectada:</span>
                                 <span class="metodo-valor" id="pred-tendencia">--</span>
+                            </div>
+                            <div class="metodo-item">
+                                <span class="metodo-label">Patrón estacional:</span>
+                                <span class="metodo-valor" id="pred-estacionalidad">--</span>
                             </div>
                         </div>
                         <p class="info-text metodo-disclaimer">
