@@ -67,13 +67,56 @@ class ImportadorService {
     }
 
     /**
+     * Dividir CSV en líneas respetando campos multilínea entre comillas
+     * Maneja casos como: "CONCEPTO\nCONTINUACIÓN DEL CONCEPTO"
+     */
+    dividirLineasCSV(contenido) {
+        const lineas = [];
+        let lineaActual = '';
+        let dentroComillas = false;
+        
+        for (let i = 0; i < contenido.length; i++) {
+            const char = contenido[i];
+            
+            if (char === '"') {
+                dentroComillas = !dentroComillas;
+                lineaActual += char;
+            } else if ((char === '\n' || char === '\r') && !dentroComillas) {
+                // Fin de línea real (no dentro de comillas)
+                if (lineaActual.trim()) {
+                    lineas.push(lineaActual.trim());
+                }
+                lineaActual = '';
+                // Saltar \r\n combinado
+                if (char === '\r' && contenido[i + 1] === '\n') {
+                    i++;
+                }
+            } else if (char === '\r' || char === '\n') {
+                // Salto de línea dentro de comillas - reemplazar por espacio
+                lineaActual += ' ';
+            } else {
+                lineaActual += char;
+            }
+        }
+        
+        // Agregar última línea si existe
+        if (lineaActual.trim()) {
+            lineas.push(lineaActual.trim());
+        }
+        
+        return lineas;
+    }
+
+    /**
      * Importar desde archivo CSV
      */
     async importarCSV(rutaArchivo) {
         return new Promise((resolve, reject) => {
             const transacciones = [];
             const contenido = fs.readFileSync(rutaArchivo, 'utf-8');
-            let lineas = contenido.split('\n').filter(l => l.trim());
+            
+            // Usar el nuevo método que respeta campos multilínea
+            let lineas = this.dividirLineasCSV(contenido);
 
             if (lineas.length < 2) {
                 return resolve([]);
@@ -102,7 +145,7 @@ class ImportadorService {
             console.log('📋 Mapeo detectado:', mapeo);
 
             if (!mapeo) {
-                return reject(new Error('No se pudo detectar el formato del CSV. Asegúrate de que tiene columnas: FECHA OPERACIÓN, CONCEPTO, IMPORTE EUR'));
+                return reject(new Error('No se pudo detectar el formato del CSV. Asegúrate de que tiene columnas: FECHA, CONCEPTO, IMPORTE'));
             }
 
             // Parsear datos (desde línea 1 porque línea 0 es la cabecera)

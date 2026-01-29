@@ -1,3 +1,4 @@
 **/node_modules
-# Todos los archivos de base de datos
 **/data/*.db
+**/*.bak
+uploads/
