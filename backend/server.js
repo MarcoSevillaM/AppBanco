@@ -44,13 +44,13 @@ app.use((err, req, res, next) => {
 async function iniciarServidor() {
     try {
         await ecoSis.ready();
-        
-        app.listen(PORT, () => {
+        const HOST = process.env.HOST || '0.0.0.0';
+        app.listen(PORT, HOST, () => {
             console.log('================================================');
             console.log('  🏦 AppBanco v1.5 - Sistema de Transacciones');
             console.log('================================================');
-            console.log(`  📡 Servidor corriendo en: http://localhost:${PORT}`);
-            console.log(`  📊 API disponible en: http://localhost:${PORT}/api`);
+            console.log(`  📡 Servidor corriendo en: http://${HOST}:${PORT}`);
+            console.log(`  📊 API disponible en: http://${HOST}:${PORT}/api`);
             console.log('================================================');
         });
     } catch (error) {
