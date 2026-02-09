@@ -61,10 +61,10 @@ class EcoSis {
     /**
      * Crear una nueva transacción
      */
-    crearTransaccion(datos) {
+    async crearTransaccion(datos) {
         // Clasificar automáticamente si no tiene categoría
         if (!datos.categoria) {
-            datos.categoria = this.clasificador.clasificar(datos.concepto);
+            datos.categoria = await this.clasificador.clasificar(datos.concepto);
         }
         const transaccion = new Transaccion(datos);
         return this.database.insertarTransaccion(transaccion);
@@ -99,7 +99,7 @@ class EcoSis {
 
         for (const datos of transacciones) {
             try {
-                this.crearTransaccion(datos);
+                await this.crearTransaccion(datos);
                 resultados.exitosas++;
             } catch (error) {
                 resultados.fallidas++;
