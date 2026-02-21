@@ -21,6 +21,7 @@ const AppState = {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 AppBanco v1.5 iniciado');
     
+    inicializarTema();
     inicializarTabs();
     inicializarEventos();
     cargarDatosIniciales();
@@ -39,6 +40,53 @@ async function cargarDatosIniciales() {
     } catch (error) {
         console.error('Error al cargar datos iniciales:', error);
     }
+}
+
+// ==========================================
+// GESTIÓN DE TEMA (MODO CLARO/OSCURO)
+// ==========================================
+
+function inicializarTema() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    
+    // Cargar tema guardado o usar preferencia del sistema
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    
+    // Aplicar tema inicial
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    actualizarIconoTema(currentTheme, themeIcon);
+    
+    // Evento de cambio de tema
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        actualizarIconoTema(newTheme, themeIcon);
+        
+        // Animar el cambio
+        themeIcon.style.transform = 'rotate(360deg)';
+        setTimeout(() => {
+            themeIcon.style.transform = '';
+        }, 300);
+    });
+    
+    // Detectar cambios en la preferencia del sistema
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            const newTheme = e.matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            actualizarIconoTema(newTheme, themeIcon);
+        }
+    });
+}
+
+function actualizarIconoTema(theme, iconElement) {
+    iconElement.textContent = theme === 'dark' ? '☀️' : '🌙';
 }
 
 // ==========================================
@@ -748,12 +796,16 @@ function llenarSelectorAños(años) {
     
     const valorActual = GraficasState.añoSeleccionado;
     
-    select.innerHTML = años.map(año => 
+    // Agregar opción "Todo" al principio
+    const opcionTodo = `<option value="todo" ${valorActual === 'todo' ? 'selected' : ''}>Todo</option>`;
+    const opcionesAños = años.map(año => 
         `<option value="${año}" ${año == valorActual ? 'selected' : ''}>${año}</option>`
     ).join('');
     
+    select.innerHTML = opcionTodo + opcionesAños;
+    
     if (!GraficasState.añoSeleccionado && años.length > 0) {
-        GraficasState.añoSeleccionado = años[0];
+        GraficasState.añoSeleccionado = "todo";
     }
 }
 
@@ -761,6 +813,10 @@ function llenarSelectorAños(años) {
  * Filtrar transacciones por año
  */
 function filtrarPorAño(transacciones, año) {
+    // Si el año es "todo", devolver todas las transacciones
+    if (año === 'todo') {
+        return transacciones;
+    }
     return transacciones.filter(t => new Date(t.fecha).getFullYear() == año);
 }
 
@@ -770,14 +826,23 @@ function filtrarPorAño(transacciones, año) {
 function agruparPorMes(transacciones) {
     const meses = {};
     
+    // Verificar si hay múltiples años en las transacciones
+    const años = [...new Set(transacciones.map(t => new Date(t.fecha).getFullYear()))];
+    const multipleAños = años.length > 1;
+    
     transacciones.forEach(t => {
         const fecha = new Date(t.fecha);
         const mes = fecha.getMonth(); // 0-11
+        const año = fecha.getFullYear();
         
-        if (!meses[mes]) {
-            meses[mes] = {
+        // Si hay múltiples años, usar clave mes-año, sino solo mes
+        const key = multipleAños ? `${año}-${mes}` : mes;
+        
+        if (!meses[key]) {
+            meses[key] = {
                 mes,
-                nombre: NOMBRES_MESES[mes],
+                año,
+                nombre: multipleAños ? `${NOMBRES_MESES[mes]} ${año}` : NOMBRES_MESES[mes],
                 ingresos: 0,
                 gastos: 0,
                 inversion: 0,
@@ -785,20 +850,27 @@ function agruparPorMes(transacciones) {
             };
         }
         
-        meses[mes].transacciones.push(t);
+        meses[key].transacciones.push(t);
         
         // Clasificar por tipo (Inversión se separa)
         if (t.categoria === 'Inversiones') {
-            meses[mes].inversion += t.importe;
+            meses[key].inversion += t.importe;
         } else if (t.importe > 0) {
-            meses[mes].ingresos += t.importe;
+            meses[key].ingresos += t.importe;
         } else {
-            meses[mes].gastos += Math.abs(t.importe);
+            meses[key].gastos += Math.abs(t.importe);
         }
     });
     
-    // Convertir a array ordenado por mes
-    return Object.values(meses).sort((a, b) => a.mes - b.mes);
+    // Convertir a array ordenado por año y mes
+    return Object.values(meses).sort((a, b) => {
+        if (multipleAños) {
+            // Ordenar por año y luego por mes
+            if (a.año !== b.año) return a.año - b.año;
+            return a.mes - b.mes;
+        }
+        return a.mes - b.mes;
+    });
 }
 
 /**
@@ -809,27 +881,52 @@ function agruparPorCategoriaMes(transacciones) {
     const categorias = new Set();
     const mesesSet = new Set();
     
+    // Verificar si hay múltiples años
+    const años = [...new Set(transacciones.map(t => new Date(t.fecha).getFullYear()))];
+    const multipleAños = años.length > 1;
+    
     transacciones.forEach(t => {
         // Solo gastos (importe negativo) y excluyendo Ingresos
         if (t.importe >= 0 || t.categoria === 'Ingresos') return;
         
-        const mes = new Date(t.fecha).getMonth();
-        categorias.add(t.categoria);
-        mesesSet.add(mes);
+        const fecha = new Date(t.fecha);
+        const mes = fecha.getMonth();
+        const año = fecha.getFullYear();
         
-        const key = `${t.categoria}-${mes}`;
+        categorias.add(t.categoria);
+        
+        // Si hay múltiples años, usar clave año-mes, sino solo mes
+        const mesKey = multipleAños ? `${año}-${mes}` : mes;
+        mesesSet.add(mesKey);
+        
+        const key = `${t.categoria}-${mesKey}`;
         if (!datos[key]) {
-            datos[key] = { categoria: t.categoria, mes, total: 0 };
+            datos[key] = { 
+                categoria: t.categoria, 
+                mes: mesKey,
+                mesNombre: multipleAños ? `${NOMBRES_MESES[mes]} ${año}` : NOMBRES_MESES[mes],
+                total: 0 
+            };
         }
         datos[key].total += Math.abs(t.importe);
     });
     
-    const meses = [...mesesSet].sort((a, b) => a - b);
+    const meses = [...mesesSet].sort((a, b) => {
+        if (multipleAños) {
+            // Ordenar por año-mes si son strings del formato "año-mes"
+            const [añoA, mesA] = String(a).split('-').map(Number);
+            const [añoB, mesB] = String(b).split('-').map(Number);
+            if (añoA !== añoB) return añoA - añoB;
+            return mesA - mesB;
+        }
+        return a - b;
+    });
     
     return {
         categorias: [...categorias],
         meses,
-        datos
+        datos,
+        multipleAños
     };
 }
 
@@ -961,8 +1058,16 @@ function renderizarChartCategoriasMes(transacciones) {
     
     destruirChart('categoriasMes');
     
-    const { categorias, meses, datos } = agruparPorCategoriaMes(transacciones);
-    const labels = meses.map(m => NOMBRES_MESES[m]);
+    const { categorias, meses, datos, multipleAños } = agruparPorCategoriaMes(transacciones);
+    
+    // Generar las etiquetas correctamente según si hay múltiples años o no
+    const labels = meses.map(m => {
+        if (multipleAños) {
+            const [año, mes] = String(m).split('-').map(Number);
+            return `${NOMBRES_MESES[mes]} ${año}`;
+        }
+        return NOMBRES_MESES[m];
+    });
     
     const datasets = categorias.map(cat => {
         const color = COLORES_CATEGORIAS[cat] || { bg: 'rgba(107, 114, 128, 0.7)', border: 'rgb(107, 114, 128)' };
@@ -1213,26 +1318,39 @@ function llenarSelectorMeses(transacciones) {
     const select = document.getElementById('select-mes-detalle');
     if (!select) return;
     
+    // Verificar si hay múltiples años
+    const años = [...new Set(transacciones.map(t => new Date(t.fecha).getFullYear()))];
+    const multipleAños = años.length > 1;
+    
     // Obtener meses disponibles
     const mesesDisponibles = new Map();
     
     transacciones.forEach(t => {
         const fecha = new Date(t.fecha);
         const mes = fecha.getMonth();
-        const key = mes;
+        const año = fecha.getFullYear();
+        const key = multipleAños ? `${año}-${mes}` : mes;
         
         if (!mesesDisponibles.has(key)) {
             mesesDisponibles.set(key, {
                 mes,
-                nombre: NOMBRES_MESES[mes],
+                año,
+                key,
+                nombre: multipleAños ? `${NOMBRES_MESES[mes]} ${año}` : NOMBRES_MESES[mes],
                 transacciones: []
             });
         }
         mesesDisponibles.get(key).transacciones.push(t);
     });
     
-    // Ordenar por mes
-    const mesesOrdenados = [...mesesDisponibles.values()].sort((a, b) => a.mes - b.mes);
+    // Ordenar por año y mes
+    const mesesOrdenados = [...mesesDisponibles.values()].sort((a, b) => {
+        if (multipleAños) {
+            if (a.año !== b.año) return a.año - b.año;
+            return a.mes - b.mes;
+        }
+        return a.mes - b.mes;
+    });
     
     // Guardar en estado para uso posterior
     GraficasState.mesesDisponibles = mesesOrdenados;
@@ -1240,7 +1358,7 @@ function llenarSelectorMeses(transacciones) {
     // Llenar select
     select.innerHTML = '<option value="">-- Seleccionar mes --</option>' + 
         mesesOrdenados.map(m => 
-            `<option value="${m.mes}">${m.nombre} (${m.transacciones.length} transacciones)</option>`
+            `<option value="${m.key}">${m.nombre} (${m.transacciones.length} transacciones)</option>`
         ).join('');
     
     // Limpiar contenedor y contador
@@ -1252,7 +1370,7 @@ function llenarSelectorMeses(transacciones) {
     select.onchange = (e) => {
         const mesSeleccionado = e.target.value;
         if (mesSeleccionado !== '') {
-            mostrarTransaccionesMes(parseInt(mesSeleccionado));
+            mostrarTransaccionesMes(mesSeleccionado);
         } else {
             document.getElementById('transacciones-mes-container').innerHTML = 
                 '<p class="info-text">Selecciona un mes para ver sus transacciones.</p>';
@@ -1264,13 +1382,13 @@ function llenarSelectorMeses(transacciones) {
 /**
  * Mostrar transacciones de un mes específico
  */
-function mostrarTransaccionesMes(mesIndex) {
+function mostrarTransaccionesMes(mesKey) {
     const container = document.getElementById('transacciones-mes-container');
     const countSpan = document.getElementById('transacciones-mes-count');
     
     if (!container || !GraficasState.mesesDisponibles) return;
     
-    const datosMes = GraficasState.mesesDisponibles.find(m => m.mes === mesIndex);
+    const datosMes = GraficasState.mesesDisponibles.find(m => String(m.key) === String(mesKey));
     
     if (!datosMes || datosMes.transacciones.length === 0) {
         container.innerHTML = '<p class="info-text">No hay transacciones para este mes.</p>';

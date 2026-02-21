@@ -3,3 +3,5 @@
 **/*.bak
 uploads/
 modelo/
+.venv/
+__pycache__/
