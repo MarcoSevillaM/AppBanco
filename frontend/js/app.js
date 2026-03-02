@@ -315,11 +315,13 @@ async function guardarEdicion(e) {
     e.preventDefault();
     
     const id = document.getElementById('edit-id').value;
+    const notasValue = document.getElementById('edit-notas').value.trim();
     const datos = {
         fecha: document.getElementById('edit-fecha').value,
         concepto: document.getElementById('edit-concepto').value,
         importe: parseFloat(document.getElementById('edit-importe').value),
-        categoria: document.getElementById('edit-categoria').value
+        categoria: document.getElementById('edit-categoria').value,
+        notas: notasValue || null
     };
     
     try {
@@ -540,7 +542,10 @@ function renderizarTransacciones(transacciones) {
     tbody.innerHTML = transacciones.map(t => `
         <tr>
             <td>${formatearFecha(t.fecha)}</td>
-            <td>${escapeHtml(t.concepto)}</td>
+            <td>
+                ${escapeHtml(t.concepto)}
+                ${t.notas ? `<span title="${escapeHtml(t.notas)}" style="cursor: help; margin-left: 5px;">📝</span>` : ''}
+            </td>
             <td>
                 <span class="categoria-badge" data-cat="${t.categoria}">${t.categoria}</span>
             </td>
@@ -589,6 +594,7 @@ async function abrirModalEditar(id) {
             document.getElementById('edit-concepto').value = t.concepto;
             document.getElementById('edit-importe').value = t.importe;
             document.getElementById('edit-categoria').value = t.categoria;
+            document.getElementById('edit-notas').value = t.notas || '';
             
             document.getElementById('modal-editar').classList.remove('hidden');
         }
@@ -886,8 +892,8 @@ function agruparPorCategoriaMes(transacciones) {
     const multipleAños = años.length > 1;
     
     transacciones.forEach(t => {
-        // Solo gastos (importe negativo) y excluyendo Ingresos
-        if (t.importe >= 0 || t.categoria === 'Ingresos') return;
+        // Excluir categoría Ingresos pero procesar todos los importes (positivos y negativos)
+        if (t.categoria === 'Ingresos') return;
         
         const fecha = new Date(t.fecha);
         const mes = fecha.getMonth();
@@ -908,7 +914,11 @@ function agruparPorCategoriaMes(transacciones) {
                 total: 0 
             };
         }
-        datos[key].total += Math.abs(t.importe);
+        // Sumar el importe tal cual (positivo o negativo) para obtener el resultado neto
+        datos[key].total += t.importe;
+        //Invierto el signo
+        //datos[key].total += t.importe < 0 ? Math.abs(t.importe) : -t.importe;
+
     });
     
     const meses = [...mesesSet].sort((a, b) => {
@@ -1141,12 +1151,14 @@ function renderizarChartDistribucion(transacciones) {
     const gastosPorCategoria = {};
     
     transacciones.forEach(t => {
-        if (t.importe >= 0 || t.categoria === 'Ingresos') return;
+        //if (t.importe >= 0 || t.categoria === 'Ingresos') return;
+        if (t.categoria === 'Ingresos') return;
         
         if (!gastosPorCategoria[t.categoria]) {
             gastosPorCategoria[t.categoria] = 0;
         }
-        gastosPorCategoria[t.categoria] += Math.abs(t.importe);
+        //gastosPorCategoria[t.categoria] += Math.abs(t.importe);
+        gastosPorCategoria[t.categoria] += t.importe;
     });
     
     const categorias = Object.keys(gastosPorCategoria);
@@ -2108,6 +2120,7 @@ function renderizarPrediccionCategorias(transacciones) {
         'Coche': '#f59e0b',
         'Alimentación': '#10b981',
         'Gastos Recurrentes': '#a855f7',
+        'Gastos recurrentes': '#a855f7',
         'Ocio': '#ec4899',
         'Otros': '#6b7280'
     };
