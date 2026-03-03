@@ -6,6 +6,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const TransaccionController = require('../controllers/TransaccionController');
+const { AuthController, authMiddleware } = require('../controllers/AuthController');
 
 const router = express.Router();
 
@@ -32,6 +33,33 @@ const upload = multer({
         }
     }
 });
+
+// ==========================================
+// RUTAS DE AUTENTICACIÓN (públicas)
+// ==========================================
+
+// Login
+router.post('/auth/login', AuthController.login);
+
+// Verificar token
+router.get('/auth/verify', authMiddleware, AuthController.verify);
+
+// ==========================================
+// RUTAS DEL SISTEMA
+// ==========================================
+
+// Estado del sistema
+router.get('/estado', TransaccionController.obtenerEstado);
+
+// Health check
+router.get('/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// ==========================================
+// PROTEGER TODAS LAS RUTAS SIGUIENTES
+// ==========================================
+router.use(authMiddleware);
 
 // ==========================================
 // RUTAS DE TRANSACCIONES
@@ -85,16 +113,6 @@ router.get('/estadisticas/mensual', TransaccionController.obtenerResumenMensual)
 // Balance general
 router.get('/estadisticas/balance', TransaccionController.obtenerBalance);
 
-// ==========================================
-// RUTAS DEL SISTEMA
-// ==========================================
 
-// Estado del sistema
-router.get('/estado', TransaccionController.obtenerEstado);
-
-// Health check
-router.get('/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
 
 module.exports = router;

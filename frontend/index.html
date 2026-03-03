@@ -14,7 +14,31 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="app-container">
+    <!-- Panel de Login -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>🏦 AppBanco <span class="version">v1.5</span></h1>
+                <p>Sistema de Gestión de Transacciones Bancarias</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="login-field">
+                    <label for="login-username">👤 Usuario</label>
+                    <input type="text" id="login-username" placeholder="Introduce tu usuario" autocomplete="username" required autofocus>
+                </div>
+                <div class="login-field">
+                    <label for="login-password">🔒 Contraseña</label>
+                    <input type="password" id="login-password" placeholder="Introduce tu contraseña" autocomplete="current-password" required>
+                </div>
+                <div id="login-error" class="login-error hidden"></div>
+                <button type="submit" class="btn btn-primary login-btn" id="login-submit">
+                    Iniciar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container" id="app-container" style="display: none;">
         <!-- Header -->
         <header class="header">
             <div class="header-content">
@@ -22,9 +46,13 @@
                     <h1>🏦 AppBanco <span class="version">v1.5</span></h1>
                     <p class="subtitle">Sistema de Gestión de Transacciones Bancarias</p>
                 </div>
-                <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
-                    <span class="theme-icon">🌙</span>
-                </button>
+                <div class="header-right">
+                    <span id="user-display" class="user-display"></span>
+                    <button id="btn-logout" class="btn-logout" title="Cerrar sesión">🚪 Salir</button>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
             </div>
         </header>
 

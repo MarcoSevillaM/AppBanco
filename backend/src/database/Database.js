@@ -107,6 +107,27 @@ class Database {
             )
         `);
 
+        // Tabla de administradores
+        this.db.run(`
+            CREATE TABLE IF NOT EXISTS admin (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                password_hash TEXT NOT NULL,
+                fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Insertar admin por defecto si no existe
+        const adminExiste = this.db.exec("SELECT COUNT(*) as count FROM admin WHERE username = 'marco'");
+        const count = adminExiste[0]?.values[0]?.[0] || 0;
+        if (count === 0) {
+            this.db.run(
+                'INSERT INTO admin (username, password_hash) VALUES (?, ?)',
+                ['marco', '$2a$12$Cyu03QB0gXYbQNP4sPYQ.OYCIzm3Z/GJp1IWGCq6VoxwWzQW7QykK']
+            );
+            console.log('👤 Usuario marco creado por defecto');
+        }
+
         // Índices para mejorar rendimiento
         this.db.run(`CREATE INDEX IF NOT EXISTS idx_transacciones_fecha ON transacciones(fecha)`);
         this.db.run(`CREATE INDEX IF NOT EXISTS idx_transacciones_categoria ON transacciones(categoria)`);
@@ -116,8 +137,28 @@ class Database {
     }
 
     // ==========================================
-    // OPERACIONES CRUD - TRANSACCIONES
+    // OPERACIONES - ADMIN
     // ==========================================
+
+    /**
+     * Obtener un administrador por username
+     */
+    obtenerAdmin(username) {
+        const stmt = this.db.prepare('SELECT * FROM admin WHERE username = ?');
+        stmt.bind([username]);
+        
+        let admin = null;
+        if (stmt.step()) {
+            const row = stmt.getAsObject();
+            admin = row;
+        }
+        stmt.free();
+        return admin;
+    }
+
+    // ==========================================
+    // OPERACIONES CRUD - TRANSACCIONES
+    // ====================
 
     /**
      * Insertar una nueva transacción

@@ -11,8 +11,165 @@ const AppState = {
     transacciones: [],
     categorias: [],
     archivoSeleccionado: null,
-    ordenFecha: 'DESC' // 'DESC' = más recientes primero, 'ASC' = más antiguas primero
+    ordenFecha: 'DESC', // 'DESC' = más recientes primero, 'ASC' = más antiguas primero
+    token: null,
+    username: null
 };
+
+// ==========================================
+// AUTENTICACIÓN
+// ==========================================
+
+/**
+ * Obtener headers con token de autenticación
+ */
+function getAuthHeaders(extra = {}) {
+    const headers = {
+        'Content-Type': 'application/json',
+        ...extra
+    };
+    if (AppState.token) {
+        headers['Authorization'] = `Bearer ${AppState.token}`;
+    }
+    return headers;
+}
+
+/**
+ * Fetch autenticado - wrapper de fetch que incluye el token
+ */
+async function fetchAuth(url, options = {}) {
+    const headers = getAuthHeaders(options.headers || {});
+    const response = await fetch(url, { ...options, headers });
+    
+    // Si el token expiró, volver al login
+    if (response.status === 401) {
+        cerrarSesion();
+        throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+    }
+    
+    return response;
+}
+
+/**
+ * Inicializar el sistema de login
+ */
+function inicializarLogin() {
+    const loginForm = document.getElementById('login-form');
+    const btnLogout = document.getElementById('btn-logout');
+    
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await realizarLogin();
+    });
+    
+    btnLogout.addEventListener('click', cerrarSesion);
+    
+    // Comprobar si hay sesión guardada
+    const tokenGuardado = localStorage.getItem('appbanco_token');
+    const usernameGuardado = localStorage.getItem('appbanco_username');
+    
+    if (tokenGuardado) {
+        // Verificar que el token sigue siendo válido
+        verificarToken(tokenGuardado, usernameGuardado);
+    }
+}
+
+/**
+ * Verificar token guardado
+ */
+async function verificarToken(token, username) {
+    try {
+        const response = await fetch(`${API_URL}/auth/verify`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            AppState.token = token;
+            AppState.username = username;
+            mostrarApp();
+        } else {
+            // Token inválido, limpiar
+            localStorage.removeItem('appbanco_token');
+            localStorage.removeItem('appbanco_username');
+        }
+    } catch (error) {
+        console.error('Error al verificar token:', error);
+    }
+}
+
+/**
+ * Realizar login
+ */
+async function realizarLogin() {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errorDiv = document.getElementById('login-error');
+    const submitBtn = document.getElementById('login-submit');
+    
+    errorDiv.classList.add('hidden');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Verificando...';
+    
+    try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            AppState.token = data.token;
+            AppState.username = data.username;
+            localStorage.setItem('appbanco_token', data.token);
+            localStorage.setItem('appbanco_username', data.username);
+            mostrarApp();
+        } else {
+            errorDiv.textContent = data.error || 'Credenciales inválidas';
+            errorDiv.classList.remove('hidden');
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Error de conexión con el servidor';
+        errorDiv.classList.remove('hidden');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Iniciar Sesión';
+    }
+}
+
+/**
+ * Mostrar la aplicación después del login
+ */
+function mostrarApp() {
+    document.getElementById('login-overlay').classList.add('hidden');
+    document.getElementById('app-container').style.display = '';
+    document.getElementById('user-display').textContent = `👤 ${AppState.username}`;
+    
+    // Cargar datos
+    inicializarTabs();
+    inicializarEventos();
+    cargarDatosIniciales();
+}
+
+/**
+ * Cerrar sesión
+ */
+function cerrarSesion() {
+    AppState.token = null;
+    AppState.username = null;
+    localStorage.removeItem('appbanco_token');
+    localStorage.removeItem('appbanco_username');
+    
+    // Mostrar login, ocultar app
+    document.getElementById('login-overlay').classList.remove('hidden');
+    document.getElementById('app-container').style.display = 'none';
+    
+    // Limpiar formulario
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+    document.getElementById('login-error').classList.add('hidden');
+}
 
 // ==========================================
 // INICIALIZACIÓN
@@ -22,9 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 AppBanco v1.5 iniciado');
     
     inicializarTema();
-    inicializarTabs();
-    inicializarEventos();
-    cargarDatosIniciales();
+    inicializarLogin();
 });
 
 /**
@@ -173,9 +328,8 @@ function inicializarEventos() {
         
         if (concepto && !selectCategoria.value) {
             try {
-                const response = await fetch(`${API_URL}/clasificar`, {
+                const response = await fetchAuth(`${API_URL}/clasificar`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ concepto })
                 });
                 const data = await response.json();
@@ -208,7 +362,7 @@ async function cargarTransacciones(filtros = {}) {
         const orden = filtros.orden || AppState.ordenFecha;
         params.append('orden', orden);
         
-        const response = await fetch(`${API_URL}/transacciones?${params}`);
+        const response = await fetchAuth(`${API_URL}/transacciones?${params}`);
         const data = await response.json();
         
         if (data.success) {
@@ -269,9 +423,8 @@ async function crearTransaccion(e) {
     };
     
     try {
-        const response = await fetch(`${API_URL}/transacciones`, {
+        const response = await fetchAuth(`${API_URL}/transacciones`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
         
@@ -295,7 +448,7 @@ async function eliminarTransaccion(id) {
     if (!confirm('¿Estás seguro de eliminar esta transacción?')) return;
     
     try {
-        const response = await fetch(`${API_URL}/transacciones/${id}`, {
+        const response = await fetchAuth(`${API_URL}/transacciones/${id}`, {
             method: 'DELETE'
         });
         
@@ -325,9 +478,8 @@ async function guardarEdicion(e) {
     };
     
     try {
-        const response = await fetch(`${API_URL}/transacciones/${id}`, {
+        const response = await fetchAuth(`${API_URL}/transacciones/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
         
@@ -351,9 +503,9 @@ async function guardarEdicion(e) {
 async function cargarEstadisticas() {
     try {
         const [balanceRes, categoriasRes, estadoRes] = await Promise.all([
-            fetch(`${API_URL}/estadisticas/balance`),
-            fetch(`${API_URL}/estadisticas/categorias`),
-            fetch(`${API_URL}/estado`)
+            fetchAuth(`${API_URL}/estadisticas/balance`),
+            fetchAuth(`${API_URL}/estadisticas/categorias`),
+            fetchAuth(`${API_URL}/estado`)
         ]);
         
         const balance = await balanceRes.json();
@@ -381,7 +533,7 @@ async function cargarEstadisticas() {
 
 async function cargarCategorias() {
     try {
-        const response = await fetch(`${API_URL}/categorias`);
+        const response = await fetchAuth(`${API_URL}/categorias`);
         const data = await response.json();
         
         if (data.success) {
@@ -448,6 +600,7 @@ async function importarTransacciones() {
     try {
         const response = await fetch(`${API_URL}/transacciones/importar`, {
             method: 'POST',
+            headers: { 'Authorization': `Bearer ${AppState.token}` },
             body: formData
         });
         
@@ -584,7 +737,7 @@ function renderizarCategorias(categorias) {
 
 async function abrirModalEditar(id) {
     try {
-        const response = await fetch(`${API_URL}/transacciones/${id}`);
+        const response = await fetchAuth(`${API_URL}/transacciones/${id}`);
         const data = await response.json();
         
         if (data.success) {
@@ -746,7 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function cargarGraficas() {
     try {
         // Obtener todas las transacciones
-        const response = await fetch(`${API_URL}/transacciones`);
+        const response = await fetchAuth(`${API_URL}/transacciones`);
         const data = await response.json();
         
         if (!data.success) {
@@ -1493,7 +1646,7 @@ const PrediccionState = {
  */
 async function cargarPrediccion() {
     try {
-        const response = await fetch(`${API_URL}/transacciones`);
+        const response = await fetchAuth(`${API_URL}/transacciones`);
         const data = await response.json();
         
         if (!data.success || data.data.length === 0) {
