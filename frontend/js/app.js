@@ -1638,6 +1638,7 @@ const NOMBRES_MESES_COMPLETOS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', '
 // Estado de predicción
 const PrediccionState = {
     chart: null,
+    chartAbsoluto: null,
     datosHistoricos: null
 };
 
@@ -1666,6 +1667,7 @@ async function cargarPrediccion() {
         // Mostrar resultados
         renderizarPrediccion(prediccion);
         renderizarChartPrediccion(datosMensuales, prediccion);
+        renderizarChartPrediccionAbsoluto(datosMensuales, prediccion);
         renderizarPrediccionCategorias(transacciones);
         
     } catch (error) {
@@ -2163,6 +2165,120 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
     
     // Calcular y mostrar precisión del modelo
     mostrarPrecisionModelo(prediccionesHistoricas);
+}
+
+/**
+ * Renderizar gráfica de tendencia y predicción con ahorro absoluto (ahorro real - inversión)
+ */
+function renderizarChartPrediccionAbsoluto(datosMensuales, prediccion) {
+    const ctx = document.getElementById('chart-prediccion-absoluto');
+    if (!ctx) return;
+    
+    if (PrediccionState.chartAbsoluto) {
+        PrediccionState.chartAbsoluto.destroy();
+    }
+    
+    const datosGrafica = datosMensuales;
+    
+    const labels = datosGrafica.map(m => `${NOMBRES_MESES[m.mes]} ${m.año.toString().slice(-2)}`);
+    const ahorrosAbsolutos = datosGrafica.map(m => (m.ingresos - m.gastos) + m.inversion);
+    
+    const prediccionesHistoricas = calcularPrediccionesHistoricas(datosMensuales);
+    
+    const ahorrosPredichos = datosGrafica.map((m, idx) => {
+        const predHistorica = prediccionesHistoricas.find(p => p.mesIndex === idx);
+        return predHistorica ? predHistorica.prediccion : null;
+    });
+    
+    if (prediccion) {
+        labels.push(`${NOMBRES_MESES[prediccion.mesObjetivo]} ${prediccion.añoObjetivo.toString().slice(-2)} (Pred.)`);
+        ahorrosAbsolutos.push(null);
+        ahorrosPredichos.push(prediccion.ahorro);
+    }
+    
+    const datasets = [
+        {
+            label: 'Ahorro Absoluto',
+            data: ahorrosAbsolutos,
+            borderColor: 'rgb(34, 197, 94)',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: 'rgb(34, 197, 94)',
+            pointRadius: 6,
+            pointHoverRadius: 8
+        },
+        {
+            label: 'Predicción',
+            data: ahorrosPredichos,
+            borderColor: 'rgb(168, 85, 247)',
+            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+            fill: false,
+            tension: 0.3,
+            pointBackgroundColor: 'rgb(168, 85, 247)',
+            pointRadius: 5,
+            pointStyle: 'triangle',
+            borderDash: [5, 5]
+        }
+    ];
+    
+    PrediccionState.chartAbsoluto = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        boxWidth: getChartResponsiveConfig().legend.boxWidth,
+                        padding: getChartResponsiveConfig().legend.padding,
+                        font: { size: getChartResponsiveConfig().legend.fontSize }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            if (context.raw === null) return null;
+                            return context.dataset.label + ': ' + formatearMoneda(context.raw);
+                        },
+                        afterBody: function(tooltipItems) {
+                            const realItem = tooltipItems.find(i => i.dataset.label === 'Ahorro Absoluto');
+                            const predItem = tooltipItems.find(i => i.dataset.label === 'Predicción');
+                            
+                            if (realItem && predItem && realItem.raw !== null && predItem.raw !== null) {
+                                const diferencia = realItem.raw - predItem.raw;
+                                const porcentaje = predItem.raw !== 0 ? ((diferencia / Math.abs(predItem.raw)) * 100).toFixed(1) : 0;
+                                const signo = diferencia >= 0 ? '+' : '';
+                                return [`─────────────`, `Diferencia: ${signo}${formatearMoneda(diferencia)} (${signo}${porcentaje}%)`];
+                            }
+                            return [];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        maxRotation: getChartResponsiveConfig().axis.maxRotation,
+                        minRotation: getChartResponsiveConfig().axis.minRotation,
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
+                    }
+                },
+                y: {
+                    ticks: {
+                        callback: value => formatearMoneda(value),
+                        font: { size: getChartResponsiveConfig().axis.fontSize }
+                    }
+                }
+            }
+        }
+    });
 }
 
 /**
