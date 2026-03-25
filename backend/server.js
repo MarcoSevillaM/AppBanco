@@ -3,9 +3,11 @@
  * Punto de entrada de la aplicación
  */
 
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const EcoSis = require('./src/core/EcoSis');
 
 const app = express();

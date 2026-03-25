@@ -132,13 +132,32 @@ cd backend
 npm install
 ```
 
-3. **Crear carpetas necesarias**
+3. **Configurar variables de entorno**
+```bash
+# Desde la carpeta backend
+cp .env.example .env
+```
+
+En Windows PowerShell:
+```powershell
+Copy-Item .env.example .env
+```
+
+Variables clave en `.env`:
+
+- `JWT_SECRET`: clave para firmar tokens.
+- `JWT_EXPIRATION`: duración del token (ejemplo: `8h`).
+- `DEFAULT_ADMIN_USERNAME`: usuario admin inicial.
+- `DEFAULT_ADMIN_PASSWORD_HASH`: hash bcrypt del admin inicial.
+- `HOST` y `PORT`: host y puerto del servidor.
+
+4. **Crear carpetas necesarias**
 ```bash
 mkdir data
 mkdir backend/uploads
 ```
 
-4. **🤖 (Opcional) Entrenar el modelo de IA**
+5. **🤖 (Opcional) Entrenar el modelo de IA**
 ```bash
 # Entrenar modelo con datos existentes
 node modelo/entrenarModelo.js
@@ -147,12 +166,12 @@ node modelo/entrenarModelo.js
 node modelo/configurar.js
 ```
 
-5. **Iniciar el servidor**
+6. **Iniciar el servidor**
 ```bash
 npm start
 ```
 
-6. **Abrir en el navegador**
+7. **Abrir en el navegador**
 ```
 http://localhost:3000
 ```

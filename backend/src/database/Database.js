@@ -7,6 +7,9 @@
 const path = require('path');
 const fs = require('fs');
 
+const DEFAULT_ADMIN_USERNAME = process.env.DEFAULT_ADMIN_USERNAME || 'marco';
+const DEFAULT_ADMIN_PASSWORD_HASH = process.env.DEFAULT_ADMIN_PASSWORD_HASH || '$2a$12$Cyu03QB0gXYbQNP4sPYQ.OYCIzm3Z/GJp1IWGCq6VoxwWzQW7QykK';
+
 class Database {
     constructor() {
         this.dbPath = path.join(__dirname, '../../../data/banco.db');
@@ -118,14 +121,20 @@ class Database {
         `);
 
         // Insertar admin por defecto si no existe
-        const adminExiste = this.db.exec("SELECT COUNT(*) as count FROM admin WHERE username = 'marco'");
-        const count = adminExiste[0]?.values[0]?.[0] || 0;
+        const stmtAdminExiste = this.db.prepare('SELECT COUNT(*) as count FROM admin WHERE username = ?');
+        stmtAdminExiste.bind([DEFAULT_ADMIN_USERNAME]);
+        let count = 0;
+        if (stmtAdminExiste.step()) {
+            count = stmtAdminExiste.getAsObject().count || 0;
+        }
+        stmtAdminExiste.free();
+
         if (count === 0) {
             this.db.run(
                 'INSERT INTO admin (username, password_hash) VALUES (?, ?)',
-                ['marco', '$2a$12$Cyu03QB0gXYbQNP4sPYQ.OYCIzm3Z/GJp1IWGCq6VoxwWzQW7QykK']
+                [DEFAULT_ADMIN_USERNAME, DEFAULT_ADMIN_PASSWORD_HASH]
             );
-            console.log('👤 Usuario marco creado por defecto');
+            console.log(`👤 Usuario ${DEFAULT_ADMIN_USERNAME} creado por defecto`);
         }
 
         // Índices para mejorar rendimiento

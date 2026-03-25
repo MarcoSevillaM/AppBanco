@@ -6,9 +6,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Clave secreta para JWT (en producción debería estar en variable de entorno)
 const JWT_SECRET = process.env.JWT_SECRET || 'appbanco_v1.5_secret_key_2026';
-const JWT_EXPIRATION = '8h';
+const JWT_EXPIRATION = process.env.JWT_EXPIRATION || '8h';
 
 const AuthController = {
     /**
