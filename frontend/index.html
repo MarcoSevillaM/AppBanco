@@ -274,7 +274,7 @@
                     <div class="card card-prediccion-principal">
                         <div class="prediccion-header">
                             <h3>🔮 Predicción de Ahorro</h3>
-                            <p class="info-text">Estimación para el próximo mes basada en tu historial financiero</p>
+                            <p class="info-text">Estimación para el mes actual basada en tu historial financiero</p>
                         </div>
                         
                         <div class="prediccion-resultado">
@@ -285,6 +285,38 @@
                                 <span class="pred-label">Ahorro Estimado</span>
                                 <span class="pred-valor" id="pred-ahorro">-- €</span>
                                 <span class="pred-confianza" id="pred-confianza"></span>
+                            </div>
+                        </div>
+
+                        <!-- Progreso del mes actual: real vs predicción -->
+                        <div class="prediccion-progreso" id="pred-progreso" style="display:none;">
+                            <h4>📋 Progreso del Mes Actual</h4>
+                            <div class="progreso-fila">
+                                <span class="progreso-label">Ingresos registrados:</span>
+                                <span class="progreso-valor" id="pred-ingresos-real">-- €</span>
+                                <span class="progreso-de">de</span>
+                                <span class="progreso-valor predicho" id="pred-ingresos-esperado">-- €</span>
+                                <span class="progreso-label">esperados</span>
+                            </div>
+                            <div class="progreso-barra-container">
+                                <div class="progreso-barra ingreso" id="pred-barra-ingresos" style="width:0%"></div>
+                            </div>
+                            <div class="progreso-fila">
+                                <span class="progreso-label">Gastos registrados:</span>
+                                <span class="progreso-valor" id="pred-gastos-real">-- €</span>
+                                <span class="progreso-de">de</span>
+                                <span class="progreso-valor predicho" id="pred-gastos-esperado">-- €</span>
+                                <span class="progreso-label">esperados</span>
+                            </div>
+                            <div class="progreso-barra-container">
+                                <div class="progreso-barra gasto" id="pred-barra-gastos" style="width:0%"></div>
+                            </div>
+                            <div class="progreso-fila progreso-ahorro">
+                                <span class="progreso-label">Ahorro actual:</span>
+                                <span class="progreso-valor" id="pred-ahorro-real">-- €</span>
+                                <span class="progreso-de">vs</span>
+                                <span class="progreso-valor predicho" id="pred-ahorro-esperado">-- €</span>
+                                <span class="progreso-label">estimado</span>
                             </div>
                         </div>
 
@@ -327,7 +359,7 @@
                     <!-- Predicción por categorías -->
                     <div class="card card-prediccion">
                         <h3>📁 Predicción por Categorías</h3>
-                        <p class="info-text">Estimación de gastos por categoría para el próximo mes</p>
+                        <p class="info-text">Estimación de gastos por categoría para el mes actual</p>
                         <div id="prediccion-categorias" class="prediccion-categorias-grid">
                             <!-- Se llena dinámicamente -->
                         </div>

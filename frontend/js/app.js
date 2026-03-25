@@ -1639,11 +1639,12 @@ const NOMBRES_MESES_COMPLETOS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', '
 const PrediccionState = {
     chart: null,
     chartAbsoluto: null,
-    datosHistoricos: null
+    datosHistoricos: null,
+    datosMesActual: null
 };
 
 /**
- * Cargar y calcular predicción
+ * Cargar y calcular predicción para el MES ACTUAL
  */
 async function cargarPrediccion() {
     try {
@@ -1658,17 +1659,30 @@ async function cargarPrediccion() {
         const transacciones = data.data;
         
         // Agrupar por año-mes para análisis histórico
-        const datosMensuales = agruparTransaccionesPorAñoMes(transacciones);
-        PrediccionState.datosHistoricos = datosMensuales;
+        const todosLosMeses = agruparTransaccionesPorAñoMes(transacciones);
         
-        // Calcular predicción
-        const prediccion = calcularPrediccion(datosMensuales);
+        // Determinar mes actual
+        const ahora = new Date();
+        const mesActual = ahora.getMonth(); // 0-11
+        const añoActual = ahora.getFullYear();
+        const mesActualKey = `${añoActual}-${String(mesActual + 1).padStart(2, '0')}`;
+        
+        // Separar: datos históricos (meses anteriores) vs datos del mes actual
+        const datosHistoricos = todosLosMeses.filter(m => m.key < mesActualKey);
+        const datosMesActual = todosLosMeses.find(m => m.key === mesActualKey) || null;
+        
+        PrediccionState.datosHistoricos = datosHistoricos;
+        PrediccionState.datosMesActual = datosMesActual;
+        
+        // Calcular predicción para el mes actual usando solo datos históricos
+        const prediccion = calcularPrediccion(datosHistoricos, mesActual, añoActual);
         
         // Mostrar resultados
         renderizarPrediccion(prediccion);
-        renderizarChartPrediccion(datosMensuales, prediccion);
-        renderizarChartPrediccionAbsoluto(datosMensuales, prediccion);
-        renderizarPrediccionCategorias(transacciones);
+        renderizarProgresoMesActual(prediccion, datosMesActual);
+        renderizarChartPrediccion(datosHistoricos, prediccion, datosMesActual);
+        renderizarChartPrediccionAbsoluto(datosHistoricos, prediccion, datosMesActual);
+        renderizarPrediccionCategorias(transacciones, mesActualKey);
         
     } catch (error) {
         console.error('Error al cargar predicción:', error);
@@ -1779,22 +1793,22 @@ function calcularEstacionalidad(datosMensuales) {
 
 /**
  * Calcular predicción usando Media Móvil Ponderada + Tendencia + Estacionalidad
+ * @param {Array} datosMensuales - Datos históricos (meses anteriores al objetivo)
+ * @param {number} mesObjetivo - Mes objetivo (0-11), por defecto mes actual
+ * @param {number} añoObjetivo - Año objetivo, por defecto año actual
  */
-function calcularPrediccion(datosMensuales) {
+function calcularPrediccion(datosMensuales, mesObjetivo, añoObjetivo) {
     const n = datosMensuales.length;
     
     if (n === 0) {
         return null;
     }
     
-    // Determinar mes objetivo (siguiente mes)
-    const ultimoMes = datosMensuales[n - 1];
-    let mesObjetivo = ultimoMes.mes + 1;
-    let añoObjetivo = ultimoMes.año;
-    
-    if (mesObjetivo > 11) {
-        mesObjetivo = 0;
-        añoObjetivo++;
+    // Si no se pasan parámetros, usar el mes actual
+    if (mesObjetivo === undefined || añoObjetivo === undefined) {
+        const ahora = new Date();
+        mesObjetivo = ahora.getMonth();
+        añoObjetivo = ahora.getFullYear();
     }
     
     // Usar los últimos N meses (máximo 12) para la predicción
@@ -1981,6 +1995,48 @@ function renderizarPrediccion(prediccion) {
 }
 
 /**
+ * Renderizar progreso del mes actual: real vs predicción
+ */
+function renderizarProgresoMesActual(prediccion, datosMesActual) {
+    const container = document.getElementById('pred-progreso');
+    if (!container || !prediccion) return;
+    
+    if (!datosMesActual) {
+        // No hay datos del mes actual todavía
+        container.style.display = 'block';
+        document.getElementById('pred-ingresos-real').textContent = formatearMoneda(0);
+        document.getElementById('pred-ingresos-esperado').textContent = formatearMoneda(prediccion.ingresos);
+        document.getElementById('pred-gastos-real').textContent = formatearMoneda(0);
+        document.getElementById('pred-gastos-esperado').textContent = formatearMoneda(prediccion.gastos);
+        document.getElementById('pred-ahorro-real').textContent = formatearMoneda(0);
+        document.getElementById('pred-ahorro-esperado').textContent = formatearMoneda(prediccion.ahorro);
+        document.getElementById('pred-barra-ingresos').style.width = '0%';
+        document.getElementById('pred-barra-gastos').style.width = '0%';
+        return;
+    }
+    
+    container.style.display = 'block';
+    
+    const ingresosReales = datosMesActual.ingresos;
+    const gastosReales = datosMesActual.gastos;
+    const ahorroReal = ingresosReales - gastosReales;
+    
+    document.getElementById('pred-ingresos-real').textContent = formatearMoneda(ingresosReales);
+    document.getElementById('pred-ingresos-esperado').textContent = formatearMoneda(prediccion.ingresos);
+    document.getElementById('pred-gastos-real').textContent = formatearMoneda(gastosReales);
+    document.getElementById('pred-gastos-esperado').textContent = formatearMoneda(prediccion.gastos);
+    document.getElementById('pred-ahorro-real').textContent = formatearMoneda(ahorroReal);
+    document.getElementById('pred-ahorro-esperado').textContent = formatearMoneda(prediccion.ahorro);
+    
+    // Barras de progreso
+    const pctIngresos = prediccion.ingresos > 0 ? Math.min((ingresosReales / prediccion.ingresos) * 100, 100) : 0;
+    const pctGastos = prediccion.gastos > 0 ? Math.min((gastosReales / prediccion.gastos) * 100, 100) : 0;
+    
+    document.getElementById('pred-barra-ingresos').style.width = `${pctIngresos}%`;
+    document.getElementById('pred-barra-gastos').style.width = `${pctGastos}%`;
+}
+
+/**
  * Calcular predicciones históricas retroactivas
  * Para cada mes, calcula qué hubiéramos predicho basándonos en los meses anteriores
  * Usa el mismo algoritmo mejorado: Media Móvil Ponderada + Tendencia + Estacionalidad
@@ -2045,7 +2101,7 @@ function calcularPrediccionesHistoricas(datosMensuales) {
 /**
  * Renderizar gráfica de tendencia y predicción
  */
-function renderizarChartPrediccion(datosMensuales, prediccion) {
+function renderizarChartPrediccion(datosMensuales, prediccion, datosMesActual) {
     const ctx = document.getElementById('chart-prediccion');
     if (!ctx) return;
     
@@ -2071,10 +2127,17 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
         return predHistorica ? predHistorica.prediccion : null;
     });
     
-    // Añadir mes de predicción futura
+    // Añadir mes actual con datos reales parciales y predicción
     if (prediccion) {
-        labels.push(`${NOMBRES_MESES[prediccion.mesObjetivo]} ${prediccion.añoObjetivo.toString().slice(-2)} (Pred.)`);
-        ahorrosReales.push(null);
+        const labelMesActual = `${NOMBRES_MESES[prediccion.mesObjetivo]} ${prediccion.añoObjetivo.toString().slice(-2)} (Actual)`;
+        labels.push(labelMesActual);
+        
+        // Mostrar ahorro real parcial del mes actual si hay datos
+        if (datosMesActual) {
+            ahorrosReales.push(datosMesActual.ingresos - datosMesActual.gastos);
+        } else {
+            ahorrosReales.push(null);
+        }
         ahorrosPredichos.push(prediccion.ahorro);
     }
     
@@ -2170,7 +2233,7 @@ function renderizarChartPrediccion(datosMensuales, prediccion) {
 /**
  * Renderizar gráfica de tendencia y predicción con ahorro absoluto (ahorro real - inversión)
  */
-function renderizarChartPrediccionAbsoluto(datosMensuales, prediccion) {
+function renderizarChartPrediccionAbsoluto(datosMensuales, prediccion, datosMesActual) {
     const ctx = document.getElementById('chart-prediccion-absoluto');
     if (!ctx) return;
     
@@ -2191,8 +2254,14 @@ function renderizarChartPrediccionAbsoluto(datosMensuales, prediccion) {
     });
     
     if (prediccion) {
-        labels.push(`${NOMBRES_MESES[prediccion.mesObjetivo]} ${prediccion.añoObjetivo.toString().slice(-2)} (Pred.)`);
-        ahorrosAbsolutos.push(null);
+        const labelMesActual = `${NOMBRES_MESES[prediccion.mesObjetivo]} ${prediccion.añoObjetivo.toString().slice(-2)} (Actual)`;
+        labels.push(labelMesActual);
+        
+        if (datosMesActual) {
+            ahorrosAbsolutos.push((datosMesActual.ingresos - datosMesActual.gastos) + datosMesActual.inversion);
+        } else {
+            ahorrosAbsolutos.push(null);
+        }
         ahorrosPredichos.push(prediccion.ahorro);
     }
     
@@ -2322,28 +2391,36 @@ function mostrarPrecisionModelo(prediccionesHistoricas) {
 }
 
 /**
- * Renderizar predicción por categorías
+ * Renderizar predicción por categorías (para el mes actual)
  */
-function renderizarPrediccionCategorias(transacciones) {
+function renderizarPrediccionCategorias(transacciones, mesActualKey) {
     const container = document.getElementById('prediccion-categorias');
     if (!container) return;
     
-    // Agrupar gastos por categoría y mes
+    // Agrupar gastos por categoría y mes, excluyendo el mes actual de la base de predicción
     const categoriasMes = {};
+    const categoriasActual = {}; // Datos reales del mes actual por categoría
     
     transacciones.forEach(t => {
         if (t.importe >= 0 || t.categoria === 'Ingresos') return;
         
         const fecha = new Date(t.fecha);
-        const mesKey = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
+        const mKey = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
+        
+        // Separar datos del mes actual
+        if (mKey === mesActualKey) {
+            if (!categoriasActual[t.categoria]) categoriasActual[t.categoria] = 0;
+            categoriasActual[t.categoria] += Math.abs(t.importe);
+            return;
+        }
         
         if (!categoriasMes[t.categoria]) {
             categoriasMes[t.categoria] = {};
         }
-        if (!categoriasMes[t.categoria][mesKey]) {
-            categoriasMes[t.categoria][mesKey] = 0;
+        if (!categoriasMes[t.categoria][mKey]) {
+            categoriasMes[t.categoria][mKey] = 0;
         }
-        categoriasMes[t.categoria][mesKey] += Math.abs(t.importe);
+        categoriasMes[t.categoria][mKey] += Math.abs(t.importe);
     });
     
     // Calcular predicción para cada categoría
@@ -2376,6 +2453,7 @@ function renderizarPrediccionCategorias(transacciones) {
         prediccionesCategorias.push({
             categoria,
             prediccion,
+            actual: categoriasActual[categoria] || 0,
             tendencia: tendenciaTexto
         });
     }
@@ -2400,13 +2478,18 @@ function renderizarPrediccionCategorias(transacciones) {
         'estable': '→'
     };
     
-    container.innerHTML = prediccionesCategorias.map(p => `
+    container.innerHTML = prediccionesCategorias.map(p => {
+        const pctActual = p.prediccion > 0 ? Math.min((p.actual / p.prediccion) * 100, 100).toFixed(0) : 0;
+        const actualTexto = p.actual > 0 ? `<span class="pred-categoria-actual">Registrado: ${formatearMoneda(p.actual)} (${pctActual}%)</span>` : '';
+        return `
         <div class="pred-categoria-item" style="border-left-color: ${coloresCat[p.categoria] || '#6b7280'}">
             <span class="pred-categoria-nombre">${p.categoria}</span>
             <span class="pred-categoria-valor">${formatearMoneda(p.prediccion)}</span>
+            ${actualTexto}
             <span class="pred-categoria-tendencia ${p.tendencia}">
                 ${tendenciaIcono[p.tendencia]} Tendencia ${p.tendencia}
             </span>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
