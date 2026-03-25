@@ -1,38 +1,39 @@
-# 🏦 AppBanco v1.5
+# AppBanco v1.5
 
-Sistema de Gestión de Transacciones Bancarias con **clasificación automática inteligente** mediante IA.
+Sistema de gestión de transacciones bancarias con clasificación automática basada en inteligencia artificial.
 
-## 📋 Descripción
+## Descripción
 
-AppBanco es una aplicación web completa para gestionar transacciones bancarias importadas. El sistema clasifica automáticamente cada transacción utilizando:
+AppBanco es una aplicación web para gestionar transacciones bancarias importadas. El sistema clasifica automáticamente cada transacción utilizando:
 
-- 🤖 **Modelo de IA (Neural Network)** - Red neuronal LSTM para clasificación inteligente (Por defecto, **pendiente de mejora**)
-- 📋 **Sistema de Reglas** - Palabras clave tradicional como fallback
+- Modelo de IA (red neuronal LSTM) para clasificación automática
+- Sistema de reglas basado en palabras clave como respaldo
 
 Categorías disponibles:
 
-- 💹 **Inversión** - Fondos, acciones, ETFs, brokers
-- 🚗 **Coche** - Gasolina, parking, peajes, taller
-- 🛒 **Alimentación** - Supermercados, tiendas de alimentación
-- 🏠 **Gastos Recurrentes** - Alquiler, luz, agua, suscripciones
-- 🎮 **Ocio** - Restaurantes, viajes, entretenimiento
-- 💰 **Ingresos** - Nóminas, transferencias recibidas
-- 📦 **Otros** - Transacciones no clasificadas
+- Inversión: fondos, acciones, ETFs, brokers  
+- Coche: gasolina, parking, peajes, taller  
+- Alimentación: supermercados, tiendas de alimentación  
+- Gastos recurrentes: alquiler, luz, agua, suscripciones  
+- Ocio: restaurantes, viajes, entretenimiento  
+- Ingresos: nóminas, transferencias recibidas  
+- Otros: transacciones no clasificadas  
 
-## 🏗️ Arquitectura del Sistema
+## Arquitectura del sistema
 
 ```
+
 AppBanco_v.1.5/
-├── backend/                    # Servidor Node.js + Express
+├── backend/
 │   ├── src/
 │   │   ├── core/
-│   │   │   └── EcoSis.js      # 🎯 Clase principal - Orquestador del sistema
+│   │   │   └── EcoSis.js
 │   │   ├── controllers/
 │   │   │   └── TransaccionController.js
 │   │   ├── models/
 │   │   │   └── Transaccion.js
 │   │   ├── services/
-│   │   │   ├── ClasificadorService.js  # 🧠 Clasificador con IA
+│   │   │   ├── ClasificadorService.js
 │   │   │   └── ImportadorService.js
 │   │   ├── database/
 │   │   │   └── Database.js
@@ -40,223 +41,216 @@ AppBanco_v.1.5/
 │   │       └── api.js
 │   ├── server.js
 │   └── package.json
-├── frontend/                   # Interfaz web HTML/CSS/JS
+├── frontend/
 │   ├── index.html
 │   ├── css/
 │   │   └── styles.css
 │   └── js/
 │       └── app.js
-├── modelo/                     # 🤖 Modelo de IA (NUEVO)
-│   ├── ModeloClasificador.js  # Red neuronal TensorFlow.js
-│   ├── entrenarModelo.js      # Script de entrenamiento
-│   ├── probarModelo.js        # Testing y evaluación
-│   ├── UtilsModelo.js         # Utilidades de preprocesamiento
-│   ├── configurar.js          # Configuración interactiva
-│   ├── README.md              # Documentación del modelo
+├── modelo/
+│   ├── ModeloClasificador.js
+│   ├── entrenarModelo.js
+│   ├── probarModelo.js
+│   ├── UtilsModelo.js
+│   ├── configurar.js
+│   ├── README.md
 │   └── .gitignore
-├── data/                       # Base de datos SQLite
+├── data/
 │   └── banco.db
 └── README.md
-```
 
-## 🤖 Modelo de IA - Características
+````
 
-### Arquitectura del Modelo
-- **Embedding Layer**: Convierte palabras en vectores densos (128 dimensiones)
-- **Bidirectional LSTM**: Captura contexto en ambas direcciones (64 unidades)
-- **Dropout Layers**: Previene overfitting (50% y 30%)
-- **Dense Layers**: Clasificación final (7 categorías)
+## Modelo de IA
 
-### Ventajas sobre Reglas
-- ✅ Aprende patrones complejos de los datos
-- ✅ Se adapta a nuevos conceptos
-- ✅ Mayor precisión (>85% accuracy)
-- ✅ Maneja variaciones y errores tipográficos
-- ✅ Mejora con más datos
+### Arquitectura
 
-## 🎯 Clase EcoSis
+- Embedding layer: representación vectorial de palabras (128 dimensiones)  
+- Bidirectional LSTM: captura de contexto en ambas direcciones (64 unidades)  
+- Dropout: regularización (50% y 30%)  
+- Dense layers: clasificación en 7 categorías  
 
-`EcoSis` es la clase central que orquesta todo el sistema:
+### Ventajas frente a reglas
+
+- Aprende patrones complejos a partir de los datos  
+- Se adapta a nuevos conceptos  
+- Mayor precisión (en torno al 85% o superior)  
+- Tolera variaciones y errores tipográficos  
+- Mejora a medida que aumenta el volumen de datos  
+
+## Clase EcoSis
+
+Clase central que coordina el sistema:
 
 ```javascript
 const ecoSis = new EcoSis();
 
-// Gestión de transacciones (ahora con IA)
 await ecoSis.crearTransaccion({ fecha, concepto, importe });
 ecoSis.obtenerTransacciones(filtros);
 ecoSis.actualizarTransaccion(id, datos);
 ecoSis.eliminarTransaccion(id);
 
-// Importación
 await ecoSis.importarTransacciones(archivo, 'csv');
 
-// Clasificación (IA o Reglas)
-await ecoSis.clasificarConcepto('Compra Mercadona'); // -> 'Alimentación'
+await ecoSis.clasificarConcepto('Compra Mercadona');
 ecoSis.reclasificarTodas();
 
-// Estadísticas
 ecoSis.obtenerResumenCategorias();
 ecoSis.obtenerBalance();
-```
+````
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 ### Backend
-- **Node.js** - Runtime de JavaScript
-- **Express.js** - Framework web
-- **sql.js** - Base de datos SQLite
-- **Multer** - Gestión de archivos
-- **csv-parser** - Parseo de CSV
-- **TensorFlow.js** - 🤖 Machine Learning (NUEVO)
+
+* Node.js
+* Express.js
+* sql.js (SQLite)
+* Multer
+* csv-parser
+* TensorFlow.js
 
 ### Frontend
-- **HTML5** - Estructura
-- **CSS3** - Estilos (Variables CSS, Flexbox, Grid)
-- **JavaScript Vanilla** - Sin frameworks
 
-### Base de Datos
-- **SQLite** - Base de datos embebida, ligera y portable
+* HTML5
+* CSS3
+* JavaScript sin frameworks
 
-### Modelo de IA
-- **TensorFlow.js Node** - Framework de ML
-- **LSTM** - Red neuronal recurrente bidireccional
-- **Vocabulario de 5000 palabras** - Preprocesamiento de texto
+### Base de datos
 
-## 🚀 Instalación
+* SQLite
 
-1. **Clonar o descargar el proyecto**
+### Modelo
 
-2. **Instalar dependencias del backend**
+* TensorFlow.js (Node)
+* LSTM bidireccional
+* Vocabulario aproximado de 5000 palabras
+
+## Instalación
+
+1. Clonar o descargar el proyecto
+
+2. Instalar dependencias:
+
 ```bash
 cd backend
 npm install
 ```
 
-3. **Configurar variables de entorno**
+3. Configurar variables de entorno:
+
 ```bash
-# Desde la carpeta backend
 cp .env.example .env
 ```
 
-En Windows PowerShell:
+En PowerShell:
+
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Variables clave en `.env`:
+Variables relevantes:
 
-- `JWT_SECRET`: clave para firmar tokens.
-- `JWT_EXPIRATION`: duración del token (ejemplo: `8h`).
-- `DEFAULT_ADMIN_USERNAME`: usuario admin inicial.
-- `DEFAULT_ADMIN_PASSWORD_HASH`: hash bcrypt del admin inicial.
-- `HOST` y `PORT`: host y puerto del servidor.
+* JWT_SECRET
+* JWT_EXPIRATION
+* DEFAULT_ADMIN_USERNAME
+* DEFAULT_ADMIN_PASSWORD_HASH
+* HOST
+* PORT
 
-4. **Crear carpetas necesarias**
+4. Crear carpetas necesarias:
+
 ```bash
 mkdir data
 mkdir backend/uploads
 ```
 
-5. **🤖 (Opcional) Entrenar el modelo de IA**
-```bash
-# Entrenar modelo con datos existentes
-node modelo/entrenarModelo.js
+5. Entrenamiento opcional del modelo:
 
-# O usar el configurador interactivo
+```bash
+node modelo/entrenarModelo.js
 node modelo/configurar.js
 ```
 
-6. **Iniciar el servidor**
+6. Iniciar servidor:
+
 ```bash
 npm start
 ```
 
-7. **Abrir en el navegador**
+7. Acceso:
+
 ```
 http://localhost:3000
 ```
 
-## 🧠 Uso del Modelo de IA
+## Uso del modelo
 
 ### Entrenamiento
 
 ```bash
-# Entrenar modelo con configuración por defecto
 node modelo/entrenarModelo.js
-
-# Probar el modelo
 node modelo/probarModelo.js
-
-# Probar un concepto específico
 node modelo/probarModelo.js concepto "MERCADONA SUPERMERCADO"
-
-# Ver resumen del modelo
 node modelo/probarModelo.js resumen
-
-# Comparar reglas vs IA
 node modelo/probarModelo.js comparar
-
-# Configuración interactiva
 node modelo/configurar.js
 ```
 
-### Activar IA en el Servidor
-
-El modelo se carga automáticamente al iniciar el servidor. Para activarlo:
+### Activación
 
 ```javascript
-// En el código o vía API
 clasificadorService.establecerModo('ia');
+clasificadorService.umbralConfianza = 0.6;
 
-// Configurar umbral de confianza
-clasificadorService.umbralConfianza = 0.6; // 60%
-
-// Ver estado actual
 const estado = clasificadorService.obtenerModoActual();
 ```
 
-### Modos de Clasificación
+### Modos
 
-- **`reglas`**: Sistema tradicional basado en palabras clave (por defecto)
-- **`ia`**: Red neuronal con fallback a reglas si confianza < umbral
+* reglas: clasificación basada en palabras clave
+* ia: modelo neuronal con fallback a reglas si la confianza es baja
 
-## 📊 Rendimiento del Modelo
+## Rendimiento
 
-Con datos de entrenamiento típicos:
-- **Accuracy**: >85% en datos de prueba
-- **Velocidad**: <50ms por predicción
-- **Memoria**: ~100-200 MB en ejecución
-- **Tamaño del modelo**: ~10-20 MB
+* Precisión: superior al 85% en pruebas
+* Tiempo de inferencia: inferior a 50 ms
+* Consumo de memoria: entre 100 y 200 MB
+* Tamaño del modelo: entre 10 y 20 MB
 
-## 📡 API REST
+## API REST
 
 ### Transacciones
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/transacciones` | Listar transacciones |
-| GET | `/api/transacciones/:id` | Obtener una transacción |
-| POST | `/api/transacciones` | Crear transacción |
-| PUT | `/api/transacciones/:id` | Actualizar transacción |
-| DELETE | `/api/transacciones/:id` | Eliminar transacción |
-| POST | `/api/transacciones/importar` | Importar desde archivo |
+
+| Método | Endpoint                    | Descripción             |
+| ------ | --------------------------- | ----------------------- |
+| GET    | /api/transacciones          | Listar transacciones    |
+| GET    | /api/transacciones/:id      | Obtener una transacción |
+| POST   | /api/transacciones          | Crear transacción       |
+| PUT    | /api/transacciones/:id      | Actualizar              |
+| DELETE | /api/transacciones/:id      | Eliminar                |
+| POST   | /api/transacciones/importar | Importar archivo        |
 
 ### Clasificación
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/categorias` | Listar categorías |
-| POST | `/api/clasificar` | Clasificar un concepto |
-| POST | `/api/reclasificar` | Reclasificar todas |
+
+| Método | Endpoint          | Descripción         |
+| ------ | ----------------- | ------------------- |
+| GET    | /api/categorias   | Listar categorías   |
+| POST   | /api/clasificar   | Clasificar concepto |
+| POST   | /api/reclasificar | Reclasificar todo   |
 
 ### Estadísticas
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/estadisticas/categorias` | Resumen por categoría |
-| GET | `/api/estadisticas/mensual` | Resumen mensual |
-| GET | `/api/estadisticas/balance` | Balance general |
 
-## 📥 Formato de Importación
+| Método | Endpoint                     | Descripción           |
+| ------ | ---------------------------- | --------------------- |
+| GET    | /api/estadisticas/categorias | Resumen por categoría |
+| GET    | /api/estadisticas/mensual    | Resumen mensual       |
+| GET    | /api/estadisticas/balance    | Balance               |
+
+## Formato de importación
 
 ### CSV
+
 ```csv
 Fecha;Concepto;Importe
 2024-01-15;Compra Mercadona;-45.50
@@ -264,6 +258,7 @@ Fecha;Concepto;Importe
 ```
 
 ### JSON
+
 ```json
 {
   "transacciones": [
@@ -276,34 +271,31 @@ Fecha;Concepto;Importe
 }
 ```
 
-## 🔮 Próximas Mejoras
+## Próximas mejoras
 
-### Funcionalidades Generales
-- [ ] Gráficos de estadísticas con Chart.js
-- [ ] Exportación de datos
-- [ ] Reglas de clasificación personalizables desde UI
-- [ ] Múltiples cuentas bancarias
-- [ ] Autenticación de usuarios
-- [ ] Modo oscuro
+### Generales
 
-### Modelo de IA
-- [ ] Transfer learning con modelos preentrenados
-- [ ] Atención a importes y fechas en la clasificación
-- [ ] Detección de anomalías (gastos inusuales)
-- [ ] Sugerencias de nuevas categorías automáticas
-- [ ] API REST para predicciones
-- [ ] Dashboard de métricas del modelo
-- [ ] Auto-reentrenamiento periódico
+* Gráficos de estadísticas
+* Exportación de datos
+* Reglas configurables desde la interfaz
+* Soporte para múltiples cuentas
+* Autenticación de usuarios
+* Modo oscuro
 
-## 📚 Documentación Adicional
+### Modelo
 
-- **[Modelo de IA](modelo/README.md)** - Documentación completa del modelo
-- **API REST** - Documentación de endpoints (ver sección API abajo)
+* Transfer learning
+* Uso de importe y fecha en la clasificación
+* Detección de anomalías
+* Sugerencia automática de categorías
+* API de predicción
+* Panel de métricas
+* Reentrenamiento automático
 
-## 📄 Licencia
+## Documentación adicional
 
-MIT License - Uso libre
+* modelo/README.md
 
----
+## Licencia
 
-Desarrollado con ❤️ y 🤖 para la gestión de finanzas personales
+MIT
