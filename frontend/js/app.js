@@ -1457,8 +1457,8 @@ function renderizarTablaResumenMensual(transacciones) {
                 <td class="positivo">${formatearMoneda(m.ingresos)}</td>
                 <td class="negativo">${formatearMoneda(m.gastos)}</td>
                 <td class="${ahorro >= 0 ? 'positivo' : 'negativo'}">${formatearMoneda(ahorro)}</td>
-                <td class="inversion">${formatearMoneda(Math.abs(m.inversion))}</td>
-            </tr>
+                <td class="inversion">${formatearMoneda(m.inversion)}</td>
+                </tr>
         `;
     }).join('');
     
