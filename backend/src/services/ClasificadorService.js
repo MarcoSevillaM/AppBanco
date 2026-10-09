@@ -4,6 +4,7 @@
  */
 
 const { spawn } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 
 class ClasificadorService {
@@ -161,11 +162,41 @@ class ClasificadorService {
         // Reglas personalizadas (se cargarán desde la base de datos)
         this.reglasPersonalizadas = {};
 
-        // Ruta al script Python
+        // Ruta al script Python y al intérprete que lo ejecuta
         this.pythonScript = path.join(__dirname, '../../../modelo/modelo_clasificador.py');
+        this.pythonBin = this.resolverPython();
         
         // Inicializar modelo de IA de forma asíncrona
         this.inicializarModeloIA();
+    }
+
+    /**
+     * Elegir el intérprete de Python: PYTHON_PATH del .env, si no el .venv del
+     * proyecto y, como último recurso, el "python" del sistema.
+     * El del sistema no suele tener las dependencias del modelo (unidecode, sklearn).
+     */
+    resolverPython() {
+        if (process.env.PYTHON_PATH) return process.env.PYTHON_PATH;
+
+        const raiz = path.join(__dirname, '../../..');
+        const candidatos = [
+            path.join(raiz, '.venv', 'Scripts', 'python.exe'),
+            path.join(raiz, '.venv', 'bin', 'python')
+        ];
+        return candidatos.find(c => fs.existsSync(c)) || 'python';
+    }
+
+    /**
+     * Comprobar que el intérprete puede importar las dependencias del modelo
+     */
+    comprobarDependenciasPython() {
+        return new Promise(resolve => {
+            const proceso = spawn(this.pythonBin, ['-c', 'import unidecode, sklearn, numpy']);
+            let stderr = '';
+            proceso.stderr.on('data', d => { stderr += d.toString(); });
+            proceso.on('close', code => resolve({ ok: code === 0, error: stderr.trim().split('\n').pop() }));
+            proceso.on('error', error => resolve({ ok: false, error: error.message }));
+        });
     }
 
     /**
@@ -181,9 +212,14 @@ class ClasificadorService {
                 .catch(() => false);
             
             if (existe) {
-                this.modeloIACargado = true;
-                console.log('🤖 Modelo de IA (Python) disponible');
-                console.log('   Para usar IA: cambiar modo a "ia"');
+                const dependencias = await this.comprobarDependenciasPython();
+                if (dependencias.ok) {
+                    this.modeloIACargado = true;
+                    console.log(`🤖 Modelo de IA (Python) disponible con ${this.pythonBin}`);
+                } else {
+                    console.log(`⚠️ Modelo de IA no disponible: ${this.pythonBin} no puede cargarlo (${dependencias.error}).`);
+                    console.log('   Usando clasificación por reglas. Define PYTHON_PATH en backend/.env o crea .venv.');
+                }
             } else {
                 console.log('📋 Modelo de IA no disponible. Usando clasificación por reglas.');
                 console.log('   Para entrenar: python modelo/entrenar_modelo.py');
@@ -240,16 +276,35 @@ class ClasificadorService {
     }
 
     /**
+     * Pasar a minúsculas y quitar tildes para comparar textos
+     */
+    normalizarTexto(texto) {
+        return texto
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim();
+    }
+
+    /**
+     * Comprobar si la palabra clave aparece como palabra completa
+     * ("dia" no debe coincidir con "Mediador", ni "bar" con "Salvador").
+     * Admite plural: "nomina" coincide con "Nominas".
+     */
+    contienePalabra(textoNormalizado, palabraClave) {
+        const palabra = this.normalizarTexto(palabraClave)
+            .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return new RegExp(`(^|[^a-z0-9])${palabra}(e?s)?($|[^a-z0-9])`).test(textoNormalizado);
+    }
+
+    /**
      * Buscar coincidencia en las reglas prioritarias (ignora mayúsculas y tildes)
      */
     buscarReglaPrioritaria(concepto) {
-        const conceptoNormalizado = concepto
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[̀-ͯ]/g, '');
+        const conceptoNormalizado = this.normalizarTexto(concepto);
 
         for (const [palabra, categoria] of Object.entries(this.reglasPrioritarias)) {
-            if (conceptoNormalizado.includes(palabra)) {
+            if (this.contienePalabra(conceptoNormalizado, palabra)) {
                 return categoria;
             }
         }
@@ -263,18 +318,21 @@ class ClasificadorService {
         const categoriaPrioritaria = this.buscarReglaPrioritaria(concepto);
         if (categoriaPrioritaria) return categoriaPrioritaria;
 
-        const conceptoLower = concepto.toLowerCase().trim();
+        // Quitar los prefijos de Santander: "Pago Movil En ..." y "Compra Internet En ..."
+        // describen el medio de pago, no el comercio, y activaban las reglas "movil" e "internet"
+        const conceptoNormalizado = this.normalizarTexto(concepto)
+            .replace(/\b(pago movil|compra internet) en\b/g, ' ');
 
         // Primero buscar en reglas personalizadas (tienen prioridad)
         for (const [palabra, categoria] of Object.entries(this.reglasPersonalizadas)) {
-            if (conceptoLower.includes(palabra)) {
+            if (this.contienePalabra(conceptoNormalizado, palabra)) {
                 return categoria;
             }
         }
 
         // Luego buscar en reglas por defecto
         for (const [palabra, categoria] of Object.entries(this.reglas)) {
-            if (conceptoLower.includes(palabra)) {
+            if (this.contienePalabra(conceptoNormalizado, palabra)) {
                 return categoria;
             }
         }
@@ -312,7 +370,10 @@ class ClasificadorService {
      */
     llamarModeloPython(comando, ...args) {
         return new Promise((resolve, reject) => {
-            const python = spawn('python', [this.pythonScript, comando, ...args]);
+            // Forzar UTF-8: en Windows Python escribe en cp1252 y "Alimentación" llegaba corrupta
+            const python = spawn(this.pythonBin, [this.pythonScript, comando, ...args], {
+                env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
+            });
             
             let stdout = '';
             let stderr = '';
