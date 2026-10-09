@@ -129,6 +129,7 @@
                         <option value="Gastos recurrentes">Gastos Recurrentes</option>
                         <option value="Ocio">Ocio</option>
                         <option value="Ingresos">Ingresos</option>
+                        <option value="Vivienda">Vivienda</option>
                         <option value="Otros">Otros</option>
                     </select>
                     <select id="filtro-orden">
@@ -158,6 +159,10 @@
                     <div class="resumen-filtro-item">
                         <span class="resumen-filtro-label">INVERSIÓN</span>
                         <span class="resumen-filtro-valor inversion" id="filtro-total-inversion">0,00 €</span>
+                    </div>
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label">VIVIENDA</span>
+                        <span class="resumen-filtro-valor vivienda" id="filtro-total-vivienda">0,00 €</span>
                     </div>
                 </div>
 
@@ -194,8 +199,8 @@
                 <div class="graficas-grid">
                     <!-- Gráfica: Gastos/Ingresos/Ahorro por Mes -->
                     <div class="card card-grafica">
-                        <h3>💰 Balance Mensual (sin Inversión)</h3>
-                        <p class="info-text">Gastos, Ingresos y Ahorro por mes. Las transacciones de "Inversión" no se cuentan.</p>
+                        <h3>💰 Balance Mensual (sin Inversión ni Vivienda)</h3>
+                        <p class="info-text">Gastos, Ingresos y Ahorro por mes. Las transacciones de "Inversión" y "Vivienda" no se cuentan.</p>
                         <div class="chart-container">
                             <canvas id="chart-balance-mensual"></canvas>
                         </div>
@@ -223,7 +228,7 @@
                     <!-- Gráfica: Evolución del Ahorro Acumulado -->
                     <div class="card card-grafica card-half">
                         <h3>📈 Evolución del Ahorro</h3>
-                        <p class="info-text">Ahorro acumulado mes a mes (sin contar Inversión).</p>
+                        <p class="info-text">Ahorro acumulado mes a mes (sin contar Inversión ni Vivienda).</p>
                         <div class="chart-container">
                             <canvas id="chart-ahorro-acumulado"></canvas>
                         </div>
@@ -241,6 +246,7 @@
                                         <th>Gastos</th>
                                         <th>Ahorro</th>
                                         <th>Inversión</th>
+                                        <th>Vivienda</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tabla-resumen-mensual">
@@ -458,6 +464,7 @@
                                 <option value="Gastos recurrentes">Gastos recurrentes</option>
                                 <option value="Ocio">Ocio</option>
                                 <option value="Ingresos">Ingresos</option>
+                                <option value="Vivienda">Vivienda</option>
                                 <option value="Otros">Otros</option>
                             </select>
                         </div>
@@ -505,6 +512,7 @@
                             <option value="Gastos recurrentes">Gastos recurrentes</option>
                             <option value="Ocio">Ocio</option>
                             <option value="Ingresos">Ingresos</option>
+                            <option value="Vivienda">Vivienda</option>
                             <option value="Otros">Otros</option>
                         </select>
                     </div>

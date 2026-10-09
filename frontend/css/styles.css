@@ -398,6 +398,10 @@ body {
     color: #8b5cf6;
 }
 
+.resumen-filtro-valor.vivienda {
+    color: #0891b2;
+}
+
 /* Responsive resumen filtro */
 @media (max-width: 600px) {
     .resumen-filtro {
@@ -414,8 +418,9 @@ body {
         border-right: 1px solid var(--border-color);
     }
     
-    .resumen-filtro-item:nth-child(3),
-    .resumen-filtro-item:nth-child(4) {
+    .resumen-filtro-item:last-child {
+        grid-column: 1 / -1;
+        border-right: none;
         border-bottom: none;
     }
     
@@ -526,6 +531,7 @@ body {
 .categoria-badge[data-cat="Gastos recurrentes"] { background: #fce7f3; color: #9d174d; }
 .categoria-badge[data-cat="Ocio"] { background: #e0e7ff; color: #3730a3; }
 .categoria-badge[data-cat="Ingresos"] { background: #d1fae5; color: #047857; }
+.categoria-badge[data-cat="Vivienda"] { background: #cffafe; color: #155e75; }
 .categoria-badge[data-cat="Otros"] { background: #f3f4f6; color: #4b5563; }
 
 /* ==========================================
@@ -1619,6 +1625,11 @@ code {
 
 .tabla-resumen-mensual td.inversion {
     color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tabla-resumen-mensual td.vivienda {
+    color: #0891b2;
     font-weight: 600;
 }
 

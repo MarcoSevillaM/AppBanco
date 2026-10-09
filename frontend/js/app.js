@@ -387,11 +387,14 @@ function actualizarResumenFiltro(transacciones) {
     let ingresos = 0;
     let gastos = 0;
     let inversion = 0;
+    let vivienda = 0;
     
     transacciones.forEach(t => {
         if (t.categoria === 'Inversiones') {
             //inversion += Math.abs(t.importe);
             inversion += t.importe;
+        } else if (t.categoria === 'Vivienda') {
+            vivienda += t.importe;
         } else if (t.importe > 0) {
             ingresos += t.importe;
         } else {
@@ -406,6 +409,7 @@ function actualizarResumenFiltro(transacciones) {
     document.getElementById('filtro-total-gastos').textContent = formatearMoneda(gastos);
     document.getElementById('filtro-total-ahorro').textContent = formatearMoneda(ahorro);
     document.getElementById('filtro-total-inversion').textContent = formatearMoneda(inversion);
+    document.getElementById('filtro-total-vivienda').textContent = formatearMoneda(vivienda);
     
     // Mostrar el resumen
     resumenDiv.classList.remove('hidden');
@@ -847,6 +851,7 @@ const COLORES_CATEGORIAS = {
     'Gastos recurrentes': { bg: 'rgba(168, 85, 247, 0.7)', border: 'rgb(168, 85, 247)' }, // Púrpura
     'Ocio': { bg: 'rgba(236, 72, 153, 0.7)', border: 'rgb(236, 72, 153)' },            // Rosa/Fucsia
     'Ingresos': { bg: 'rgba(34, 197, 94, 0.7)', border: 'rgb(34, 197, 94)' },          // Verde claro
+    'Vivienda': { bg: 'rgba(8, 145, 178, 0.7)', border: 'rgb(8, 145, 178)' },          // Cian
     'Otros': { bg: 'rgba(107, 114, 128, 0.7)', border: 'rgb(107, 114, 128)' }          // Gris
 };
 
@@ -1005,15 +1010,18 @@ function agruparPorMes(transacciones) {
                 ingresos: 0,
                 gastos: 0,
                 inversion: 0,
+                vivienda: 0,
                 transacciones: []
             };
         }
         
         meses[key].transacciones.push(t);
         
-        // Clasificar por tipo (Inversión se separa)
+        // Clasificar por tipo (Inversión y Vivienda se separan)
         if (t.categoria === 'Inversiones') {
             meses[key].inversion += t.importe;
+        } else if (t.categoria === 'Vivienda') {
+            meses[key].vivienda += t.importe;
         } else if (t.importe > 0) {
             meses[key].ingresos += t.importe;
         } else {
@@ -1443,6 +1451,7 @@ function renderizarTablaResumenMensual(transacciones) {
     let totalGastos = 0;
     let totalAhorro = 0;
     let totalInversion = 0;
+    let totalVivienda = 0;
     
     const filas = datosMes.map(m => {
         const ahorro = m.ingresos - m.gastos;
@@ -1450,6 +1459,7 @@ function renderizarTablaResumenMensual(transacciones) {
         totalGastos += m.gastos;
         totalAhorro += ahorro;
         totalInversion += m.inversion;
+        totalVivienda += m.vivienda;
         
         return `
             <tr>
@@ -1458,6 +1468,7 @@ function renderizarTablaResumenMensual(transacciones) {
                 <td class="negativo">${formatearMoneda(m.gastos)}</td>
                 <td class="${ahorro >= 0 ? 'positivo' : 'negativo'}">${formatearMoneda(ahorro)}</td>
                 <td class="inversion">${formatearMoneda(m.inversion)}</td>
+                <td class="vivienda">${formatearMoneda(m.vivienda)}</td>
                 </tr>
         `;
     }).join('');
@@ -1470,6 +1481,7 @@ function renderizarTablaResumenMensual(transacciones) {
             <td class="negativo">${formatearMoneda(totalGastos)}</td>
             <td class="${totalAhorro >= 0 ? 'positivo' : 'negativo'}">${formatearMoneda(totalAhorro)}</td>
             <td class="inversion">${formatearMoneda(Math.abs(totalInversion))}</td>
+            <td class="vivienda">${formatearMoneda(totalVivienda)}</td>
         </tr>
     `;
     
@@ -1567,10 +1579,13 @@ function mostrarTransaccionesMes(mesKey) {
     let ingresos = 0;
     let gastos = 0;
     let inversion = 0;
+    let vivienda = 0;
     
     transacciones.forEach(t => {
         if (t.categoria === 'Inversiones') {
             inversion += t.importe;
+        } else if (t.categoria === 'Vivienda') {
+            vivienda += t.importe;
         } else if (t.importe > 0) {
             ingresos += t.importe;
         } else {
@@ -1621,6 +1636,10 @@ function mostrarTransaccionesMes(mesKey) {
             <div class="resumen-item">
                 <span class="resumen-label">Inversión</span>
                 <span class="resumen-value" style="color: #6366f1;">${formatearMoneda(Math.abs(inversion))}</span>
+            </div>
+            <div class="resumen-item">
+                <span class="resumen-label">Vivienda</span>
+                <span class="resumen-value" style="color: #0891b2;">${formatearMoneda(vivienda)}</span>
             </div>
         </div>
     `;
@@ -2469,6 +2488,7 @@ function renderizarPrediccionCategorias(transacciones, mesActualKey) {
         'Gastos Recurrentes': '#a855f7',
         'Gastos recurrentes': '#a855f7',
         'Ocio': '#ec4899',
+        'Vivienda': '#0891b2',
         'Otros': '#6b7280'
     };
     

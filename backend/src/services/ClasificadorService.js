@@ -16,8 +16,18 @@ class ClasificadorService {
             'Gastos Recurrentes',
             'Ocio',
             'Ingresos',
+            'Vivienda',
             'Otros'
         ];
+
+        // Reglas que se aplican antes que la IA (el modelo no conoce estas categorías).
+        // Se comparan contra el concepto en minúsculas y sin tildes.
+        this.reglasPrioritarias = {
+            'amortizacion prestamo mama': 'Vivienda',
+            'reforma piso': 'Vivienda',
+            'notaria': 'Vivienda',
+            'tasiberica': 'Vivienda'
+        };
 
         // Modo de clasificación: 'reglas' o 'ia'
         this.modoClasificacion = 'ia'; // Por defecto usa reglas
@@ -217,6 +227,9 @@ class ClasificadorService {
     async clasificar(concepto) {
         if (!concepto) return 'Otros';
 
+        const categoriaPrioritaria = this.buscarReglaPrioritaria(concepto);
+        if (categoriaPrioritaria) return categoriaPrioritaria;
+
         // Clasificar según el modo configurado
         if (this.modoClasificacion === 'ia' && this.modeloIACargado) {
             return await this.clasificarConIA(concepto);
@@ -227,9 +240,29 @@ class ClasificadorService {
     }
 
     /**
+     * Buscar coincidencia en las reglas prioritarias (ignora mayúsculas y tildes)
+     */
+    buscarReglaPrioritaria(concepto) {
+        const conceptoNormalizado = concepto
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[̀-ͯ]/g, '');
+
+        for (const [palabra, categoria] of Object.entries(this.reglasPrioritarias)) {
+            if (conceptoNormalizado.includes(palabra)) {
+                return categoria;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Clasificar usando reglas (método original)
      */
     clasificarConReglas(concepto) {
+        const categoriaPrioritaria = this.buscarReglaPrioritaria(concepto);
+        if (categoriaPrioritaria) return categoriaPrioritaria;
+
         const conceptoLower = concepto.toLowerCase().trim();
 
         // Primero buscar en reglas personalizadas (tienen prioridad)
@@ -320,8 +353,10 @@ class ClasificadorService {
             try {
                 const predicciones = await this.modeloIA.predecirLote(conceptos);
                 
-                // Aplicar umbral de confianza
+                // Aplicar reglas prioritarias y umbral de confianza
                 return predicciones.map((pred, idx) => {
+                    const categoriaPrioritaria = this.buscarReglaPrioritaria(conceptos[idx]);
+                    if (categoriaPrioritaria) return categoriaPrioritaria;
                     if (pred.confianza < this.umbralConfianza) {
                         return this.clasificarConReglas(conceptos[idx]);
                     }
@@ -410,6 +445,7 @@ class ClasificadorService {
      */
     obtenerReglas() {
         return {
+            prioritarias: { ...this.reglasPrioritarias },
             default: { ...this.reglas },
             personalizadas: { ...this.reglasPersonalizadas }
         };
