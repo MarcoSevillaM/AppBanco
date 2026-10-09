@@ -157,7 +157,7 @@ class TransaccionController {
      * POST /api/transacciones/clasificar
      * Clasificar un concepto
      */
-    static clasificar(req, res) {
+    static async clasificar(req, res) {
         try {
             const ecoSis = req.app.get('ecoSis');
             const { concepto } = req.body;
@@ -169,7 +169,7 @@ class TransaccionController {
                 });
             }
 
-            const categoria = ecoSis.clasificarConcepto(concepto);
+            const categoria = await ecoSis.clasificarConcepto(concepto);
             res.json({ success: true, data: { concepto, categoria } });
         } catch (error) {
             res.status(500).json({ success: false, error: error.message });
@@ -178,17 +178,21 @@ class TransaccionController {
 
     /**
      * POST /api/transacciones/reclasificar
-     * Reclasificar todas las transacciones
+     * Reclasificar las transacciones no editadas a mano.
+     * Body opcional: { "simular": true } para ver los cambios sin aplicarlos.
      */
-    static reclasificar(req, res) {
+    static async reclasificar(req, res) {
         try {
             const ecoSis = req.app.get('ecoSis');
-            const resultado = ecoSis.reclasificarTodas();
+            const simular = req.body?.simular === true;
+            const resultado = await ecoSis.reclasificarTodas({ simular });
 
             res.json({
                 success: true,
                 data: resultado,
-                message: `Reclasificadas ${resultado.actualizadas} de ${resultado.total} transacciones`
+                message: simular
+                    ? `Simulación: ${resultado.cambios.length} cambios propuestos (${resultado.protegidas} editadas a mano no se tocan)`
+                    : `Reclasificadas ${resultado.actualizadas} de ${resultado.total} transacciones (${resultado.protegidas} editadas a mano no se tocan)`
             });
         } catch (error) {
             res.status(500).json({ success: false, error: error.message });

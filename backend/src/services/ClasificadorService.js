@@ -8,17 +8,24 @@ const path = require('path');
 
 class ClasificadorService {
     constructor() {
-        // Categorías disponibles
+        // Categorías disponibles (mismos nombres que en la BD y el frontend)
         this.categorias = [
-            'Inversión',
+            'Inversiones',
             'Coche',
             'Alimentación',
-            'Gastos Recurrentes',
+            'Gastos recurrentes',
             'Ocio',
             'Ingresos',
             'Vivienda',
             'Otros'
         ];
+
+        // Nombres antiguos que todavía devuelve el modelo de IA -> nombre canónico
+        this.aliasCategorias = {
+            'Inversión': 'Inversiones',
+            'Inversion': 'Inversiones',
+            'Gastos Recurrentes': 'Gastos recurrentes'
+        };
 
         // Reglas que se aplican antes que la IA (el modelo no conoce estas categorías).
         // Se comparan contra el concepto en minúsculas y sin tildes.
@@ -41,20 +48,20 @@ class ClasificadorService {
 
         // Reglas de clasificación por defecto (palabras clave -> categoría)
         this.reglas = {
-            // Inversión
-            'inversión': 'Inversión',
-            'inversion': 'Inversión',
-            'fondos': 'Inversión',
-            'acciones': 'Inversión',
-            'etf': 'Inversión',
-            'broker': 'Inversión',
-            'degiro': 'Inversión',
-            'trading': 'Inversión',
-            'bolsa': 'Inversión',
-            'cripto': 'Inversión',
-            'bitcoin': 'Inversión',
-            'indexa': 'Inversión',
-            'myinvestor': 'Inversión',
+            // Inversiones
+            'inversión': 'Inversiones',
+            'inversion': 'Inversiones',
+            'fondos': 'Inversiones',
+            'acciones': 'Inversiones',
+            'etf': 'Inversiones',
+            'broker': 'Inversiones',
+            'degiro': 'Inversiones',
+            'trading': 'Inversiones',
+            'bolsa': 'Inversiones',
+            'cripto': 'Inversiones',
+            'bitcoin': 'Inversiones',
+            'indexa': 'Inversiones',
+            'myinvestor': 'Inversiones',
 
             // Coche
             'gasolina': 'Coche',
@@ -91,32 +98,32 @@ class ClasificadorService {
             'carniceria': 'Alimentación',
             'panaderia': 'Alimentación',
 
-            // Gastos Recurrentes
-            'alquiler': 'Gastos Recurrentes',
-            'hipoteca': 'Gastos Recurrentes',
-            'luz': 'Gastos Recurrentes',
-            'electricidad': 'Gastos Recurrentes',
-            'iberdrola': 'Gastos Recurrentes',
-            'endesa': 'Gastos Recurrentes',
-            'naturgy': 'Gastos Recurrentes',
-            'gas': 'Gastos Recurrentes',
-            'agua': 'Gastos Recurrentes',
-            'telefono': 'Gastos Recurrentes',
-            'móvil': 'Gastos Recurrentes',
-            'movil': 'Gastos Recurrentes',
-            'internet': 'Gastos Recurrentes',
-            'fibra': 'Gastos Recurrentes',
-            'movistar': 'Gastos Recurrentes',
-            'vodafone': 'Gastos Recurrentes',
-            'orange': 'Gastos Recurrentes',
-            'netflix': 'Gastos Recurrentes',
-            'spotify': 'Gastos Recurrentes',
-            'hbo': 'Gastos Recurrentes',
-            'amazon prime': 'Gastos Recurrentes',
-            'gimnasio': 'Gastos Recurrentes',
-            'gym': 'Gastos Recurrentes',
-            'seguro': 'Gastos Recurrentes',
-            'comunidad': 'Gastos Recurrentes',
+            // Gastos recurrentes
+            'alquiler': 'Gastos recurrentes',
+            'hipoteca': 'Gastos recurrentes',
+            'luz': 'Gastos recurrentes',
+            'electricidad': 'Gastos recurrentes',
+            'iberdrola': 'Gastos recurrentes',
+            'endesa': 'Gastos recurrentes',
+            'naturgy': 'Gastos recurrentes',
+            'gas': 'Gastos recurrentes',
+            'agua': 'Gastos recurrentes',
+            'telefono': 'Gastos recurrentes',
+            'móvil': 'Gastos recurrentes',
+            'movil': 'Gastos recurrentes',
+            'internet': 'Gastos recurrentes',
+            'fibra': 'Gastos recurrentes',
+            'movistar': 'Gastos recurrentes',
+            'vodafone': 'Gastos recurrentes',
+            'orange': 'Gastos recurrentes',
+            'netflix': 'Gastos recurrentes',
+            'spotify': 'Gastos recurrentes',
+            'hbo': 'Gastos recurrentes',
+            'amazon prime': 'Gastos recurrentes',
+            'gimnasio': 'Gastos recurrentes',
+            'gym': 'Gastos recurrentes',
+            'seguro': 'Gastos recurrentes',
+            'comunidad': 'Gastos recurrentes',
 
             // Ocio
             'restaurante': 'Ocio',
@@ -240,6 +247,13 @@ class ClasificadorService {
     }
 
     /**
+     * Traducir un nombre de categoría a su forma canónica
+     */
+    normalizarCategoria(categoria) {
+        return this.aliasCategorias[categoria] || categoria;
+    }
+
+    /**
      * Buscar coincidencia en las reglas prioritarias (ignora mayúsculas y tildes)
      */
     buscarReglaPrioritaria(concepto) {
@@ -268,7 +282,7 @@ class ClasificadorService {
         // Primero buscar en reglas personalizadas (tienen prioridad)
         for (const [palabra, categoria] of Object.entries(this.reglasPersonalizadas)) {
             if (conceptoLower.includes(palabra)) {
-                return categoria;
+                return this.normalizarCategoria(categoria);
             }
         }
 
@@ -298,7 +312,7 @@ class ClasificadorService {
                 return categoriaReglas;
             }
 
-            return prediccion.categoria;
+            return this.normalizarCategoria(prediccion.categoria);
 
         } catch (error) {
             console.error('Error en clasificación por IA:', error.message);
@@ -312,7 +326,10 @@ class ClasificadorService {
      */
     llamarModeloPython(comando, ...args) {
         return new Promise((resolve, reject) => {
-            const python = spawn('python', [this.pythonScript, comando, ...args]);
+            // Forzar UTF-8: en Windows Python escribe en cp1252 y "Alimentación" llegaba corrupta
+            const python = spawn('python', [this.pythonScript, comando, ...args], {
+                env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
+            });
             
             let stdout = '';
             let stderr = '';
@@ -349,27 +366,11 @@ class ClasificadorService {
      * Clasificar múltiples conceptos (batch)
      */
     async clasificarLote(conceptos) {
-        if (this.modoClasificacion === 'ia' && this.modeloIACargado) {
-            try {
-                const predicciones = await this.modeloIA.predecirLote(conceptos);
-                
-                // Aplicar reglas prioritarias y umbral de confianza
-                return predicciones.map((pred, idx) => {
-                    const categoriaPrioritaria = this.buscarReglaPrioritaria(conceptos[idx]);
-                    if (categoriaPrioritaria) return categoriaPrioritaria;
-                    if (pred.confianza < this.umbralConfianza) {
-                        return this.clasificarConReglas(conceptos[idx]);
-                    }
-                    return pred.categoria;
-                });
-            } catch (error) {
-                console.error('Error en clasificación por lote:', error.message);
-                // Fallback a reglas
-                return conceptos.map(c => this.clasificarConReglas(c));
-            }
-        } else {
-            return conceptos.map(c => this.clasificarConReglas(c));
+        const categorias = [];
+        for (const concepto of conceptos) {
+            categorias.push(await this.clasificar(concepto));
         }
+        return categorias;
     }
 
     /**
@@ -412,6 +413,7 @@ class ClasificadorService {
      * Agregar regla de clasificación personalizada
      */
     agregarRegla(palabraClave, categoria) {
+        categoria = this.normalizarCategoria(categoria);
         if (!this.categorias.includes(categoria)) {
             throw new Error(`Categoría no válida: ${categoria}`);
         }
@@ -435,7 +437,7 @@ class ClasificadorService {
      */
     cargarReglasDesdeDB(reglas) {
         for (const regla of reglas) {
-            this.reglasPersonalizadas[regla.palabra_clave] = regla.categoria;
+            this.reglasPersonalizadas[regla.palabra_clave] = this.normalizarCategoria(regla.categoria);
         }
         console.log(`📋 Cargadas ${reglas.length} reglas personalizadas`);
     }
