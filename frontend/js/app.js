@@ -2571,10 +2571,9 @@ function renderizarPrediccionCategorias(transacciones, mesActualKey) {
     
     // Renderizar
     const coloresCat = {
-        'Inversión': '#3b82f6',
+        'Inversiones': '#3b82f6',
         'Coche': '#f59e0b',
         'Alimentación': '#10b981',
-        'Gastos Recurrentes': '#a855f7',
         'Gastos recurrentes': '#a855f7',
         'Ocio': '#ec4899',
         'Vivienda': '#0891b2',

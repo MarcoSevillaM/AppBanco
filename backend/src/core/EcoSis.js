@@ -122,21 +122,46 @@ class EcoSis {
     }
 
     /**
-     * Reclasificar todas las transacciones
+     * Reclasificar las transacciones que no se han editado a mano.
+     * Una transacción editada tiene fecha_actualizacion posterior a fecha_creacion;
+     * esas se respetan para no pisar correcciones manuales.
+     * Con simular = true solo devuelve los cambios propuestos, sin aplicarlos.
      */
-    reclasificarTodas() {
+    async reclasificarTodas({ simular = false } = {}) {
         const transacciones = this.database.obtenerTransacciones();
-        let actualizadas = 0;
+        const cambios = [];
+        let protegidas = 0;
 
         for (const trans of transacciones) {
-            const nuevaCategoria = this.clasificador.clasificar(trans.concepto);
+            if (trans.fecha_actualizacion > trans.fecha_creacion) {
+                protegidas++;
+                continue;
+            }
+
+            const nuevaCategoria = await this.clasificador.clasificar(trans.concepto);
             if (nuevaCategoria !== trans.categoria) {
-                this.database.actualizarTransaccion(trans.id, { categoria: nuevaCategoria });
-                actualizadas++;
+                cambios.push({
+                    id: trans.id,
+                    concepto: trans.concepto,
+                    categoriaAnterior: trans.categoria,
+                    categoriaNueva: nuevaCategoria
+                });
             }
         }
 
-        return { total: transacciones.length, actualizadas };
+        if (!simular) {
+            for (const cambio of cambios) {
+                this.database.actualizarTransaccion(cambio.id, { categoria: cambio.categoriaNueva });
+            }
+        }
+
+        return {
+            total: transacciones.length,
+            protegidas,
+            actualizadas: simular ? 0 : cambios.length,
+            simulado: simular,
+            cambios
+        };
     }
 
     /**
