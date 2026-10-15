@@ -113,6 +113,17 @@ router.get('/estadisticas/mensual', TransaccionController.obtenerResumenMensual)
 // Balance general
 router.get('/estadisticas/balance', TransaccionController.obtenerBalance);
 
+// ==========================================
+// RUTAS DE PATRIMONIO
+// ==========================================
+
+// Dinero líquido y patrimonio total
+router.get('/patrimonio', TransaccionController.obtenerPatrimonio);
+
+// Configuración (saldo inicial, valor de inversiones)
+router.get('/configuracion', TransaccionController.obtenerConfiguracion);
+router.put('/configuracion', TransaccionController.actualizarConfiguracion);
+
 
 
 module.exports = router;

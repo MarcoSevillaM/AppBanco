@@ -320,6 +320,12 @@ function inicializarEventos() {
     document.getElementById('btn-cerrar-modal').addEventListener('click', cerrarModal);
     document.getElementById('btn-cancelar-edicion').addEventListener('click', cerrarModal);
     document.getElementById('form-editar').addEventListener('submit', guardarEdicion);
+
+    // Modal de patrimonio
+    document.getElementById('btn-config-patrimonio').addEventListener('click', abrirModalPatrimonio);
+    document.getElementById('btn-cerrar-patrimonio').addEventListener('click', cerrarModalPatrimonio);
+    document.getElementById('btn-cancelar-patrimonio').addEventListener('click', cerrarModalPatrimonio);
+    document.getElementById('form-patrimonio').addEventListener('submit', guardarConfiguracionPatrimonio);
     
     // Clasificación automática en tiempo real
     document.getElementById('input-concepto').addEventListener('blur', async (e) => {
@@ -370,6 +376,7 @@ async function cargarTransacciones(filtros = {}) {
             renderizarTransacciones(data.data);
             actualizarIndicadorOrden();
             actualizarResumenFiltro(data.data);
+            cargarPatrimonio(filtros.fechaFin);
         }
     } catch (error) {
         console.error('Error al cargar transacciones:', error);
@@ -413,6 +420,86 @@ function actualizarResumenFiltro(transacciones) {
     
     // Mostrar el resumen
     resumenDiv.classList.remove('hidden');
+}
+
+/**
+ * Cargar dinero líquido y patrimonio total hasta la fecha final del filtro
+ * (no depende de la categoría ni de la búsqueda)
+ */
+async function cargarPatrimonio(fechaFin) {
+    const div = document.getElementById('resumen-patrimonio');
+    if (!div) return;
+
+    try {
+        const params = new URLSearchParams();
+        if (fechaFin) params.append('fechaFin', fechaFin);
+
+        const response = await fetchAuth(`${API_URL}/patrimonio?${params}`);
+        const data = await response.json();
+
+        if (data.success) {
+            const p = data.data;
+            document.getElementById('patrimonio-liquido').textContent = formatearMoneda(p.liquido);
+            document.getElementById('patrimonio-inversiones').textContent = formatearMoneda(p.valorInversiones);
+            document.getElementById('patrimonio-total').textContent = formatearMoneda(p.total);
+            document.getElementById('patrimonio-fecha-label').textContent =
+                fechaFin ? `DINERO LÍQUIDO A ${formatearFecha(fechaFin)}` : 'DINERO LÍQUIDO';
+            div.classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error al cargar patrimonio:', error);
+    }
+}
+
+async function abrirModalPatrimonio() {
+    try {
+        const response = await fetchAuth(`${API_URL}/configuracion`);
+        const data = await response.json();
+
+        if (data.success) {
+            const c = data.data;
+            document.getElementById('config-saldo-inicial').value = c.saldo_inicial || 0;
+            document.getElementById('config-fecha-saldo-inicial').value = c.fecha_saldo_inicial || '';
+            document.getElementById('config-valor-inversiones').value = c.valor_inversiones || 0;
+            document.getElementById('config-cuenta-inversiones').value = c.cuenta_inversiones || '';
+            document.getElementById('modal-patrimonio').classList.remove('hidden');
+        }
+    } catch (error) {
+        mostrarNotificacion('❌ Error al cargar la configuración', 'error');
+    }
+}
+
+function cerrarModalPatrimonio() {
+    document.getElementById('modal-patrimonio').classList.add('hidden');
+}
+
+async function guardarConfiguracionPatrimonio(e) {
+    e.preventDefault();
+
+    const datos = {
+        saldo_inicial: parseFloat(document.getElementById('config-saldo-inicial').value),
+        fecha_saldo_inicial: document.getElementById('config-fecha-saldo-inicial').value,
+        valor_inversiones: parseFloat(document.getElementById('config-valor-inversiones').value),
+        cuenta_inversiones: document.getElementById('config-cuenta-inversiones').value.trim()
+    };
+
+    try {
+        const response = await fetchAuth(`${API_URL}/configuracion`, {
+            method: 'PUT',
+            body: JSON.stringify(datos)
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            mostrarNotificacion('✅ Configuración guardada');
+            cerrarModalPatrimonio();
+            cargarPatrimonio(document.getElementById('filtro-fecha-fin').value);
+        } else {
+            mostrarNotificacion(`❌ ${data.error}`, 'error');
+        }
+    } catch (error) {
+        mostrarNotificacion('❌ Error al guardar la configuración', 'error');
+    }
 }
 
 async function crearTransaccion(e) {
@@ -478,6 +565,7 @@ async function guardarEdicion(e) {
         concepto: document.getElementById('edit-concepto').value,
         importe: parseFloat(document.getElementById('edit-importe').value),
         categoria: document.getElementById('edit-categoria').value,
+        cuenta: document.getElementById('edit-cuenta').value.trim() || null,
         notas: notasValue || null
     };
     
@@ -751,6 +839,7 @@ async function abrirModalEditar(id) {
             document.getElementById('edit-concepto').value = t.concepto;
             document.getElementById('edit-importe').value = t.importe;
             document.getElementById('edit-categoria').value = t.categoria;
+            document.getElementById('edit-cuenta').value = t.cuenta || '';
             document.getElementById('edit-notas').value = t.notas || '';
             
             document.getElementById('modal-editar').classList.remove('hidden');

@@ -258,6 +258,49 @@ class TransaccionController {
     }
 
     /**
+     * GET /api/patrimonio
+     * Dinero líquido y patrimonio total hasta una fecha (fechaFin opcional)
+     */
+    static obtenerPatrimonio(req, res) {
+        try {
+            const ecoSis = req.app.get('ecoSis');
+            const patrimonio = ecoSis.obtenerPatrimonio(req.query.fechaFin || null);
+
+            res.json({ success: true, data: patrimonio });
+        } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+        }
+    }
+
+    /**
+     * GET /api/configuracion
+     * Obtener configuración de patrimonio
+     */
+    static obtenerConfiguracion(req, res) {
+        try {
+            const ecoSis = req.app.get('ecoSis');
+            res.json({ success: true, data: ecoSis.obtenerConfiguracion() });
+        } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+        }
+    }
+
+    /**
+     * PUT /api/configuracion
+     * Actualizar configuración de patrimonio
+     */
+    static actualizarConfiguracion(req, res) {
+        try {
+            const ecoSis = req.app.get('ecoSis');
+            const config = ecoSis.actualizarConfiguracion(req.body);
+
+            res.json({ success: true, data: config, message: 'Configuración guardada' });
+        } catch (error) {
+            res.status(400).json({ success: false, error: error.message });
+        }
+    }
+
+    /**
      * GET /api/estado
      * Obtener estado del sistema
      */
