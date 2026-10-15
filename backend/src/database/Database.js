@@ -142,6 +142,26 @@ class Database {
         this.db.run(`CREATE INDEX IF NOT EXISTS idx_transacciones_categoria ON transacciones(categoria)`);
         this.db.run(`CREATE INDEX IF NOT EXISTS idx_transacciones_concepto ON transacciones(concepto)`);
 
+        // Tabla de configuración (clave/valor) para el cálculo de patrimonio
+        this.db.run(`
+            CREATE TABLE IF NOT EXISTS configuracion (
+                clave TEXT PRIMARY KEY,
+                valor TEXT,
+                fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Valores por defecto (solo se insertan si no existen)
+        const configPorDefecto = {
+            saldo_inicial: '1883.32',          // Saldo de todas las cuentas antes del primer movimiento
+            fecha_saldo_inicial: '2024-08-30',
+            valor_inversiones: '1793.15',      // Valor actual de la cartera (MyInvestor), se actualiza a mano
+            cuenta_inversiones: 'MyInvestor'   // Movimientos con esta cuenta ocurren dentro de la inversión
+        };
+        for (const [clave, valor] of Object.entries(configPorDefecto)) {
+            this.db.run('INSERT OR IGNORE INTO configuracion (clave, valor) VALUES (?, ?)', [clave, valor]);
+        }
+
         console.log('✅ Tablas inicializadas correctamente');
     }
 
@@ -433,6 +453,67 @@ class Database {
         
         this.guardar();
         return true;
+    }
+
+    // ==========================================
+    // OPERACIONES - CONFIGURACIÓN Y PATRIMONIO
+    // ==========================================
+
+    /**
+     * Obtener la configuración como objeto { clave: valor }
+     */
+    obtenerConfiguracion() {
+        const stmt = this.db.prepare('SELECT clave, valor FROM configuracion');
+
+        const config = {};
+        while (stmt.step()) {
+            const row = stmt.getAsObject();
+            config[row.clave] = row.valor;
+        }
+        stmt.free();
+
+        return config;
+    }
+
+    /**
+     * Guardar un valor de configuración
+     */
+    guardarConfiguracion(clave, valor) {
+        this.db.run(`
+            INSERT INTO configuracion (clave, valor, fecha_actualizacion)
+            VALUES (?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(clave) DO UPDATE SET valor = excluded.valor, fecha_actualizacion = CURRENT_TIMESTAMP
+        `, [clave, String(valor)]);
+
+        this.guardar();
+    }
+
+    /**
+     * Sumar los importes que afectan al dinero líquido hasta una fecha.
+     * Excluye los movimientos que ocurren dentro de la cuenta de inversiones.
+     */
+    sumarMovimientosLiquidos(fechaFin = null, cuentaInversiones = null) {
+        let query = 'SELECT COALESCE(SUM(importe), 0) as total FROM transacciones WHERE 1=1';
+        const params = [];
+
+        if (fechaFin) {
+            query += ' AND fecha <= ?';
+            params.push(fechaFin);
+        }
+        if (cuentaInversiones) {
+            query += ' AND (cuenta IS NULL OR cuenta <> ?)';
+            params.push(cuentaInversiones);
+        }
+
+        const stmt = this.db.prepare(query);
+        stmt.bind(params);
+        let total = 0;
+        if (stmt.step()) {
+            total = stmt.getAsObject().total || 0;
+        }
+        stmt.free();
+
+        return total;
     }
 
     /**

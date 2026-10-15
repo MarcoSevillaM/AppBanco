@@ -189,6 +189,58 @@ class EcoSis {
     }
 
     // ==========================================
+    // PATRIMONIO
+    // ==========================================
+
+    /**
+     * Obtener configuración de patrimonio
+     */
+    obtenerConfiguracion() {
+        return this.database.obtenerConfiguracion();
+    }
+
+    /**
+     * Actualizar configuración de patrimonio (solo claves conocidas)
+     */
+    actualizarConfiguracion(datos = {}) {
+        const numericas = ['saldo_inicial', 'valor_inversiones'];
+        const permitidas = [...numericas, 'fecha_saldo_inicial', 'cuenta_inversiones'];
+
+        for (const [clave, valor] of Object.entries(datos)) {
+            if (!permitidas.includes(clave) || valor === undefined || valor === null) continue;
+            if (numericas.includes(clave) && isNaN(parseFloat(valor))) {
+                throw new Error(`Valor no numérico para ${clave}`);
+            }
+            this.database.guardarConfiguracion(clave, valor);
+        }
+
+        return this.obtenerConfiguracion();
+    }
+
+    /**
+     * Calcular dinero líquido y patrimonio total hasta una fecha.
+     * Líquido = saldo inicial + movimientos (salvo los internos de la cuenta de inversiones).
+     * Patrimonio = líquido + valor actual de las inversiones.
+     */
+    obtenerPatrimonio(fechaFin = null) {
+        const config = this.obtenerConfiguracion();
+        const saldoInicial = parseFloat(config.saldo_inicial) || 0;
+        const valorInversiones = parseFloat(config.valor_inversiones) || 0;
+        const movimientos = this.database.sumarMovimientosLiquidos(fechaFin, config.cuenta_inversiones || null);
+        const liquido = saldoInicial + movimientos;
+
+        return {
+            fechaFin: fechaFin || null,
+            saldoInicial,
+            fechaSaldoInicial: config.fecha_saldo_inicial || null,
+            movimientos,
+            liquido,
+            valorInversiones,
+            total: liquido + valorInversiones
+        };
+    }
+
+    // ==========================================
     // UTILIDADES DEL SISTEMA
     // ==========================================
 

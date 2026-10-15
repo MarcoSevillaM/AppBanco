@@ -166,6 +166,26 @@
                     </div>
                 </div>
 
+                <!-- Patrimonio: saldos reales (no depende de categoría ni búsqueda, solo de la fecha final) -->
+                <div id="resumen-patrimonio" class="resumen-filtro resumen-patrimonio hidden">
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label" id="patrimonio-fecha-label">DINERO LÍQUIDO</span>
+                        <span class="resumen-filtro-valor liquido" id="patrimonio-liquido">0,00 €</span>
+                        <span class="resumen-filtro-detalle">Saldo inicial + todos los movimientos</span>
+                    </div>
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label">INVERSIONES</span>
+                        <span class="resumen-filtro-valor inversion" id="patrimonio-inversiones">0,00 €</span>
+                        <span class="resumen-filtro-detalle">Valor actual (se actualiza a mano)</span>
+                    </div>
+                    <div class="resumen-filtro-item">
+                        <span class="resumen-filtro-label">PATRIMONIO TOTAL</span>
+                        <span class="resumen-filtro-valor patrimonio" id="patrimonio-total">0,00 €</span>
+                        <span class="resumen-filtro-detalle">Líquido + inversiones</span>
+                    </div>
+                    <button type="button" class="btn-config-patrimonio" id="btn-config-patrimonio" title="Ajustar saldo inicial y valor de inversiones">⚙️</button>
+                </div>
+
                 <!-- Tabla de Transacciones -->
                 <div class="table-container">
                     <table class="tabla-transacciones">
@@ -517,12 +537,57 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="edit-cuenta">Cuenta</label>
+                        <input type="text" id="edit-cuenta" list="lista-cuentas" placeholder="Vacío = cuenta principal (Santander)">
+                        <datalist id="lista-cuentas">
+                            <option value="Santander">
+                            <option value="Trade Republic">
+                            <option value="Bankinter">
+                            <option value="Unicaja">
+                            <option value="Revolut">
+                            <option value="MyInvestor">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
                         <label for="edit-notas">Notas / Comentarios</label>
                         <textarea id="edit-notas" rows="3" placeholder="Añade notas o comentarios sobre esta transacción..."></textarea>
                     </div>
                     <div class="modal-actions">
                         <button type="button" class="btn btn-secondary" id="btn-cancelar-edicion">Cancelar</button>
                         <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Configuración de Patrimonio -->
+        <div id="modal-patrimonio" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>⚙️ Configurar patrimonio</h3>
+                    <button class="btn-close" id="btn-cerrar-patrimonio">&times;</button>
+                </div>
+                <form id="form-patrimonio">
+                    <div class="form-group">
+                        <label for="config-saldo-inicial">Saldo inicial (€)</label>
+                        <input type="number" id="config-saldo-inicial" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="config-fecha-saldo-inicial">Fecha del saldo inicial</label>
+                        <input type="date" id="config-fecha-saldo-inicial">
+                    </div>
+                    <div class="form-group">
+                        <label for="config-valor-inversiones">Valor actual de las inversiones (€)</label>
+                        <input type="number" id="config-valor-inversiones" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="config-cuenta-inversiones">Cuenta de inversiones</label>
+                        <input type="text" id="config-cuenta-inversiones" list="lista-cuentas">
+                        <small class="info-text">Los movimientos con esta cuenta (intereses, promociones...) ocurren dentro de la inversión y no cuentan como dinero líquido.</small>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-cancelar-patrimonio">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar</button>
                     </div>
                 </form>
             </div>

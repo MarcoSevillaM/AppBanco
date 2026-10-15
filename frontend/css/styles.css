@@ -402,6 +402,40 @@ body {
     color: #0891b2;
 }
 
+/* Patrimonio (saldos reales) */
+.resumen-patrimonio {
+    position: relative;
+}
+
+.resumen-filtro-valor.liquido {
+    color: var(--ingresos-color);
+}
+
+.resumen-filtro-valor.patrimonio {
+    color: var(--text-color, inherit);
+}
+
+.resumen-filtro-detalle {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    margin-top: 0.125rem;
+}
+
+.btn-config-patrimonio {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.6;
+}
+
+.btn-config-patrimonio:hover {
+    opacity: 1;
+}
+
 /* Responsive resumen filtro */
 @media (max-width: 600px) {
     .resumen-filtro {
