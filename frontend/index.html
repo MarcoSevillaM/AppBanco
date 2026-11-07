@@ -387,6 +387,29 @@
                         </div>
                     </div>
 
+                    <!-- Acierto de las predicciones pasadas -->
+                    <div class="card card-prediccion card-acierto">
+                        <div class="acierto-cabecera">
+                            <h3>🎯 ¿Cuánto acierta la predicción?</h3>
+                            <div class="acierto-dias" id="acierto-dias" role="group" aria-label="Momento del mes">
+                                <button type="button" data-dia="0" class="active">Día 1</button>
+                                <button type="button" data-dia="10">Día 10</button>
+                                <button type="button" data-dia="20">Día 20</button>
+                            </div>
+                        </div>
+                        <p class="info-text">Cada mes pasado se predijo usando solo los meses anteriores, como si estuvieras en ese día del mes. La barra es el rango que se habría dado y el punto, lo que ahorraste de verdad.</p>
+                        <div class="acierto-resumen" id="acierto-resumen"></div>
+                        <div class="chart-container acierto-chart">
+                            <canvas id="chart-acierto"></canvas>
+                        </div>
+                        <details class="acierto-detalle">
+                            <summary>Ver detalle por mes</summary>
+                            <div class="acierto-tabla-scroll">
+                                <table class="acierto-tabla" id="acierto-tabla"></table>
+                            </div>
+                        </details>
+                    </div>
+
                     <!-- Movimientos fijos y extraordinarios del mes -->
                     <div class="card card-prediccion">
                         <h3>📌 Fijos del Mes</h3>

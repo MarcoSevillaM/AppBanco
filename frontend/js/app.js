@@ -1750,6 +1750,8 @@ const NOMBRES_MESES_COMPLETOS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', '
 const PrediccionState = {
     chart: null,
     chartAbsoluto: null,
+    chartAcierto: null,
+    diaAcierto: 0,
     datos: null
 };
 
@@ -1793,6 +1795,7 @@ async function cargarPrediccion() {
         renderizarChartPrediccionAbsoluto(pred);
         renderizarFijosPrediccion(pred);
         renderizarPrediccionCategorias(pred);
+        renderizarAciertoPrediccion(pred);
         renderizarMetodoPrediccion(pred);
     } catch (error) {
         console.error('Error al cargar predicción:', error);
@@ -1844,7 +1847,9 @@ function renderizarPrediccion(pred) {
 
     const intervalo = pred.prediccion.intervalo;
     document.getElementById('pred-intervalo').textContent = intervalo
-        ? `Probablemente entre ${formatearMoneda(intervalo.p10)} y ${formatearMoneda(intervalo.p90)} (8 de cada 10 meses)`
+        ? `Probablemente entre ${formatearMoneda(intervalo.p10)} y ${formatearMoneda(intervalo.p90)}`
+            + (pred.precision && pred.precision.dentroIntervalo !== null
+                ? ` (este rango acertó el ${Math.round(pred.precision.dentroIntervalo)}% de los meses pasados)` : '')
         : '';
 
     const confianza = pred.mesesAnalizados < 6 || !intervalo ? 'Baja'
@@ -2138,3 +2143,206 @@ function renderizarMetodoPrediccion(pred) {
     precisionEl.innerHTML = `±${formatearMoneda(p.errorMediano)} en un mes normal
         <br><small>Error medio ${formatearMoneda(p.errorMedio)} · ${p.mesesProbados} meses probados</small>`;
 }
+
+// ==========================================
+// ACIERTO DE LAS PREDICCIONES PASADAS
+// ==========================================
+
+const NOMBRE_DIA_ACIERTO = { 0: 'a principio de mes', 10: 'el día 10', 20: 'el día 20' };
+
+function textoCausa(causa) {
+    if (causa.tipo === 'extraordinario') return `${causa.concepto} (${formatearMoneda(causa.importe)})`;
+    if (causa.tipo === 'ingresoNoLlego') return `No llegó: ${causa.concepto} (${formatearMoneda(-causa.importe)})`;
+    return `No se pagó: ${causa.concepto} (${formatearMoneda(causa.importe)})`;
+}
+
+/**
+ * Tarjeta "¿Cuánto acierta?": resumen, gráfica de rango vs real y tabla por mes
+ */
+function renderizarAciertoPrediccion(pred) {
+    const card = document.querySelector('.card-acierto');
+    if (!card) return;
+    const probados = pred.historico.filter(h => h.acierto);
+    if (!pred.precision || probados.length === 0) {
+        card.hidden = true;
+        return;
+    }
+    card.hidden = false;
+
+    const dia = PrediccionState.diaAcierto;
+    document.querySelectorAll('#acierto-dias button').forEach(b => {
+        const activo = Number(b.dataset.dia) === dia;
+        b.classList.toggle('active', activo);
+        b.setAttribute('aria-pressed', String(activo));
+    });
+
+    renderizarResumenAcierto(pred, dia);
+    renderizarChartAcierto(probados, dia);
+    renderizarTablaAcierto(probados, dia);
+}
+
+function renderizarResumenAcierto(pred, dia) {
+    const resumen = pred.precision.porDia.find(p => p.dia === dia);
+    const inicio = pred.precision.porDia[0];
+    const mejora = dia > 0 && inicio.errorMediano > 0
+        ? `${Math.round((1 - resumen.errorMediano / inicio.errorMediano) * 100)}% menos que el día 1`
+        : 'en la mitad de los meses se falla menos';
+    const sesgo = Math.abs(resumen.sesgo) < 50
+        ? 'Sin tendencia clara a fallar hacia un lado'
+        : resumen.sesgo < 0
+            ? `De media promete ${formatearMoneda(-resumen.sesgo)} más de lo que ahorras`
+            : `De media se queda ${formatearMoneda(resumen.sesgo)} corta`;
+
+    const dato = (label, valor, nota) => `
+        <div class="acierto-dato">
+            <span class="acierto-dato-label">${label}</span>
+            <span class="acierto-dato-valor">${valor}</span>
+            <span class="acierto-dato-nota">${nota}</span>
+        </div>`;
+
+    document.getElementById('acierto-resumen').innerHTML = [
+        dato('Dentro del rango', `${resumen.dentroRango} de ${resumen.mesesConRango}`,
+            `meses en que el ahorro real cayó en el rango dado ${NOMBRE_DIA_ACIERTO[dia]}`),
+        dato('Error típico', `±${formatearMoneda(resumen.errorMediano)}`, mejora),
+        dato('Error medio', formatearMoneda(resumen.errorMedio), 'lo suben los meses con gastos imprevistos'),
+        dato('Sesgo', formatearMoneda(resumen.sesgo), sesgo)
+    ].join('');
+}
+
+function renderizarChartAcierto(probados, dia) {
+    const ctx = document.getElementById('chart-acierto');
+    if (!ctx) return;
+    if (PrediccionState.chartAcierto) PrediccionState.chartAcierto.destroy();
+
+    const cfg = getChartResponsiveConfig();
+    const datos = probados.map(h => h.acierto.find(a => a.dia === dia));
+    const colorPunto = datos.map(a => a.dentro === null ? '#9ca3af' : a.dentro ? '#10b981' : '#ef4444');
+
+    PrediccionState.chartAcierto = new Chart(ctx, {
+        data: {
+            labels: probados.map(h => etiquetaMesPred(h.mes)),
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Rango previsto',
+                    data: datos.map(a => a.p10 === null ? null : [a.p10, a.p90]),
+                    backgroundColor: 'rgba(102, 126, 234, 0.22)',
+                    borderColor: 'rgba(102, 126, 234, 0.5)',
+                    borderWidth: 1,
+                    borderSkipped: false,
+                    barPercentage: 0.6,
+                    order: 3
+                },
+                {
+                    type: 'line',
+                    label: 'Predicción',
+                    data: datos.map(a => a.prediccion),
+                    showLine: false,
+                    pointStyle: 'line',
+                    pointRadius: cfg.point.radius * 2.4,
+                    pointHoverRadius: cfg.point.radius * 2.6,
+                    pointBorderWidth: 3,
+                    borderColor: '#667eea',
+                    backgroundColor: '#667eea',
+                    order: 2
+                },
+                {
+                    type: 'line',
+                    label: 'Ahorro real (verde: dentro · rojo: fuera)',
+                    data: probados.map(h => h.ahorro),
+                    showLine: false,
+                    pointRadius: cfg.point.radius + 1,
+                    pointHoverRadius: cfg.point.hoverRadius + 1,
+                    pointBackgroundColor: colorPunto,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1.5,
+                    borderColor: '#10b981',
+                    backgroundColor: '#10b981',
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        generateLabels: chart => Chart.defaults.plugins.legend.labels.generateLabels(chart)
+                            .map(item => item.datasetIndex === 2
+                                ? { ...item, fillStyle: '#10b981', strokeStyle: '#10b981' } : item),
+                        boxWidth: cfg.legend.boxWidth,
+                        padding: cfg.legend.padding,
+                        font: { size: cfg.legend.fontSize }
+                    }
+                },
+                tooltip: {
+                    filter: item => item.raw !== null,
+                    callbacks: {
+                        label: c => Array.isArray(c.raw)
+                            ? `Rango: ${formatearMoneda(c.raw[0])} a ${formatearMoneda(c.raw[1])}`
+                            : `${c.datasetIndex === 2 ? 'Ahorro real' : c.dataset.label}: ${formatearMoneda(c.raw)}`,
+                        afterBody: items => {
+                            const i = items[0].dataIndex;
+                            const a = datos[i];
+                            const lineas = ['─────────────',
+                                `Error: ${a.error >= 0 ? '+' : ''}${formatearMoneda(a.error)}`
+                                + (a.dentro === null ? '' : a.dentro ? ' · dentro del rango' : ' · fuera del rango')];
+                            probados[i].causas.forEach(c => lineas.push('• ' + textoCausa(c)));
+                            return lineas;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        maxRotation: cfg.axis.maxRotation,
+                        minRotation: cfg.axis.minRotation,
+                        font: { size: cfg.axis.fontSize }
+                    }
+                },
+                y: {
+                    ticks: { callback: v => formatearMoneda(v), font: { size: cfg.axis.fontSize } }
+                }
+            }
+        }
+    });
+}
+
+function renderizarTablaAcierto(probados, dia) {
+    const filas = [...probados].reverse().map(h => {
+        const a = h.acierto.find(x => x.dia === dia);
+        const estado = a.dentro === null ? '<span title="Aún no había meses suficientes para dar un rango">—</span>'
+            : a.dentro ? '<span class="dentro">✓ dentro</span>' : '<span class="fuera">✗ fuera</span>';
+        const rango = a.p10 === null ? '—' : `${formatearMoneda(a.p10)} a ${formatearMoneda(a.p90)}`;
+        const causas = h.causas.map(c => escapeHtml(textoCausa(c))).join('<br>');
+        return `<tr>
+            <td>${etiquetaMesPred(h.mes)}</td>
+            <td>${formatearMoneda(a.prediccion)}</td>
+            <td>${rango}</td>
+            <td>${formatearMoneda(h.ahorro)}</td>
+            <td>${a.error >= 0 ? '+' : ''}${formatearMoneda(a.error)}</td>
+            <td>${estado}</td>
+            <td class="acierto-causas">${causas}</td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('acierto-tabla').innerHTML = `
+        <thead><tr>
+            <th>Mes</th><th>Predicho</th><th>Rango</th><th>Real</th><th>Error</th><th></th><th>Lo que más pesó</th>
+        </tr></thead>
+        <tbody>${filas}</tbody>`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('acierto-dias')?.addEventListener('click', (e) => {
+        const boton = e.target.closest('button[data-dia]');
+        if (!boton || !PrediccionState.datos) return;
+        PrediccionState.diaAcierto = Number(boton.dataset.dia);
+        renderizarAciertoPrediccion(PrediccionState.datos);
+    });
+});

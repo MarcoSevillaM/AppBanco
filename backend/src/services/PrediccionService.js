@@ -14,7 +14,7 @@
  * Si el mes ya ha empezado, se suma lo ya registrado y solo se proyecta lo
  * que falta, según cómo se reparte habitualmente el gasto a lo largo del mes.
  *
- * El intervalo P10–P90 sale de una prueba hacia atrás: para cada mes pasado
+ * El intervalo P5–P95 sale de una prueba hacia atrás: para cada mes pasado
  * se predice usando solo los meses anteriores y se mide el error real.
  *
  * Las Inversiones no cuentan como ingreso ni gasto (igual que en el resto de la app).
@@ -33,6 +33,11 @@ const UMBRAL_EXTRA_MINIMO = 300;    // un movimiento extraordinario mide al meno
 const PERCENTIL_EXTRA = 0.95;
 const MIN_MESES_PRUEBA = 6;         // meses previos necesarios para probar un mes
 const MIN_MESES_FIABLE = 6;
+const DIAS_PRUEBA = [0, 10, 20];     // días del mes en que se mide el acierto
+const MIN_ERRORES_INTERVALO = 4;    // errores previos necesarios para dar un rango
+const RANGO_BAJO = 0.05;            // percentiles del error para el rango probable
+const RANGO_ALTO = 0.95;            // (con P10-P90 solo acertaba la mitad de los meses)
+const MIN_IMPORTE_CAUSA = 100;      // fijos que no llegaron y merecen mencionarse
 
 class PrediccionService {
     /**
@@ -474,25 +479,69 @@ class PrediccionService {
     }
 
     /**
-     * Prueba hacia atrás: predecir cada mes pasado solo con los anteriores
+     * Prueba hacia atrás: predecir cada mes pasado solo con los anteriores,
+     * a principio de mes y con lo registrado hasta los días DIAS_PRUEBA.
+     * El intervalo de cada mes sale solo de los errores de meses anteriores,
+     * así que "dentro del rango" mide un acierto real, no uno a posteriori.
      */
-    probarHaciaAtras(porMes, mesObjetivo) {
+    probarHaciaAtras(porMes, mesObjetivo, diaExtra = null) {
+        const R = PrediccionService.redondear;
         const meses = [...porMes.keys()].filter(m => m < mesObjetivo).sort();
+        const dias = [...new Set([...DIAS_PRUEBA, ...(diaExtra ? [diaExtra] : [])])];
+        const erroresPrevios = Object.fromEntries(dias.map(d => [d, []]));
         const resultados = [];
+
         for (let i = 0; i < meses.length; i++) {
             const mes = meses[i];
             const real = PrediccionService.ahorroReal(porMes.get(mes));
-            const fila = { mes, ...real, prediccion: null, error: null };
+            const fila = { mes, ...real, prediccion: null, error: null, porDia: {}, causas: [] };
+
             if (i >= MIN_MESES_PRUEBA) {
-                const pred = this.predecirMes(porMes, mes, 0);
-                fila.prediccion = pred.ahorro;
-                fila.prediccionIngresos = pred.totalIngresos;
-                fila.prediccionGastos = pred.totalGastos;
-                fila.error = real.ahorro - pred.ahorro;
+                const modelo = this.ajustar(porMes, mes);
+                const diasMes = PrediccionService.diasDelMes(mes);
+                for (const dia of dias) {
+                    const pred = this.predecirMes(porMes, mes, Math.min(dia, diasMes), modelo);
+                    const error = real.ahorro - pred.ahorro;
+                    const previos = erroresPrevios[dia];
+                    const rango = previos.length >= MIN_ERRORES_INTERVALO
+                        ? { p10: pred.ahorro + PrediccionService.percentil(previos, RANGO_BAJO),
+                            p90: pred.ahorro + PrediccionService.percentil(previos, RANGO_ALTO) }
+                        : null;
+                    fila.porDia[dia] = {
+                        prediccion: pred.ahorro,
+                        error,
+                        p10: rango ? rango.p10 : null,
+                        p90: rango ? rango.p90 : null,
+                        dentro: rango ? real.ahorro >= rango.p10 && real.ahorro <= rango.p90 : null
+                    };
+                    previos.push(error);
+                }
+                const inicio = fila.porDia[0];
+                fila.prediccion = inicio.prediccion;
+                fila.error = inicio.error;
+                fila.causas = this.causasDelMes(porMes, mes, modelo).map(c => ({ ...c, importe: R(c.importe) }));
             }
             resultados.push(fila);
         }
         return resultados;
+    }
+
+    /**
+     * Lo que más explica que un mes se desvíe: gastos extraordinarios
+     * y fijos grandes que se esperaban y no llegaron
+     */
+    causasDelMes(porMes, mes, modelo) {
+        const completo = this.predecirMes(porMes, mes, PrediccionService.diasDelMes(mes), modelo);
+        const extras = completo.real.extraordinarios
+            .filter(m => m.importe < 0)
+            .map(m => ({ tipo: 'extraordinario', concepto: m.concepto, importe: m.importe }));
+        const faltan = completo.fijos
+            .filter(f => f.pendiente && f.esperado >= MIN_IMPORTE_CAUSA)
+            .map(f => ({ tipo: f.tipo === 'ingreso' ? 'ingresoNoLlego' : 'gastoNoLlego', concepto: f.concepto,
+                importe: f.tipo === 'ingreso' ? -f.esperado : f.esperado }));
+        return [...extras, ...faltan]
+            .sort((a, b) => Math.abs(b.importe) - Math.abs(a.importe))
+            .slice(0, 3);
     }
 
     // ==========================================
@@ -530,31 +579,41 @@ class PrediccionService {
 
         const modelo = this.ajustar(porMes, mesObjetivo);
         const pred = this.predecirMes(porMes, mesObjetivo, diaCorte, modelo);
-        const historico = this.probarHaciaAtras(porMes, mesObjetivo);
+        const historico = this.probarHaciaAtras(porMes, mesObjetivo, diaCorte);
         const inversion = PrediccionService.inversionPorMes(transacciones);
+        const probados = historico.filter(h => h.error !== null);
 
-        // Intervalo a partir de los errores pasados, más estrecho cuanto más avanzado el mes
-        const errores = historico.filter(h => h.error !== null).map(h => h.error);
+        // Intervalo: errores de los meses pasados predichos en este mismo día del mes
         let intervalo = null;
         let precision = null;
-        if (errores.length >= 4) {
-            const restante = 1 - pred.fraccion;
-            const p10 = PrediccionService.percentil(errores, 0.1) * restante;
-            const p90 = PrediccionService.percentil(errores, 0.9) * restante;
-            intervalo = { p10: R(pred.ahorro + p10), p90: R(pred.ahorro + p90) };
+        if (probados.length >= MIN_ERRORES_INTERVALO) {
+            const erroresCorte = probados.map(h => h.porDia[diaCorte].error);
+            intervalo = {
+                p10: R(pred.ahorro + PrediccionService.percentil(erroresCorte, RANGO_BAJO)),
+                p90: R(pred.ahorro + PrediccionService.percentil(erroresCorte, RANGO_ALTO))
+            };
 
-            const pIni10 = PrediccionService.percentil(errores, 0.1);
-            const pIni90 = PrediccionService.percentil(errores, 0.9);
-            const probados = historico.filter(h => h.error !== null);
-            const dentro = probados.filter(h => h.error >= pIni10 && h.error <= pIni90).length;
-            const mae = errores.reduce((s, e) => s + Math.abs(e), 0) / errores.length;
-            const medianaError = PrediccionService.mediana(errores.map(Math.abs));
+            const resumenDia = (dia) => {
+                const filas = probados.map(h => h.porDia[dia]);
+                const errores = filas.map(f => f.error);
+                const conRango = filas.filter(f => f.dentro !== null);
+                return {
+                    dia,
+                    errorMedio: R(errores.reduce((s, e) => s + Math.abs(e), 0) / errores.length),
+                    errorMediano: R(PrediccionService.mediana(errores.map(Math.abs))),
+                    sesgo: R(errores.reduce((a, b) => a + b, 0) / errores.length),
+                    mesesConRango: conRango.length,
+                    dentroRango: conRango.filter(f => f.dentro).length
+                };
+            };
+            const inicio = resumenDia(0);
             precision = {
-                mesesProbados: errores.length,
-                errorMedio: R(mae),
-                errorMediano: R(medianaError),
-                sesgo: R(errores.reduce((a, b) => a + b, 0) / errores.length),
-                dentroIntervalo: R((dentro / errores.length) * 100)
+                mesesProbados: probados.length,
+                errorMedio: inicio.errorMedio,
+                errorMediano: inicio.errorMediano,
+                sesgo: inicio.sesgo,
+                dentroIntervalo: inicio.mesesConRango ? R((inicio.dentroRango / inicio.mesesConRango) * 100) : null,
+                porDia: DIAS_PRUEBA.map(resumenDia)
             };
         } else {
             avisos.push('Todavía no hay meses suficientes para medir el error de la predicción; no se muestra intervalo.');
@@ -615,7 +674,13 @@ class PrediccionService {
                 ahorro: R(h.ahorro),
                 inversion: R(inversion[h.mes] || 0),
                 prediccion: h.prediccion === null ? null : R(h.prediccion),
-                error: h.error === null ? null : R(h.error)
+                error: h.error === null ? null : R(h.error),
+                acierto: h.error === null ? null : DIAS_PRUEBA.map(dia => {
+                    const d = h.porDia[dia];
+                    return { dia, prediccion: R(d.prediccion), error: R(d.error),
+                        p10: d.p10 === null ? null : R(d.p10), p90: d.p90 === null ? null : R(d.p90), dentro: d.dentro };
+                }),
+                causas: h.causas
             })),
             precision,
             mesesAnalizados: modelo.mesesConDatos.length,

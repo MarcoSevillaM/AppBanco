@@ -2060,6 +2060,127 @@ code {
     font-size: 0.9375rem;
 }
 
+/* Acierto de las predicciones pasadas */
+.card-acierto {
+    grid-column: 1 / -1;
+    min-height: auto;
+}
+
+.acierto-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem 1rem;
+}
+
+.acierto-dias {
+    display: inline-flex;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.acierto-dias button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+
+.acierto-dias button + button {
+    border-left: 1px solid var(--border-color);
+}
+
+.acierto-dias button.active {
+    background: var(--primary-color, #667eea);
+    color: #fff;
+}
+
+.acierto-resumen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.acierto-dato {
+    padding: 0.75rem 1rem;
+    background: var(--bg-color);
+    border-radius: var(--radius);
+    min-width: 0;
+}
+
+.acierto-dato .acierto-dato-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.acierto-dato .acierto-dato-valor {
+    display: block;
+    font-size: 1.375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.acierto-dato .acierto-dato-nota {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.card-prediccion .acierto-chart {
+    height: 300px;
+}
+
+.acierto-detalle {
+    margin-top: 1rem;
+}
+
+.acierto-detalle summary {
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.acierto-tabla-scroll {
+    overflow-x: auto;
+    margin-top: 0.5rem;
+}
+
+.acierto-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+.acierto-tabla th,
+.acierto-tabla td {
+    padding: 0.375rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.acierto-tabla th:first-child,
+.acierto-tabla td:first-child,
+.acierto-tabla td.acierto-causas {
+    text-align: left;
+}
+
+.acierto-tabla td.acierto-causas {
+    white-space: normal;
+    min-width: 220px;
+    color: var(--text-muted);
+}
+
+.acierto-tabla .dentro { color: var(--ingresos-color); }
+.acierto-tabla .fuera { color: var(--gastos-color); }
+
 /* Predicción por categorías */
 .prediccion-categorias-grid {
     display: grid;
