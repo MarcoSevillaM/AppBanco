@@ -1,5 +1,10 @@
 """
 Script para probar el modelo entrenado
+
+Uso:
+    python probar_modelo.py                                  # ejemplos predefinidos
+    python probar_modelo.py "Pago Movil En Mercadona ..."    # un concepto
+    python probar_modelo.py "Bizum De Ana Concepto Cena" --importe 15
 """
 
 import sys
@@ -43,9 +48,10 @@ def probar_ejemplos():
         emoji = {
             'Alimentación': '🛒',
             'Coche': '🚗',
-            'Gastos Recurrentes': '🔁',
+            'Gastos recurrentes': '🔁',
             'Ocio': '🎉',
-            'Inversión': '📈',
+            'Inversiones': '📈',
+            'Vivienda': '🏠',
             'Ingresos': '💰',
             'Otros': '📦'
         }.get(resultado['categoria'], '📦')
@@ -58,17 +64,17 @@ def probar_ejemplos():
         print(f'   → {resultado["categoria"]} {color} {confianza:.1%}\n')
 
 
-def probar_concepto(concepto):
-    """Probar con un concepto específico"""
+def probar_concepto(concepto, importe=None):
+    """Probar con un concepto específico (el importe es opcional)"""
     modelo = ModeloClasificador()
     
     if not modelo.cargar():
         print('❌ Modelo no encontrado.')
         return
     
-    resultado = modelo.predecir(concepto)
-    
-    print(f'\n🔍 Analizando: "{concepto}"')
+    resultado = modelo.predecir(concepto, importe)
+
+    print(f'\n🔍 Analizando: "{concepto}"' + (f' ({importe} €)' if importe is not None else ''))
     print(f'\n📊 Resultado: {resultado["categoria"]}')
     print(f'🎯 Confianza: {resultado["confianza"]:.1%}')
     print('\nProbabilidades por categoría:')
@@ -81,8 +87,14 @@ def probar_concepto(concepto):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        concepto = ' '.join(sys.argv[1:])
-        probar_concepto(concepto)
+    args = sys.argv[1:]
+    importe = None
+    if '--importe' in args:
+        i = args.index('--importe')
+        importe = float(args[i + 1].replace(',', '.'))
+        args = args[:i] + args[i + 2:]
+
+    if args:
+        probar_concepto(' '.join(args), importe)
     else:
         probar_ejemplos()
