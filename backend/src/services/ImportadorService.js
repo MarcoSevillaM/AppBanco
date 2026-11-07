@@ -312,6 +312,7 @@ class ImportadorService {
         // Solo agregar categoría si existe y no está vacía
         if (categoria && categoria.length > 0) {
             transaccion.categoria = categoria;
+            transaccion.categoria_origen = 'csv';
         }
 
         return transaccion;

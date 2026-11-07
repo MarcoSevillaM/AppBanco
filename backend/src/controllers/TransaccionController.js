@@ -56,10 +56,10 @@ class TransaccionController {
      * POST /api/transacciones
      * Crear una nueva transacción
      */
-    static crear(req, res) {
+    static async crear(req, res) {
         try {
             const ecoSis = req.app.get('ecoSis');
-            const transaccion = ecoSis.crearTransaccion(req.body);
+            const transaccion = await ecoSis.crearTransaccion(req.body);
 
             res.status(201).json({ 
                 success: true, 
@@ -160,17 +160,17 @@ class TransaccionController {
     static async clasificar(req, res) {
         try {
             const ecoSis = req.app.get('ecoSis');
-            const { concepto } = req.body;
+            const { concepto, importe = null } = req.body;
 
             if (!concepto) {
-                return res.status(400).json({ 
-                    success: false, 
-                    error: 'El concepto es requerido' 
+                return res.status(400).json({
+                    success: false,
+                    error: 'El concepto es requerido'
                 });
             }
 
-            const categoria = await ecoSis.clasificarConcepto(concepto);
-            res.json({ success: true, data: { concepto, categoria } });
+            const clasificacion = await ecoSis.clasificarConcepto(concepto, importe);
+            res.json({ success: true, data: { concepto, ...clasificacion } });
         } catch (error) {
             res.status(500).json({ success: false, error: error.message });
         }

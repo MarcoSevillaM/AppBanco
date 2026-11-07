@@ -10,6 +10,11 @@ const fs = require('fs');
 const DEFAULT_ADMIN_USERNAME = process.env.DEFAULT_ADMIN_USERNAME || 'marco';
 const DEFAULT_ADMIN_PASSWORD_HASH = process.env.DEFAULT_ADMIN_PASSWORD_HASH || '$2a$12$Cyu03QB0gXYbQNP4sPYQ.OYCIzm3Z/GJp1IWGCq6VoxwWzQW7QykK';
 
+const CAMPOS_EDITABLES = [
+    'fecha', 'concepto', 'importe', 'categoria', 'cuenta', 'notas',
+    'categoria_origen', 'categoria_confianza'
+];
+
 class Database {
     constructor() {
         this.dbPath = path.join(__dirname, '../../../data/banco.db');
@@ -99,6 +104,7 @@ class Database {
                 fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        this.migrarOrigenCategoria();
 
         // Tabla de reglas de clasificación personalizadas
         this.db.run(`
@@ -165,6 +171,28 @@ class Database {
         console.log('✅ Tablas inicializadas correctamente');
     }
 
+    /**
+     * Añadir categoria_origen ('manual', 'csv', 'historial', 'ia', 'reglas') y
+     * categoria_confianza. Antes solo se sabía que una transacción era manual porque
+     * fecha_actualizacion > fecha_creacion; se usa esa pista para rellenar las existentes.
+     */
+    migrarOrigenCategoria() {
+        const columnas = this._resultToObjects(this.db.exec('PRAGMA table_info(transacciones)'))
+            .map(c => c.name);
+
+        if (!columnas.includes('categoria_origen')) {
+            this.db.run('ALTER TABLE transacciones ADD COLUMN categoria_origen TEXT');
+            this.db.run(`
+                UPDATE transacciones
+                SET categoria_origen = CASE WHEN fecha_actualizacion > fecha_creacion THEN 'manual' ELSE 'auto' END
+            `);
+            console.log('🔧 Columna categoria_origen añadida');
+        }
+        if (!columnas.includes('categoria_confianza')) {
+            this.db.run('ALTER TABLE transacciones ADD COLUMN categoria_confianza REAL');
+        }
+    }
+
     // ==========================================
     // OPERACIONES - ADMIN
     // ==========================================
@@ -194,15 +222,18 @@ class Database {
      */
     insertarTransaccion(transaccion) {
         this.db.run(`
-            INSERT INTO transacciones (fecha, concepto, importe, categoria, cuenta, notas)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO transacciones (fecha, concepto, importe, categoria, cuenta, notas,
+                                       categoria_origen, categoria_confianza)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `, [
             transaccion.fecha,
             transaccion.concepto,
             transaccion.importe,
             transaccion.categoria,
             transaccion.cuenta || null,
-            transaccion.notas || null
+            transaccion.notas || null,
+            transaccion.categoriaOrigen || null,
+            transaccion.categoriaConfianza ?? null
         ]);
 
         // Obtener el ID insertado
@@ -305,7 +336,8 @@ class Database {
         const valores = [];
 
         for (const [campo, valor] of Object.entries(datos)) {
-            if (valor !== undefined && campo !== 'id') {
+            // Los nombres de campo van directos al SQL: solo se aceptan columnas conocidas
+            if (valor !== undefined && CAMPOS_EDITABLES.includes(campo)) {
                 campos.push(`${campo} = ?`);
                 valores.push(valor);
             }
@@ -321,6 +353,30 @@ class Database {
         
         this.guardar();
         return this.obtenerTransaccionPorId(id);
+    }
+
+    /**
+     * Guardar la clasificación automática de muchas transacciones y escribir a disco una vez.
+     * No toca fecha_actualizacion: reclasificar no es una edición.
+     */
+    actualizarClasificaciones(clasificaciones) {
+        const stmt = this.db.prepare(`
+            UPDATE transacciones SET categoria = ?, categoria_origen = ?, categoria_confianza = ? WHERE id = ?
+        `);
+        for (const c of clasificaciones) {
+            stmt.run([c.categoria, c.categoria_origen, c.categoria_confianza ?? null, c.id]);
+        }
+        stmt.free();
+        this.guardar();
+    }
+
+    /**
+     * Concepto, importe y categoría de las transacciones clasificadas a mano
+     */
+    obtenerClasificacionesManuales() {
+        return this._resultToObjects(this.db.exec(`
+            SELECT concepto, importe, categoria FROM transacciones WHERE categoria_origen = 'manual'
+        `));
     }
 
     /**

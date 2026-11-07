@@ -1,0 +1,17 @@
+# Modelo entrenado (archivos grandes)
+modelo_guardado/
+
+# Vocabulario generado
+vocabulario.json
+
+# Archivos de TensorFlow temporales
+*.pb
+*.pbtxt
+tensorboard_logs/
+
+# Checkpoints
+checkpoints/
+*.ckpt
+
+# Datos de entrenamiento
+datos_entrenamiento/

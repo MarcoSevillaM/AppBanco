@@ -3,7 +3,8 @@
 **/data/*.db
 **/*.bak
 uploads/
-modelo/
+modelo/*.pkl
+modelo/__pycache__/
 .venv/
 __pycache__/
 notas.txt

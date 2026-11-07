@@ -9,6 +9,8 @@ class Transaccion {
         this.concepto = datos.concepto || '';
         this.importe = this.normalizarImporte(datos.importe);
         this.categoria = datos.categoria || 'Otros';
+        this.categoriaOrigen = datos.categoria_origen || null;      // manual, csv, historial, ia, reglas
+        this.categoriaConfianza = datos.categoria_confianza ?? null;
         this.cuenta = datos.cuenta || null;
         this.notas = datos.notas || null;
         this.fechaCreacion = datos.fecha_creacion || new Date().toISOString();
@@ -134,6 +136,8 @@ class Transaccion {
             concepto: this.concepto,
             importe: this.importe,
             categoria: this.categoria,
+            categoria_origen: this.categoriaOrigen,
+            categoria_confianza: this.categoriaConfianza,
             cuenta: this.cuenta,
             notas: this.notas
         };
