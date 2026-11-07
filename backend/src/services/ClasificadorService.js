@@ -169,6 +169,9 @@ class ClasificadorService {
         // Reglas personalizadas (se cargarán desde la base de datos)
         this.reglasPersonalizadas = {};
 
+        // Clave de comercio -> { categoría: veces } de las clasificaciones manuales
+        this.historial = new Map();
+
         // Ruta al script Python y al intérprete que lo ejecuta
         this.pythonScript = path.join(__dirname, '../../../modelo/modelo_clasificador.py');
         this.pythonBin = this.resolverPython();
@@ -267,19 +270,130 @@ class ClasificadorService {
     /**
      * Clasificar un concepto en una categoría
      */
-    async clasificar(concepto) {
-        if (!concepto) return 'Otros';
+    async clasificar(concepto, importe = null) {
+        return (await this.clasificarDetallado(concepto, importe)).categoria;
+    }
 
-        const categoriaPrioritaria = this.buscarReglaPrioritaria(concepto);
-        if (categoriaPrioritaria) return categoriaPrioritaria;
+    /**
+     * Clasificar un concepto indicando de dónde sale la categoría
+     * @returns {{categoria: string, origen: string, confianza: number|null}}
+     */
+    async clasificarDetallado(concepto, importe = null) {
+        return (await this.clasificarLote([{ concepto, importe }]))[0];
+    }
 
-        // Clasificar según el modo configurado
-        if (this.modoClasificacion === 'ia' && this.modeloIACargado) {
-            return await this.clasificarConIA(concepto);
-        } else {
-            console.log('⚙️ Usando clasificación por reglas para concepto:', concepto);
-            return this.clasificarConReglas(concepto);
+    /**
+     * Clasificar varias transacciones con una sola llamada al modelo.
+     * Orden: reglas prioritarias -> lo que ya clasificaste a mano -> IA -> reglas.
+     * @param {Array<{concepto: string, importe?: number}>} items
+     */
+    async clasificarLote(items) {
+        const resultados = items.map(({ concepto, importe }) => {
+            if (!concepto) return { categoria: 'Otros', origen: 'reglas', confianza: null };
+
+            const prioritaria = this.buscarReglaPrioritaria(concepto);
+            if (prioritaria) return { categoria: prioritaria, origen: 'reglas', confianza: 1 };
+
+            const historial = this.buscarEnHistorial(concepto, importe);
+            if (historial) return { categoria: historial.categoria, origen: 'historial', confianza: historial.confianza };
+
+            return null;
+        });
+
+        const pendientes = items.filter((_, i) => !resultados[i]);
+        const usarIA = this.modoClasificacion === 'ia' && this.modeloIACargado && pendientes.length > 0;
+        let predicciones = [];
+        if (usarIA) {
+            try {
+                predicciones = await this.llamarModeloPython('predecir_json', null, {
+                    items: pendientes.map(({ concepto, importe }) => ({ concepto, importe: importe ?? null }))
+                });
+            } catch (error) {
+                console.error('Error en clasificación por IA:', error.message);
+            }
         }
+
+        let p = 0;
+        return resultados.map((resultado, i) => {
+            if (resultado) return resultado;
+            const prediccion = predicciones[p++];
+            const concepto = items[i].concepto;
+            const porReglas = this.clasificarConReglas(concepto);
+
+            if (!prediccion) return { categoria: porReglas, origen: 'reglas', confianza: null };
+
+            const categoriaIA = this.normalizarCategoria(prediccion.categoria);
+            // Con poca confianza mandan las reglas, pero solo si encuentran algo
+            if (prediccion.confianza < this.umbralConfianza && porReglas !== 'Otros') {
+                return { categoria: porReglas, origen: 'reglas', confianza: prediccion.confianza };
+            }
+            return { categoria: categoriaIA, origen: 'ia', confianza: prediccion.confianza };
+        });
+    }
+
+    /**
+     * Clave del comercio para comparar conceptos del banco:
+     * "Pago Movil En Mercadona Avda, Salamanca, Tarj. :*047140" -> "mercadona avda"
+     * "Bizum A Favor De Ana ... Concepto: Telefono"               -> "bizum enviado: telefono"
+     * Devuelve null si el concepto no identifica nada (bizum sin concepto).
+     */
+    claveComercio(concepto, importe = null) {
+        let texto = this.normalizarTexto(concepto).replace(/[,\s]*tarj(eta)?\b.*$/, '');
+
+        const bizum = texto.match(/^bizum (a favor de|de) .+? concepto:?\s*(.*)$/);
+        if (bizum) {
+            const motivo = bizum[2].replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim();
+            if (!motivo || motivo === 'sin concepto' || motivo.startsWith('bizum')) return null;
+            return `${bizum[1] === 'de' ? 'bizum recibido' : 'bizum enviado'}: ${motivo}`;
+        }
+
+        texto = texto
+            .replace(/^(pago movil en|compra internet en|compra de|compra)\s+/, '')
+            .split(',')[0]
+            .replace(/[^a-z ]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+        if (!texto) return null;
+        return importe > 0 ? `${texto} +` : texto;
+    }
+
+    /**
+     * Rellenar el historial con las transacciones clasificadas a mano
+     * @param {Array<{concepto, importe, categoria}>} filas
+     */
+    cargarHistorial(filas) {
+        this.historial = new Map();
+        for (const fila of filas) {
+            this.registrarClasificacionManual(fila.concepto, fila.importe, fila.categoria);
+        }
+        console.log(`📚 Historial: ${this.historial.size} comercios clasificados a mano`);
+    }
+
+    /**
+     * Apuntar una clasificación manual para reutilizarla con el mismo comercio
+     */
+    registrarClasificacionManual(concepto, importe, categoria) {
+        const clave = this.claveComercio(concepto || '', importe);
+        if (!clave) return;
+
+        const votos = this.historial.get(clave) || {};
+        votos[this.normalizarCategoria(categoria)] = (votos[this.normalizarCategoria(categoria)] || 0) + 1;
+        this.historial.set(clave, votos);
+    }
+
+    /**
+     * Categoría que más le has puesto a este comercio, si lo has clasificado
+     * al menos 2 veces y el 60% coincide (una sola corrección puede ser una excepción)
+     */
+    buscarEnHistorial(concepto, importe) {
+        const votos = this.historial.get(this.claveComercio(concepto, importe));
+        if (!votos) return null;
+
+        const total = Object.values(votos).reduce((a, b) => a + b, 0);
+        if (total < 2) return null;
+        const [categoria, veces] = Object.entries(votos).sort((a, b) => b[1] - a[1])[0];
+        const confianza = veces / total;
+        return confianza >= 0.6 ? { categoria, confianza } : null;
     }
 
     /**
@@ -356,38 +470,23 @@ class ClasificadorService {
     }
 
     /**
-     * Clasificar usando modelo de IA (Python)
+     * Llamar al script Python para predicción.
+     * Con `entrada` se envía como JSON por stdin (comando predecir_json).
      */
-    async clasificarConIA(concepto) {
-        try {
-            const prediccion = await this.llamarModeloPython('predecir', concepto);
-            
-            // Si la confianza es baja, usar clasificación por reglas como fallback
-            if (prediccion.confianza < this.umbralConfianza) {
-                console.log(prediccion.categoria)
-                const categoriaReglas = this.clasificarConReglas(concepto);
-                console.log(`⚠️ Baja confianza (${(prediccion.confianza * 100).toFixed(1)}%) para "${concepto}". Usando reglas: ${categoriaReglas}`);
-                return categoriaReglas;
-            }
-
-            return this.normalizarCategoria(prediccion.categoria);
-
-        } catch (error) {
-            console.error('Error en clasificación por IA:', error.message);
-            // Fallback a reglas en caso de error
-            return this.clasificarConReglas(concepto);
-        }
-    }
-
-    /**
-     * Llamar al script Python para predicción
-     */
-    llamarModeloPython(comando, ...args) {
+    llamarModeloPython(comando, argumento = null, entrada = null) {
         return new Promise((resolve, reject) => {
+            const args = [this.pythonScript, comando];
+            if (argumento !== null) args.push(argumento);
+
             // Forzar UTF-8: en Windows Python escribe en cp1252 y "Alimentación" llegaba corrupta
-            const python = spawn(this.pythonBin, [this.pythonScript, comando, ...args], {
+            const python = spawn(this.pythonBin, args, {
                 env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
             });
+
+            if (entrada !== null) {
+                python.stdin.on('error', () => {}); // si Python no arranca, el error llega por 'error'/'close'
+                python.stdin.end(JSON.stringify(entrada), 'utf-8');
+            }
             
             let stdout = '';
             let stderr = '';
@@ -421,20 +520,9 @@ class ClasificadorService {
     }
 
     /**
-     * Clasificar múltiples conceptos (batch)
+     * Obtener predicción detallada del modelo con probabilidades
      */
-    async clasificarLote(conceptos) {
-        const categorias = [];
-        for (const concepto of conceptos) {
-            categorias.push(await this.clasificar(concepto));
-        }
-        return categorias;
-    }
-
-    /**
-     * Obtener predicción detallada con probabilidades
-     */
-    async obtenerPrediccionDetallada(concepto) {
+    async obtenerPrediccionDetallada(concepto, importe = null) {
         if (!this.modeloIACargado) {
             return {
                 categoria: this.clasificarConReglas(concepto),
@@ -445,9 +533,12 @@ class ClasificadorService {
         }
 
         try {
-            const prediccion = await this.modeloIA.predecir(concepto);
+            const [prediccion] = await this.llamarModeloPython('predecir_json', null, {
+                items: [{ concepto, importe }]
+            });
             return {
                 ...prediccion,
+                categoria: this.normalizarCategoria(prediccion.categoria),
                 metodo: 'ia'
             };
         } catch (error) {

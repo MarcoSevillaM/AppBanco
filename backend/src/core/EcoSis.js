@@ -31,6 +31,8 @@ class EcoSis {
 
     async inicializar() {
         await this.database.ready();
+        this.clasificador.cargarReglasDesdeDB(this.database.obtenerReglasClasificacion());
+        this.clasificador.cargarHistorial(this.database.obtenerClasificacionesManuales());
         this.estado.inicializado = true;
         console.log('✅ EcoSis inicializado correctamente');
     }
@@ -61,20 +63,44 @@ class EcoSis {
     /**
      * Crear una nueva transacción
      */
-    async crearTransaccion(datos) {
-        // Clasificar automáticamente si no tiene categoría
-        if (!datos.categoria) {
-            datos.categoria = await this.clasificador.clasificar(datos.concepto);
+    async crearTransaccion(datos, clasificacion = null) {
+        if (datos.categoria) {
+            // Categoría elegida en el formulario o traída en el CSV
+            datos.categoria = this.clasificador.normalizarCategoria(datos.categoria);
+            datos.categoria_origen = datos.categoria_origen || 'manual';
+        } else {
+            clasificacion = clasificacion
+                || await this.clasificador.clasificarDetallado(datos.concepto, Number(datos.importe));
+            datos.categoria = clasificacion.categoria;
+            datos.categoria_origen = clasificacion.origen;
+            datos.categoria_confianza = clasificacion.confianza;
         }
+
         const transaccion = new Transaccion(datos);
-        return this.database.insertarTransaccion(transaccion);
+        const creada = this.database.insertarTransaccion(transaccion);
+        if (datos.categoria_origen === 'manual') {
+            this.clasificador.registrarClasificacionManual(transaccion.concepto, transaccion.importe, transaccion.categoria);
+        }
+        return creada;
     }
 
     /**
-     * Actualizar una transacción existente
+     * Actualizar una transacción desde la interfaz.
+     * Guardar la categoría desde el formulario cuenta como revisión manual.
      */
     actualizarTransaccion(id, datos) {
-        return this.database.actualizarTransaccion(id, datos);
+        const cambios = { ...datos };
+        if (cambios.categoria) {
+            cambios.categoria = this.clasificador.normalizarCategoria(cambios.categoria);
+            cambios.categoria_origen = 'manual';
+            cambios.categoria_confianza = null;
+        }
+
+        const actualizada = this.database.actualizarTransaccion(id, cambios);
+        if (actualizada && cambios.categoria) {
+            this.clasificador.registrarClasificacionManual(actualizada.concepto, actualizada.importe, actualizada.categoria);
+        }
+        return actualizada;
     }
 
     /**
@@ -97,9 +123,17 @@ class EcoSis {
             errores: []
         };
 
+        // Clasificar de una vez todas las que no traen categoría (una sola llamada al modelo)
+        const sinCategoria = transacciones.filter(t => !t.categoria);
+        const clasificaciones = await this.clasificador.clasificarLote(
+            sinCategoria.map(t => ({ concepto: t.concepto, importe: Number(t.importe) }))
+        );
+        const clasificacionDe = new Map(sinCategoria.map((t, i) => [t, clasificaciones[i]]));
+
         for (const datos of transacciones) {
             try {
-                await this.crearTransaccion(datos);
+                if (datos.categoria && !datos.categoria_origen) datos.categoria_origen = 'csv';
+                await this.crearTransaccion(datos, clasificacionDe.get(datos));
                 resultados.exitosas++;
             } catch (error) {
                 resultados.fallidas++;
@@ -117,42 +151,44 @@ class EcoSis {
     /**
      * Clasificar un concepto
      */
-    clasificarConcepto(concepto) {
-        return this.clasificador.clasificar(concepto);
+    clasificarConcepto(concepto, importe = null) {
+        return this.clasificador.clasificarDetallado(concepto, importe);
     }
 
     /**
-     * Reclasificar las transacciones que no se han editado a mano.
-     * Una transacción editada tiene fecha_actualizacion posterior a fecha_creacion;
-     * esas se respetan para no pisar correcciones manuales.
+     * Reclasificar las transacciones que no se han clasificado a mano
+     * (categoria_origen = 'manual' se respeta para no pisar correcciones).
      * Con simular = true solo devuelve los cambios propuestos, sin aplicarlos.
      */
     async reclasificarTodas({ simular = false } = {}) {
         const transacciones = this.database.obtenerTransacciones();
+        const candidatas = transacciones.filter(t => t.categoria_origen !== 'manual');
+        const protegidas = transacciones.length - candidatas.length;
+
+        const clasificaciones = await this.clasificador.clasificarLote(
+            candidatas.map(t => ({ concepto: t.concepto, importe: t.importe }))
+        );
+
         const cambios = [];
-        let protegidas = 0;
-
-        for (const trans of transacciones) {
-            if (trans.fecha_actualizacion > trans.fecha_creacion) {
-                protegidas++;
-                continue;
-            }
-
-            const nuevaCategoria = await this.clasificador.clasificar(trans.concepto);
-            if (nuevaCategoria !== trans.categoria) {
+        candidatas.forEach((trans, i) => {
+            if (clasificaciones[i].categoria !== trans.categoria) {
                 cambios.push({
                     id: trans.id,
                     concepto: trans.concepto,
                     categoriaAnterior: trans.categoria,
-                    categoriaNueva: nuevaCategoria
+                    categoriaNueva: clasificaciones[i].categoria
                 });
             }
-        }
+        });
 
+        // También se guardan origen y confianza de las que no cambian de categoría
         if (!simular) {
-            for (const cambio of cambios) {
-                this.database.actualizarTransaccion(cambio.id, { categoria: cambio.categoriaNueva });
-            }
+            this.database.actualizarClasificaciones(candidatas.map((t, i) => ({
+                id: t.id,
+                categoria: clasificaciones[i].categoria,
+                categoria_origen: clasificaciones[i].origen,
+                categoria_confianza: clasificaciones[i].confianza
+            })));
         }
 
         return {

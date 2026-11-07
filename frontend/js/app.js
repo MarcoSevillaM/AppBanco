@@ -336,7 +336,10 @@ function inicializarEventos() {
             try {
                 const response = await fetchAuth(`${API_URL}/clasificar`, {
                     method: 'POST',
-                    body: JSON.stringify({ concepto })
+                    body: JSON.stringify({
+                        concepto,
+                        importe: parseFloat(document.getElementById('input-importe').value) || null
+                    })
                 });
                 const data = await response.json();
                 if (data.success) {
