@@ -7,6 +7,7 @@
 const Database = require('../database/Database');
 const ClasificadorService = require('../services/ClasificadorService');
 const ImportadorService = require('../services/ImportadorService');
+const PrediccionService = require('../services/PrediccionService');
 const Transaccion = require('../models/Transaccion');
 
 class EcoSis {
@@ -17,6 +18,9 @@ class EcoSis {
         this.database = new Database();
         this.clasificador = new ClasificadorService();
         this.importador = new ImportadorService(this);
+        this.prediccion = new PrediccionService({
+            claveComercio: (concepto, importe) => this.clasificador.claveComercio(concepto, importe)
+        });
         
         // Estado del sistema
         this.estado = {
@@ -276,6 +280,15 @@ class EcoSis {
         }
 
         return this.obtenerConfiguracion();
+    }
+
+    /**
+     * Predicción del ahorro de un mes (por defecto el actual)
+     * @param {object} opciones - { mes: 'YYYY-MM', corte: 'YYYY-MM-DD' }
+     */
+    obtenerPrediccion(opciones = {}) {
+        const transacciones = this.database.obtenerTransacciones({ orden: 'ASC' });
+        return this.prediccion.calcular(transacciones, opciones);
     }
 
     /**
