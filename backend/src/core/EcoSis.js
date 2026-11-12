@@ -292,6 +292,65 @@ class EcoSis {
     }
 
     /**
+     * Comercios/destinatarios donde más se gasta en un periodo.
+     * Agrupa con la misma clave que la predicción (sin la parte que cambia cada mes).
+     * Inversiones y Vivienda no cuentan como gasto, igual que en el resto de Gráficas.
+     */
+    obtenerTopComercios({ desde = null, hasta = null, limite = 10 } = {}) {
+        const filtros = { orden: 'ASC' };
+        if (desde) filtros.fechaInicio = desde;
+        if (hasta) filtros.fechaFin = hasta;
+        const transacciones = this.database.obtenerTransacciones(filtros);
+
+        const grupos = new Map();
+        let totalGasto = 0;
+        for (const t of transacciones) {
+            if (t.importe >= 0 || t.categoria === 'Inversiones' || t.categoria === 'Vivienda') continue;
+            const gasto = -t.importe;
+            totalGasto += gasto;
+            const clave = this.prediccion.claveComercio(t);
+            if (!clave) continue;
+            if (!grupos.has(clave)) grupos.set(clave, { clave, total: 0, movimientos: 0, categorias: {}, ultimaFecha: null, concepto: '' });
+            const g = grupos.get(clave);
+            g.total += gasto;
+            g.movimientos += 1;
+            g.categorias[t.categoria] = (g.categorias[t.categoria] || 0) + gasto;
+            g.ultimaFecha = String(t.fecha).slice(0, 10);
+            // El concepto más reciente con tildes bien escritas sirve para el nombre visible
+            if (!g.concepto || !String(t.concepto).includes('�')) g.concepto = String(t.concepto || '');
+        }
+
+        // La clave va sin tildes (para agrupar); el nombre se saca del concepto original
+        const mayusculas = texto => texto.replace(/(^|\s)(\S)/g, (m, sep, c) => sep + c.toUpperCase());
+        const nombre = (g) => {
+            if (g.clave.startsWith('bizum')) return mayusculas(g.clave.replace(/ \+$/, ''));
+            const limpio = g.concepto
+                .replace(/^(Pago Movil En|Compra Internet En|Compra De|Compra)\s+/i, '')
+                .replace(/^Transferencia (Inmediata )?A Favor De\s+/i, 'Transferencia a ')
+                .replace(/\s+Concepto\b.*$/i, '')
+                .replace(/[,\s]*Tarj(eta)?\b.*$/i, '')
+                .split(',')[0]
+                .trim();
+            return limpio || mayusculas(g.clave);
+        };
+        const redondear = v => Math.round(v * 100) / 100;
+
+        const comercios = [...grupos.values()]
+            .sort((a, b) => b.total - a.total)
+            .slice(0, limite)
+            .map(g => ({
+                nombre: nombre(g),
+                total: redondear(g.total),
+                movimientos: g.movimientos,
+                media: redondear(g.total / g.movimientos),
+                categoria: Object.entries(g.categorias).sort((a, b) => b[1] - a[1])[0][0],
+                ultimaFecha: g.ultimaFecha
+            }));
+
+        return { desde, hasta, totalGasto: redondear(totalGasto), comercios };
+    }
+
+    /**
      * Calcular dinero líquido y patrimonio total hasta una fecha.
      * Líquido = saldo inicial + movimientos (salvo los internos de la cuenta de inversiones).
      * Patrimonio = líquido + valor actual de las inversiones.

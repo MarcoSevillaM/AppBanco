@@ -1579,8 +1579,203 @@ code {
    ========================================== */
 .graficas-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
+}
+
+/* ---------- Gráficas nuevas: flujo, habitual, comercios, calendario ---------- */
+:root {
+    /* Rampa secuencial azul (un solo tono): de "casi nada" a "mucho" */
+    --cal-vacio: #eceef1;
+    --cal-1: #cde2fb;
+    --cal-2: #86b6ef;
+    --cal-3: #3987e5;
+    --cal-4: #1c5cab;
+    --cal-5: #0d366b;
+}
+
+[data-theme="dark"] {
+    /* En oscuro se invierte: lo poco se funde con el fondo y lo mucho brilla */
+    --cal-vacio: #2b3443;
+    --cal-1: #184f95;
+    --cal-2: #256abf;
+    --cal-3: #3987e5;
+    --cal-4: #86b6ef;
+    --cal-5: #cde2fb;
+}
+
+.periodo-grafica {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-left: 0.25rem;
+}
+
+.card-grafica .chart-container.chart-flujo {
+    height: 420px;
+}
+
+.graficas-grid > .card-flujo,
+.graficas-grid > .card-calendario {
+    min-height: auto;
+}
+
+.calendario-scroll {
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+}
+
+.calendario-gasto {
+    --cal-celda: 13px;
+    --cal-hueco: 3px;
+    display: grid;
+    grid-template-rows: auto repeat(7, var(--cal-celda));
+    grid-auto-flow: column;
+    grid-auto-columns: var(--cal-celda);
+    gap: var(--cal-hueco);
+    width: max-content;
+    margin-top: 0.75rem;
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+}
+
+.calendario-gasto .cal-mes {
+    grid-row: 1;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.calendario-gasto .cal-dia-semana {
+    line-height: var(--cal-celda);
+    padding-right: 4px;
+    text-align: right;
+}
+
+.calendario-gasto .cal-celda {
+    width: var(--cal-celda);
+    height: var(--cal-celda);
+    border-radius: 3px;
+    background: var(--cal-vacio);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.calendario-gasto .cal-celda:hover,
+.calendario-gasto .cal-celda:focus-visible,
+.calendario-gasto .cal-celda.seleccionada {
+    outline: 2px solid var(--text-color);
+    outline-offset: 1px;
+}
+
+.calendario-gasto .cal-celda.fuera {
+    visibility: hidden;
+}
+
+.cal-nivel-1 { background: var(--cal-1) !important; }
+.cal-nivel-2 { background: var(--cal-2) !important; }
+.cal-nivel-3 { background: var(--cal-3) !important; }
+.cal-nivel-4 { background: var(--cal-4) !important; }
+.cal-nivel-5 { background: var(--cal-5) !important; }
+
+.calendario-pie {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.calendario-leyenda {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.calendario-leyenda .cal-celda {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    background: var(--cal-vacio);
+}
+
+.calendario-detalle {
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.calendario-detalle:empty {
+    display: none;
+}
+
+.calendario-detalle ul {
+    list-style: none;
+    margin-top: 0.375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.calendario-detalle li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.375rem 0.625rem;
+    background: var(--bg-color);
+    border-radius: var(--radius);
+}
+
+.calendario-detalle li span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.calendario-detalle li span:last-child {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.cal-tooltip {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    max-width: 280px;
+    padding: 0.5rem 0.625rem;
+    background: rgba(17, 24, 39, 0.95);
+    color: #f9fafb;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    box-shadow: var(--shadow);
+}
+
+.cal-tooltip[hidden] {
+    display: none;
+}
+
+/* Esta regla va después de .graficas-grid: la de la sección "tablet" de arriba
+   quedaba anulada y en móvil las gráficas seguían en dos columnas */
+@media (max-width: 1024px) {
+    .graficas-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .graficas-grid > .card-grafica.card-half,
+    .graficas-grid > .card-grafica.card-full {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-grafica .chart-container.chart-flujo {
+        height: 360px;
+    }
 }
 
 .card-grafica {
