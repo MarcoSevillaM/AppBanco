@@ -11,7 +11,8 @@
     <title>AppBanco v1.5 - Gestión de Transacciones</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.19.1/dist/chartjs-chart-sankey.min.js"></script>
 </head>
 <body>
     <!-- Panel de Login -->
@@ -213,6 +214,10 @@
                     <select id="graficas-año">
                         <!-- Se llena dinámicamente -->
                     </select>
+                    <label for="graficas-mes">Mes:</label>
+                    <select id="graficas-mes" title="Afecta a ¿A dónde va tu dinero?, Dónde más gastas y Este mes frente a lo habitual">
+                        <option value="">Todo el periodo</option>
+                    </select>
                     <button id="btn-actualizar-graficas" class="btn btn-primary">🔄 Actualizar</button>
                 </div>
 
@@ -234,6 +239,48 @@
                         <div class="chart-container">
                             <canvas id="chart-categorias-mes"></canvas>
                         </div>
+                    </div>
+
+                    <!-- Gráfica: Flujo del dinero (Sankey) -->
+                    <div class="card card-grafica card-full card-flujo">
+                        <h3>💸 ¿A dónde va tu dinero? <small class="periodo-grafica" id="flujo-periodo"></small></h3>
+                        <p class="info-text">Lo que entra a la izquierda y a dónde va a la derecha. El grosor de cada banda es su importe. Pasa el ratón por una banda para ver la cifra.</p>
+                        <div class="chart-container chart-flujo">
+                            <canvas id="chart-flujo" role="img" aria-label="Diagrama de flujo de ingresos a categorías de gasto"></canvas>
+                        </div>
+                        <div id="flujo-resumen" class="resumen-totales"></div>
+                    </div>
+
+                    <!-- Gráfica: Este mes frente a lo habitual -->
+                    <div class="card card-grafica card-half">
+                        <h3>📏 Este mes frente a lo habitual <small class="periodo-grafica" id="habitual-periodo"></small></h3>
+                        <p class="info-text">Gasto de cada categoría en el mes frente a su mediana de los 6 meses anteriores (la raya).</p>
+                        <div class="chart-container">
+                            <canvas id="chart-habitual" role="img" aria-label="Gasto por categoría del mes frente a lo habitual"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica: Dónde más gastas -->
+                    <div class="card card-grafica card-half">
+                        <h3>🏪 Dónde más gastas <small class="periodo-grafica" id="comercios-periodo"></small></h3>
+                        <p class="info-text">Comercios y destinatarios con más gasto (sin Inversión ni Vivienda). El color es la categoría.</p>
+                        <div class="chart-container">
+                            <canvas id="chart-comercios" role="img" aria-label="Comercios con más gasto"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica: Calendario de gasto -->
+                    <div class="card card-grafica card-full card-calendario">
+                        <h3>📅 Calendario de gasto <small class="periodo-grafica" id="calendario-periodo"></small></h3>
+                        <p class="info-text">Cada cuadro es un día; cuanto más oscuro, más gastaste (sin Inversión ni Vivienda). Pasa el ratón o pulsa un día para ver sus movimientos.</p>
+                        <div class="calendario-scroll">
+                            <div id="calendario-gasto" class="calendario-gasto"></div>
+                        </div>
+                        <div class="calendario-pie">
+                            <div id="calendario-leyenda" class="calendario-leyenda"></div>
+                            <div id="calendario-resumen" class="calendario-resumen"></div>
+                        </div>
+                        <div id="calendario-detalle" class="calendario-detalle" aria-live="polite"></div>
                     </div>
 
                     <!-- Gráfica: Distribución de Gastos (Pie/Donut) -->

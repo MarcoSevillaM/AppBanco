@@ -932,7 +932,8 @@ document.head.appendChild(style);
 const GraficasState = {
     charts: {},
     datosGraficas: null,
-    añoSeleccionado: null
+    añoSeleccionado: null,
+    mesSeleccionado: ''
 };
 
 // Colores para categorías - todos distintos y bien diferenciados
@@ -1025,6 +1026,10 @@ async function cargarGraficas() {
         
         // Llenar selector de meses y configurar visor
         llenarSelectorMeses(datosFiltrados);
+
+        // Gráficas visuales (flujo, habitual, comercios, calendario)
+        llenarSelectorMesGraficas(datosFiltrados);
+        renderizarGraficasVisuales();
         
     } catch (error) {
         console.error('Error al cargar gráficas:', error);
@@ -2345,4 +2350,555 @@ document.addEventListener('DOMContentLoaded', () => {
         PrediccionState.diaAcierto = Number(boton.dataset.dia);
         renderizarAciertoPrediccion(PrediccionState.datos);
     });
+});
+
+// ==========================================
+// GRÁFICAS VISUALES: FLUJO, HABITUAL, COMERCIOS, CALENDARIO
+// ==========================================
+
+const CATEGORIAS_FUERA_GASTO = ['Inversiones', 'Vivienda'];
+const COLOR_AHORRO = 'rgb(34, 197, 94)';
+const COLOR_NEUTRO = 'rgb(148, 163, 184)';
+const DIAS_SEMANA_LARGOS = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+
+function claveMesGrafica(fecha) {
+    return String(fecha).slice(0, 7);
+}
+
+function etiquetaMesGrafica(claveMes) {
+    const [año, mes] = claveMes.split('-').map(Number);
+    return `${NOMBRES_MESES_COMPLETOS[mes - 1]} ${año}`;
+}
+
+function esGastoConsumo(t) {
+    return t.importe < 0 && !CATEGORIAS_FUERA_GASTO.includes(t.categoria);
+}
+
+function colorCategoria(categoria) {
+    return COLORES_CATEGORIAS[categoria]?.border || COLOR_NEUTRO;
+}
+
+function colorTextoTema() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#1f2937';
+}
+
+/**
+ * Selector de mes: los meses con datos del año elegido
+ */
+function llenarSelectorMesGraficas(transaccionesAño) {
+    const select = document.getElementById('graficas-mes');
+    if (!select) return;
+    const meses = [...new Set(transaccionesAño.map(t => claveMesGrafica(t.fecha)))].sort().reverse();
+    if (GraficasState.mesSeleccionado && !meses.includes(GraficasState.mesSeleccionado)) {
+        GraficasState.mesSeleccionado = '';
+    }
+    select.innerHTML = '<option value="">Todo el periodo</option>' + meses
+        .map(m => `<option value="${m}" ${m === GraficasState.mesSeleccionado ? 'selected' : ''}>${etiquetaMesGrafica(m)}</option>`)
+        .join('');
+}
+
+/**
+ * Periodo que usan flujo y comercios: el mes elegido o el año/todo
+ */
+function periodoGraficas(transaccionesAño, año) {
+    const mes = GraficasState.mesSeleccionado;
+    if (mes) {
+        const [a, m] = mes.split('-').map(Number);
+        const ultimo = new Date(Date.UTC(a, m, 0)).getUTCDate();
+        return {
+            desde: `${mes}-01`,
+            hasta: `${mes}-${String(ultimo).padStart(2, '0')}`,
+            etiqueta: etiquetaMesGrafica(mes),
+            transacciones: transaccionesAño.filter(t => claveMesGrafica(t.fecha) === mes)
+        };
+    }
+    if (año === 'todo' || !año) {
+        return { desde: null, hasta: null, etiqueta: 'todo el historial', transacciones: transaccionesAño };
+    }
+    return { desde: `${año}-01-01`, hasta: `${año}-12-31`, etiqueta: String(año), transacciones: transaccionesAño };
+}
+
+function renderizarGraficasVisuales() {
+    const todas = GraficasState.datosGraficas?.transacciones;
+    if (!todas) return;
+    const año = GraficasState.añoSeleccionado || 'todo';
+    const transaccionesAño = filtrarPorAño(todas, año);
+    const periodo = periodoGraficas(transaccionesAño, año);
+
+    const conProteccion = (nombre, fn) => {
+        try { fn(); } catch (error) { console.error(`Error en la gráfica ${nombre}:`, error); }
+    };
+    conProteccion('flujo', () => renderizarChartFlujo(periodo));
+    conProteccion('habitual', () => renderizarChartHabitual(todas, transaccionesAño));
+    conProteccion('comercios', () => renderizarChartComercios(periodo));
+    conProteccion('calendario', () => renderizarCalendarioGasto(todas, año));
+}
+
+// ---------- 1. Flujo del dinero (Sankey) ----------
+
+function renderizarChartFlujo(periodo) {
+    const ctx = document.getElementById('chart-flujo');
+    if (!ctx) return;
+    destruirChart('flujo');
+    document.getElementById('flujo-periodo').textContent = `· ${periodo.etiqueta}`;
+
+    // Neto por categoría: lo positivo entra, lo negativo sale
+    const neto = {};
+    periodo.transacciones.forEach(t => {
+        neto[t.categoria] = (neto[t.categoria] || 0) + t.importe;
+    });
+
+    const NODO_CENTRAL = 'Dinero disponible';
+    const nombreEntrada = cat => cat === 'Ingresos' ? 'Ingresos'
+        : cat === 'Inversiones' ? 'Rescate de inversión' : `${cat} (entradas)`;
+    const nombreSalida = cat => cat === 'Inversiones' ? 'Inversión' : cat;
+
+    const entradas = Object.entries(neto).filter(([, v]) => v > 0.5).sort((a, b) => b[1] - a[1]);
+    const salidas = Object.entries(neto).filter(([, v]) => v < -0.5).sort((a, b) => a[1] - b[1]);
+    const totalEntra = entradas.reduce((s, [, v]) => s + v, 0);
+    const totalSale = salidas.reduce((s, [, v]) => s - v, 0);
+
+    const flujos = [];
+    const colores = { [NODO_CENTRAL]: COLOR_NEUTRO };
+    const totales = {};
+    const anadir = (from, to, flow, colorNodo, nodoColoreado) => {
+        flujos.push({ from, to, flow: Math.round(flow * 100) / 100 });
+        colores[nodoColoreado] = colorNodo;
+    };
+
+    entradas.forEach(([cat, v]) => anadir(nombreEntrada(cat), NODO_CENTRAL, v, colorCategoria(cat), nombreEntrada(cat)));
+    if (totalSale > totalEntra) {
+        anadir('Ahorros previos', NODO_CENTRAL, totalSale - totalEntra, COLOR_NEUTRO, 'Ahorros previos');
+    }
+    salidas.forEach(([cat, v]) => anadir(NODO_CENTRAL, nombreSalida(cat), -v, colorCategoria(cat), nombreSalida(cat)));
+    if (totalEntra > totalSale) {
+        anadir(NODO_CENTRAL, 'Ahorro', totalEntra - totalSale, COLOR_AHORRO, 'Ahorro');
+    }
+
+    flujos.forEach(f => {
+        totales[f.from] = (totales[f.from] || 0) + f.flow;
+        totales[f.to] = (totales[f.to] || 0) + f.flow;
+    });
+    totales[NODO_CENTRAL] = Math.max(totalEntra, totalSale);
+
+    const resumen = document.getElementById('flujo-resumen');
+    if (flujos.length === 0) {
+        resumen.innerHTML = '<p class="info-text">No hay movimientos en este periodo.</p>';
+        return;
+    }
+
+    // En pantallas estrechas solo el nombre (la cifra sale al pasar por la banda)
+    const estrecho = ctx.parentElement.clientWidth < 600;
+    const etiquetas = {};
+    Object.keys(totales).forEach(nodo => {
+        etiquetas[nodo] = estrecho
+            ? (nodo === NODO_CENTRAL ? '' : nodo)
+            : `${nodo}  ${formatearMoneda(totales[nodo])}`;
+    });
+    const base = Math.max(totalEntra, totalSale);
+    const ahorro = totalEntra - totalSale;
+
+    GraficasState.charts.flujo = new Chart(ctx, {
+        type: 'sankey',
+        data: {
+            datasets: [{
+                label: 'Flujo del dinero',
+                data: flujos,
+                colorFrom: c => colores[c.dataset.data[c.dataIndex].from] || COLOR_NEUTRO,
+                colorTo: c => colores[c.dataset.data[c.dataIndex].to] || COLOR_NEUTRO,
+                colorMode: 'gradient',
+                alpha: 0.45,
+                labels: etiquetas,
+                color: colorTextoTema(),
+                font: { size: getChartResponsiveConfig().legend.fontSize },
+                nodeWidth: 12,
+                nodePadding: 14,
+                size: 'max',
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        title: () => '',
+                        label: c => {
+                            const d = c.raw;
+                            const pct = base > 0 ? ` (${((d.flow / base) * 100).toFixed(1)}%)` : '';
+                            return `${d.from} → ${d.to}: ${formatearMoneda(d.flow)}${pct}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const tasa = totalEntra > 0 ? (ahorro / totalEntra) * 100 : 0;
+    resumen.innerHTML = `
+        <div class="total-item"><span class="total-label">Entra</span><span class="total-value ingresos">${formatearMoneda(totalEntra)}</span></div>
+        <div class="total-item"><span class="total-label">Sale</span><span class="total-value gastos">${formatearMoneda(totalSale)}</span></div>
+        <div class="total-item"><span class="total-label">${ahorro >= 0 ? 'Queda' : 'Falta'}${totalEntra > 0 ? ` (${tasa.toFixed(0)}% de lo que entra)` : ''}</span><span class="total-value ahorro">${formatearMoneda(Math.abs(ahorro))}</span></div>`;
+}
+
+// ---------- 2. Este mes frente a lo habitual ----------
+
+function renderizarChartHabitual(todas, transaccionesAño) {
+    const ctx = document.getElementById('chart-habitual');
+    if (!ctx) return;
+    destruirChart('habitual');
+
+    const mesesConDatos = [...new Set(transaccionesAño.map(t => claveMesGrafica(t.fecha)))].sort();
+    const hoy = new Date();
+    const mesEnCurso = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
+    // Por defecto, el último mes terminado: el mes en curso apenas tiene datos
+    const terminados = mesesConDatos.filter(k => k < mesEnCurso);
+    const mes = GraficasState.mesSeleccionado || terminados[terminados.length - 1] || mesesConDatos[mesesConDatos.length - 1];
+    if (!mes) return;
+
+    // Si es el mes en curso, se compara solo hasta el día de hoy en todos los meses
+    const diaCorte = mes === mesEnCurso ? hoy.getDate() : 31;
+    document.getElementById('habitual-periodo').textContent =
+        `· ${etiquetaMesGrafica(mes)}${diaCorte < 31 ? ` (hasta el día ${diaCorte})` : ''}`;
+
+    // Los 6 meses naturales anteriores
+    const [a, m] = mes.split('-').map(Number);
+    const anteriores = [];
+    for (let i = 1; i <= 6; i++) {
+        const d = new Date(Date.UTC(a, m - 1 - i, 1));
+        anteriores.push(`${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`);
+    }
+
+    const gastoPorMesCat = {};
+    todas.forEach(t => {
+        if (!esGastoConsumo(t)) return;
+        const clave = claveMesGrafica(t.fecha);
+        if (clave !== mes && !anteriores.includes(clave)) return;
+        if (Number(String(t.fecha).slice(8, 10)) > diaCorte) return;
+        gastoPorMesCat[clave] = gastoPorMesCat[clave] || {};
+        gastoPorMesCat[clave][t.categoria] = (gastoPorMesCat[clave][t.categoria] || 0) - t.importe;
+    });
+    const anterioresConDatos = anteriores.filter(k => gastoPorMesCat[k]);
+
+    const mediana = valores => {
+        if (!valores.length) return 0;
+        const v = [...valores].sort((x, y) => x - y);
+        const mitad = Math.floor(v.length / 2);
+        return v.length % 2 ? v[mitad] : (v[mitad - 1] + v[mitad]) / 2;
+    };
+
+    const categorias = new Set([...Object.keys(gastoPorMesCat[mes] || {}),
+        ...anterioresConDatos.flatMap(k => Object.keys(gastoPorMesCat[k]))]);
+    const filas = [...categorias].map(cat => ({
+        categoria: cat,
+        actual: (gastoPorMesCat[mes] || {})[cat] || 0,
+        habitual: mediana(anterioresConDatos.map(k => gastoPorMesCat[k][cat] || 0))
+    }))
+        .filter(f => f.actual >= 5 || f.habitual >= 5)
+        .sort((x, y) => Math.max(y.actual, y.habitual) - Math.max(x.actual, x.habitual));
+
+    const cfg = getChartResponsiveConfig();
+    GraficasState.charts.habitual = new Chart(ctx, {
+        data: {
+            labels: filas.map(f => f.categoria),
+            datasets: [
+                {
+                    type: 'bar',
+                    label: etiquetaMesGrafica(mes),
+                    data: filas.map(f => f.actual),
+                    backgroundColor: filas.map(f => COLORES_CATEGORIAS[f.categoria]?.bg || 'rgba(148, 163, 184, 0.7)'),
+                    borderColor: filas.map(f => colorCategoria(f.categoria)),
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    barPercentage: 0.7,
+                    order: 2
+                },
+                {
+                    type: 'line',
+                    label: `Lo habitual (mediana de ${anterioresConDatos.length} meses${diaCorte < 31 ? `, hasta el día ${diaCorte}` : ''})`,
+                    data: filas.map(f => f.habitual),
+                    showLine: false,
+                    pointStyle: 'line',
+                    rotation: 90,
+                    pointRadius: 13,
+                    pointHoverRadius: 14,
+                    pointBorderWidth: 3,
+                    borderColor: colorTextoTema(),
+                    backgroundColor: colorTextoTema(),
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false, axis: 'y' },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: cfg.legend.boxWidth,
+                        padding: cfg.legend.padding,
+                        font: { size: cfg.legend.fontSize },
+                        generateLabels: chart => Chart.defaults.plugins.legend.labels.generateLabels(chart)
+                            .map(item => item.datasetIndex === 0
+                                ? { ...item, fillStyle: COLOR_NEUTRO, strokeStyle: COLOR_NEUTRO, pointStyle: 'rect' }
+                                : { ...item, rotation: 90 })
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: c => `${c.datasetIndex === 0 ? 'Este mes' : 'Lo habitual'}: ${formatearMoneda(c.raw)}`,
+                        afterBody: items => {
+                            const f = filas[items[0].dataIndex];
+                            if (f.habitual < 1) return ['Normalmente no gastas en esto'];
+                            const dif = f.actual - f.habitual;
+                            const pct = Math.round((dif / f.habitual) * 100);
+                            return [`${dif >= 0 ? '+' : ''}${formatearMoneda(dif)} (${pct >= 0 ? '+' : ''}${pct}%) sobre lo habitual`];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { ticks: { callback: v => formatearMoneda(v), font: { size: cfg.axis.fontSize } } },
+                y: { ticks: { font: { size: cfg.axis.fontSize } }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+// ---------- 3. Dónde más gastas ----------
+
+async function renderizarChartComercios(periodo) {
+    const ctx = document.getElementById('chart-comercios');
+    if (!ctx) return;
+    document.getElementById('comercios-periodo').textContent = `· ${periodo.etiqueta}`;
+
+    const params = new URLSearchParams({ limite: '10' });
+    if (periodo.desde) params.set('desde', periodo.desde);
+    if (periodo.hasta) params.set('hasta', periodo.hasta);
+    const peticion = (GraficasState.peticionComercios || 0) + 1;
+    GraficasState.peticionComercios = peticion;
+
+    const response = await fetchAuth(`${API_URL}/estadisticas/comercios?${params}`);
+    const data = await response.json();
+    if (peticion !== GraficasState.peticionComercios) return; // llegó una petición más nueva
+    destruirChart('comercios');
+    if (!data.success) throw new Error(data.error);
+
+    const { comercios, totalGasto } = data.data;
+    const cfg = getChartResponsiveConfig();
+    const categorias = [...new Set(comercios.map(c => c.categoria))];
+    const corto = nombre => nombre.length > 28 ? `${nombre.slice(0, 27)}…` : nombre;
+
+    GraficasState.charts.comercios = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: comercios.map(c => corto(c.nombre)),
+            // Un dataset por categoría para que la leyenda explique el color
+            datasets: categorias.map(cat => ({
+                label: cat,
+                data: comercios.map(c => c.categoria === cat ? c.total : null),
+                backgroundColor: COLORES_CATEGORIAS[cat]?.bg || 'rgba(148, 163, 184, 0.7)',
+                borderColor: colorCategoria(cat),
+                borderWidth: 1,
+                borderRadius: 4,
+                grouped: false,
+                barPercentage: 0.75
+            }))
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { boxWidth: cfg.legend.boxWidth, padding: cfg.legend.padding, font: { size: cfg.legend.fontSize } }
+                },
+                tooltip: {
+                    filter: item => item.raw !== null,
+                    callbacks: {
+                        title: items => comercios[items[0].dataIndex].nombre,
+                        label: c => {
+                            const com = comercios[c.dataIndex];
+                            const pct = totalGasto > 0 ? ` (${((com.total / totalGasto) * 100).toFixed(1)}% del gasto)` : '';
+                            return `${formatearMoneda(com.total)}${pct}`;
+                        },
+                        afterLabel: c => {
+                            const com = comercios[c.dataIndex];
+                            return [`${com.movimientos} movimientos · media ${formatearMoneda(com.media)}`,
+                                `${com.categoria} · último: ${formatearFecha(com.ultimaFecha)}`];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { ticks: { callback: v => formatearMoneda(v), font: { size: cfg.axis.fontSize } } },
+                y: { ticks: { font: { size: cfg.axis.fontSize } }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+// ---------- 4. Calendario de gasto ----------
+
+function fechaISO(d) {
+    return d.toISOString().slice(0, 10);
+}
+
+function renderizarCalendarioGasto(todas, año) {
+    const contenedor = document.getElementById('calendario-gasto');
+    if (!contenedor) return;
+    document.getElementById('calendario-detalle').innerHTML = '';
+
+    // Rango: el año elegido o, con "Todo", los últimos 12 meses con datos
+    const fechas = todas.map(t => String(t.fecha).slice(0, 10)).sort();
+    if (!fechas.length) { contenedor.innerHTML = ''; return; }
+    let inicio, fin;
+    if (año && año !== 'todo') {
+        inicio = new Date(Date.UTC(Number(año), 0, 1));
+        fin = new Date(Date.UTC(Number(año), 11, 31));
+    } else {
+        fin = new Date(`${fechas[fechas.length - 1]}T00:00:00Z`);
+        inicio = new Date(Date.UTC(fin.getUTCFullYear() - 1, fin.getUTCMonth(), fin.getUTCDate() + 1));
+    }
+    const desde = fechaISO(inicio), hasta = fechaISO(fin);
+    document.getElementById('calendario-periodo').textContent =
+        `· ${formatearFecha(desde)} – ${formatearFecha(hasta)}`;
+
+    // Gasto y movimientos por día
+    const porDia = {};
+    todas.forEach(t => {
+        const dia = String(t.fecha).slice(0, 10);
+        if (dia < desde || dia > hasta || !esGastoConsumo(t)) return;
+        porDia[dia] = porDia[dia] || { total: 0, movimientos: [] };
+        porDia[dia].total -= t.importe;
+        porDia[dia].movimientos.push(t);
+    });
+    GraficasState.calendarioDias = porDia;
+
+    // Niveles por quintiles de los días con gasto
+    const totales = Object.values(porDia).map(d => d.total).sort((x, y) => x - y);
+    const cuantil = p => totales.length ? totales[Math.min(totales.length - 1, Math.floor(p * totales.length))] : 0;
+    const cortes = [cuantil(0.2), cuantil(0.4), cuantil(0.6), cuantil(0.8)];
+    const nivel = total => total <= 0 ? 0 : 1 + cortes.filter(c => total > c).length;
+
+    // Columnas = semanas (lunes a domingo); la primera columna son los nombres de los días
+    const html = ['<span class="cal-mes"></span>'];
+    ['L', '', 'X', '', 'V', '', 'D'].forEach(d => html.push(`<span class="cal-dia-semana">${d}</span>`));
+
+    const cursor = new Date(inicio);
+    cursor.setUTCDate(cursor.getUTCDate() - ((cursor.getUTCDay() + 6) % 7)); // lunes anterior
+    while (cursor <= fin) {
+        const semana = [];
+        let etiquetaMes = '';
+        for (let i = 0; i < 7; i++) {
+            const dia = fechaISO(cursor);
+            const fuera = dia < desde || dia > hasta;
+            if (!fuera && cursor.getUTCDate() === 1) etiquetaMes = NOMBRES_MESES[cursor.getUTCMonth()];
+            if (!fuera && dia === desde && !etiquetaMes) etiquetaMes = NOMBRES_MESES[cursor.getUTCMonth()];
+            const datos = porDia[dia];
+            const n = datos ? nivel(datos.total) : 0;
+            semana.push(fuera
+                ? '<span class="cal-celda fuera"></span>'
+                : `<button type="button" class="cal-celda${n ? ` cal-nivel-${n}` : ''}" data-dia="${dia}"
+                    aria-label="${formatearFecha(dia)}: ${formatearMoneda(datos ? datos.total : 0)}"></button>`);
+            cursor.setUTCDate(cursor.getUTCDate() + 1);
+        }
+        html.push(`<span class="cal-mes">${etiquetaMes}</span>`, ...semana);
+    }
+    contenedor.innerHTML = html.join('');
+
+    // Leyenda con los cortes reales
+    const rangos = ['Sin gasto', `hasta ${formatearMoneda(cortes[0])}`, `hasta ${formatearMoneda(cortes[1])}`,
+        `hasta ${formatearMoneda(cortes[2])}`, `hasta ${formatearMoneda(cortes[3])}`, `más de ${formatearMoneda(cortes[3])}`];
+    document.getElementById('calendario-leyenda').innerHTML = 'Menos ' +
+        [0, 1, 2, 3, 4, 5].map(n => `<span class="cal-celda${n ? ` cal-nivel-${n}` : ''}" title="${rangos[n]}"></span>`).join('') +
+        ' Más';
+
+    // Resumen: total, día más caro y día de la semana con más gasto
+    const dias = Object.entries(porDia);
+    const total = dias.reduce((s, [, d]) => s + d.total, 0);
+    const masCaro = dias.sort((x, y) => y[1].total - x[1].total)[0];
+    const porSemana = [0, 0, 0, 0, 0, 0, 0];
+    const semanasRango = Math.max(1, (fin - inicio) / (7 * 86400000));
+    Object.entries(porDia).forEach(([dia, d]) => {
+        porSemana[(new Date(`${dia}T00:00:00Z`).getUTCDay() + 6) % 7] += d.total;
+    });
+    const diaTop = porSemana.indexOf(Math.max(...porSemana));
+    document.getElementById('calendario-resumen').innerHTML = dias.length
+        ? `${formatearMoneda(total)} en ${dias.length} días con gasto · Día más caro: ${formatearFecha(masCaro[0])} (${formatearMoneda(masCaro[1].total)}) · Gastas más los ${DIAS_SEMANA_LARGOS[diaTop]} (${formatearMoneda(porSemana[diaTop] / semanasRango)} de media)`
+        : 'Sin gastos en este periodo';
+}
+
+function textoDiaCalendario(dia, limite = null) {
+    const datos = GraficasState.calendarioDias?.[dia];
+    if (!datos) return { titulo: `${formatearFecha(dia)} · sin gasto`, movimientos: [] };
+    const movimientos = [...datos.movimientos].sort((a, b) => a.importe - b.importe);
+    return {
+        titulo: `${formatearFecha(dia)} · ${formatearMoneda(datos.total)}`,
+        movimientos: limite ? movimientos.slice(0, limite) : movimientos,
+        resto: limite ? Math.max(0, movimientos.length - limite) : 0
+    };
+}
+
+function mostrarTooltipCalendario(celda) {
+    let tooltip = document.getElementById('cal-tooltip');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'cal-tooltip';
+        tooltip.className = 'cal-tooltip';
+        tooltip.setAttribute('role', 'tooltip');
+        document.body.appendChild(tooltip);
+    }
+    const info = textoDiaCalendario(celda.dataset.dia, 3);
+    tooltip.innerHTML = `<strong>${info.titulo}</strong>` + info.movimientos
+        .map(t => `<br>${escapeHtml(t.concepto.slice(0, 40))}: ${formatearMoneda(-t.importe)}`).join('')
+        + (info.resto ? `<br>y ${info.resto} más…` : '');
+    tooltip.hidden = false;
+    const r = celda.getBoundingClientRect();
+    const ancho = tooltip.offsetWidth;
+    tooltip.style.left = `${Math.min(window.innerWidth - ancho - 8, Math.max(8, r.left + r.width / 2 - ancho / 2))}px`;
+    tooltip.style.top = `${r.top - tooltip.offsetHeight - 8 < 8 ? r.bottom + 8 : r.top - tooltip.offsetHeight - 8}px`;
+}
+
+function ocultarTooltipCalendario() {
+    const tooltip = document.getElementById('cal-tooltip');
+    if (tooltip) tooltip.hidden = true;
+}
+
+function mostrarDetalleDiaCalendario(celda) {
+    document.querySelectorAll('#calendario-gasto .cal-celda.seleccionada').forEach(c => c.classList.remove('seleccionada'));
+    celda.classList.add('seleccionada');
+    const info = textoDiaCalendario(celda.dataset.dia);
+    document.getElementById('calendario-detalle').innerHTML = `<strong>${info.titulo}</strong>` + (info.movimientos.length
+        ? `<ul>${info.movimientos.map(t => `<li><span>${escapeHtml(t.concepto)} <small>· ${escapeHtml(t.categoria)}</small></span><span>${formatearMoneda(t.importe)}</span></li>`).join('')}</ul>`
+        : '');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('graficas-mes')?.addEventListener('change', (e) => {
+        GraficasState.mesSeleccionado = e.target.value;
+        renderizarGraficasVisuales();
+    });
+    // Al cambiar de año se vuelve a "Todo el periodo"
+    document.getElementById('graficas-año')?.addEventListener('change', () => {
+        GraficasState.mesSeleccionado = '';
+    });
+
+    const calendario = document.getElementById('calendario-gasto');
+    if (calendario) {
+        const celdaDe = e => e.target.closest('button.cal-celda');
+        calendario.addEventListener('mouseover', e => { const c = celdaDe(e); if (c) mostrarTooltipCalendario(c); });
+        calendario.addEventListener('focusin', e => { const c = celdaDe(e); if (c) mostrarTooltipCalendario(c); });
+        calendario.addEventListener('mouseleave', ocultarTooltipCalendario);
+        calendario.addEventListener('focusout', ocultarTooltipCalendario);
+        calendario.addEventListener('click', e => { const c = celdaDe(e); if (c) mostrarDetalleDiaCalendario(c); });
+    }
+    window.addEventListener('scroll', ocultarTooltipCalendario, { passive: true });
 });

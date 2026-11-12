@@ -283,6 +283,26 @@ class TransaccionController {
     }
 
     /**
+     * GET /api/estadisticas/comercios?desde=YYYY-MM-DD&hasta=YYYY-MM-DD&limite=10
+     * Comercios y destinatarios donde más se gasta en el periodo
+     */
+    static obtenerTopComercios(req, res) {
+        try {
+            const { desde, hasta } = req.query;
+            const fecha = /^\d{4}-\d{2}-\d{2}$/;
+            if ((desde && !fecha.test(desde)) || (hasta && !fecha.test(hasta))) {
+                return res.status(400).json({ success: false, error: 'desde y hasta deben tener formato YYYY-MM-DD' });
+            }
+            const limite = Math.min(Math.max(parseInt(req.query.limite, 10) || 10, 1), 50);
+            const ecoSis = req.app.get('ecoSis');
+            const datos = ecoSis.obtenerTopComercios({ desde: desde || null, hasta: hasta || null, limite });
+            res.json({ success: true, data: datos });
+        } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+        }
+    }
+
+    /**
      * GET /api/patrimonio
      * Dinero líquido y patrimonio total hasta una fecha (fechaFin opcional)
      */
