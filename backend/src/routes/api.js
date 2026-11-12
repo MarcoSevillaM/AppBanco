@@ -116,6 +116,9 @@ router.get('/estadisticas/balance', TransaccionController.obtenerBalance);
 // Predicción del ahorro del mes
 router.get('/prediccion', TransaccionController.obtenerPrediccion);
 
+// Comercios donde más se gasta en un periodo
+router.get('/estadisticas/comercios', TransaccionController.obtenerTopComercios);
+
 // ==========================================
 // RUTAS DE PATRIMONIO
 // ==========================================
