@@ -300,7 +300,7 @@
                     <div class="card card-prediccion-principal">
                         <div class="prediccion-header">
                             <h3>🔮 Predicción de Ahorro</h3>
-                            <p class="info-text">Estimación para el mes actual basada en tu historial financiero</p>
+                            <p class="info-text">Estimación para el mes actual: lo ya registrado más lo que falta según tu historial</p>
                         </div>
                         
                         <div class="prediccion-resultado">
@@ -311,12 +311,15 @@
                                 <span class="pred-label">Ahorro Estimado</span>
                                 <span class="pred-valor" id="pred-ahorro">-- €</span>
                                 <span class="pred-confianza" id="pred-confianza"></span>
+                                <span class="pred-intervalo" id="pred-intervalo"></span>
                             </div>
                         </div>
 
+                        <div class="pred-avisos" id="pred-avisos" hidden></div>
+
                         <!-- Progreso del mes actual: real vs predicción -->
                         <div class="prediccion-progreso" id="pred-progreso" style="display:none;">
-                            <h4>📋 Progreso del Mes Actual</h4>
+                            <h4>📋 Progreso del Mes Actual <small id="pred-dia-corte"></small></h4>
                             <div class="progreso-fila">
                                 <span class="progreso-label">Ingresos registrados:</span>
                                 <span class="progreso-valor" id="pred-ingresos-real">-- €</span>
@@ -352,6 +355,7 @@
                                 <div class="pred-item-info">
                                     <span class="pred-item-label">Ingresos Esperados</span>
                                     <span class="pred-item-valor" id="pred-ingresos">-- €</span>
+                                    <span class="pred-item-detalle" id="pred-ingresos-detalle"></span>
                                 </div>
                             </div>
                             <div class="pred-item gastos">
@@ -359,6 +363,7 @@
                                 <div class="pred-item-info">
                                     <span class="pred-item-label">Gastos Esperados</span>
                                     <span class="pred-item-valor" id="pred-gastos">-- €</span>
+                                    <span class="pred-item-detalle" id="pred-gastos-detalle"></span>
                                 </div>
                             </div>
                         </div>
@@ -367,7 +372,7 @@
                     <!-- Gráfica de tendencia -->
                     <div class="card card-prediccion">
                         <h3>📊 Tendencia y Predicción</h3>
-                        <p class="info-text">Evolución histórica y proyección futura</p>
+                        <p class="info-text">Ahorro real de cada mes frente a lo que se habría predicho con los meses anteriores. Las rayas del último mes marcan el rango probable.</p>
                         <div class="chart-container">
                             <canvas id="chart-prediccion"></canvas>
                         </div>
@@ -382,10 +387,43 @@
                         </div>
                     </div>
 
+                    <!-- Acierto de las predicciones pasadas -->
+                    <div class="card card-prediccion card-acierto">
+                        <div class="acierto-cabecera">
+                            <h3>🎯 ¿Cuánto acierta la predicción?</h3>
+                            <div class="acierto-dias" id="acierto-dias" role="group" aria-label="Momento del mes">
+                                <button type="button" data-dia="0" class="active">Día 1</button>
+                                <button type="button" data-dia="10">Día 10</button>
+                                <button type="button" data-dia="20">Día 20</button>
+                            </div>
+                        </div>
+                        <p class="info-text">Cada mes pasado se predijo usando solo los meses anteriores, como si estuvieras en ese día del mes. La barra es el rango que se habría dado y el punto, lo que ahorraste de verdad.</p>
+                        <div class="acierto-resumen" id="acierto-resumen"></div>
+                        <div class="chart-container acierto-chart">
+                            <canvas id="chart-acierto"></canvas>
+                        </div>
+                        <details class="acierto-detalle">
+                            <summary>Ver detalle por mes</summary>
+                            <div class="acierto-tabla-scroll">
+                                <table class="acierto-tabla" id="acierto-tabla"></table>
+                            </div>
+                        </details>
+                    </div>
+
+                    <!-- Movimientos fijos y extraordinarios del mes -->
+                    <div class="card card-prediccion">
+                        <h3>📌 Fijos del Mes</h3>
+                        <p class="info-text">Movimientos que se repiten casi todos los meses con un importe parecido</p>
+                        <ul id="pred-fijos" class="pred-lista"></ul>
+                        <h4 class="pred-subtitulo">⚡ Extraordinarios de este mes</h4>
+                        <p class="info-text" id="pred-extra-info"></p>
+                        <ul id="pred-extraordinarios" class="pred-lista"></ul>
+                    </div>
+
                     <!-- Predicción por categorías -->
                     <div class="card card-prediccion">
                         <h3>📁 Predicción por Categorías</h3>
-                        <p class="info-text">Estimación de gastos por categoría para el mes actual</p>
+                        <p class="info-text">Gasto esperado por categoría este mes y lo ya registrado</p>
                         <div id="prediccion-categorias" class="prediccion-categorias-grid">
                             <!-- Se llena dinámicamente -->
                         </div>
@@ -397,7 +435,7 @@
                         <div class="metodo-info">
                             <div class="metodo-item">
                                 <span class="metodo-label">Método utilizado:</span>
-                                <span class="metodo-valor" id="pred-metodo">Media Móvil Ponderada</span>
+                                <span class="metodo-valor" id="pred-metodo">--</span>
                             </div>
                             <div class="metodo-item">
                                 <span class="metodo-label">Meses analizados:</span>
@@ -408,13 +446,14 @@
                                 <span class="metodo-valor" id="pred-tendencia">--</span>
                             </div>
                             <div class="metodo-item">
-                                <span class="metodo-label">Patrón estacional:</span>
-                                <span class="metodo-valor" id="pred-estacionalidad">--</span>
+                                <span class="metodo-label">Error típico (prueba hacia atrás):</span>
+                                <span class="metodo-valor" id="pred-precision">--</span>
                             </div>
                         </div>
                         <p class="info-text metodo-disclaimer">
-                            ⚠️ Esta predicción es una estimación basada en datos históricos. 
-                            Los resultados reales pueden variar según cambios en tus hábitos financieros.
+                            ⚠️ Los gastos extraordinarios (reformas, multas, viajes grandes) no se pueden prever:
+                            se cuenta su media mensual y su efecto se ve en el intervalo.
+                            El error típico se mide prediciendo cada mes pasado solo con los anteriores.
                         </p>
                     </div>
                 </div>

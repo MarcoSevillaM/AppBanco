@@ -262,6 +262,27 @@ class TransaccionController {
     }
 
     /**
+     * GET /api/prediccion?mes=YYYY-MM&corte=YYYY-MM-DD
+     * Predicción del ahorro del mes (por defecto el actual)
+     */
+    static obtenerPrediccion(req, res) {
+        try {
+            const { mes, corte } = req.query;
+            if (mes && !/^\d{4}-\d{2}$/.test(mes)) {
+                return res.status(400).json({ success: false, error: 'mes debe tener formato YYYY-MM' });
+            }
+            if (corte && !/^\d{4}-\d{2}-\d{2}$/.test(corte)) {
+                return res.status(400).json({ success: false, error: 'corte debe tener formato YYYY-MM-DD' });
+            }
+            const ecoSis = req.app.get('ecoSis');
+            const prediccion = ecoSis.obtenerPrediccion({ mes: mes || null, corte: corte || null });
+            res.json({ success: true, data: prediccion });
+        } catch (error) {
+            res.status(500).json({ success: false, error: error.message });
+        }
+    }
+
+    /**
      * GET /api/patrimonio
      * Dinero líquido y patrimonio total hasta una fecha (fechaFin opcional)
      */

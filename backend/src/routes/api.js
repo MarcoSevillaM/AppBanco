@@ -113,6 +113,9 @@ router.get('/estadisticas/mensual', TransaccionController.obtenerResumenMensual)
 // Balance general
 router.get('/estadisticas/balance', TransaccionController.obtenerBalance);
 
+// Predicción del ahorro del mes
+router.get('/prediccion', TransaccionController.obtenerPrediccion);
+
 // ==========================================
 // RUTAS DE PATRIMONIO
 // ==========================================
